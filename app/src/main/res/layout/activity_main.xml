@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    tools:context=".example.MainActivity">
+   <Button
+       android:layout_width="100dp"
+       android:layout_height="60dp"
+       android:onClick="onClickBtn"
+       android:layout_marginTop="40dp"
+       android:text="线性垂直"/>
+   <Button
+       android:layout_width="100dp"
+       android:layout_height="60dp"
+       android:layout_marginTop="40dp"
+       android:onClick="onClickBtn"
+       android:text="线性水平"/>
+   <Button
+       android:layout_width="100dp"
+       android:layout_height="60dp"
+       android:layout_marginTop="40dp"
+       android:onClick="onClickBtn"
+       android:text="网格效果"/>
+   <Button
+       android:layout_width="100dp"
+       android:layout_height="60dp"
+       android:layout_marginTop="40dp"
+       android:onClick="onClickBtn"
+       android:text="瀑布效果"/>
+
+
+
+</LinearLayout>
