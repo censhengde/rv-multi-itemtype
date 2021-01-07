@@ -14,7 +14,7 @@ import java.util.List;
  * <p>
  * 说明：
  */
-public class MutilRecyclerView extends RecyclerView implements IBuilder{
+public class MutilRecyclerView extends RecyclerView implements IBuilder,ItemManager{
     public MutilRecyclerView(@NonNull Context context) {
         super(context);
     }
@@ -40,6 +40,31 @@ public class MutilRecyclerView extends RecyclerView implements IBuilder{
     @Override
     public void setItemTypes(@NonNull List<ItemType<?>> types) {
         ((MutilAdapter) getAdapter()).setItemTypes(types);
+    }
+
+    @Override
+    public void removeItem(int position) {
+
+    }
+
+    @Override
+    public void updateItem(int position) {
+
+    }
+
+    @Override
+    public void updateAll() {
+
+    }
+
+    @Override
+    public void addItem(Object data) {
+
+    }
+
+    @Override
+    public void insertItem(int position, Object data) {
+
     }
 
     public static abstract class Builder<T extends Builder >{
@@ -71,6 +96,15 @@ public class MutilRecyclerView extends RecyclerView implements IBuilder{
         public  T setItemType(@NonNull ItemType<?> type) {
            recyclerView.setItemType(type);
            return (T) this;
+        }
+
+
+        public T  addItemDecoration(@NonNull ItemDecoration decor, int index){
+            recyclerView.addItemDecoration(decor,index);
+            return (T) this;
+        }
+        public T  addItemDecoration(@NonNull ItemDecoration decor){
+            return addItemDecoration(decor,-1);
         }
     }
 

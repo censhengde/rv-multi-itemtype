@@ -30,6 +30,8 @@ class ExampleActivity : AppCompatActivity() {
 
     val datas= ArrayList<ItemBean>()
     val types= ArrayList<ItemType<*>>()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_example)
@@ -74,6 +76,9 @@ class ExampleActivity : AppCompatActivity() {
 
     }
 
+    /***
+     * 线性垂直
+     */
     fun linearVertical(){
         mutilRecyclerView
                 .linearBuilder()//获取实现线性效果的Builder
@@ -83,6 +88,10 @@ class ExampleActivity : AppCompatActivity() {
                 .setItemSpace(10,10,10,10)//Item间距
                 .build()
     }
+
+    /**
+     * 线性水平
+     */
     fun linearHorizontal(){
         mutilRecyclerView
                 .linearBuilder()//获取实现线性效果的Builder
@@ -92,6 +101,10 @@ class ExampleActivity : AppCompatActivity() {
                 .setItemSpace(10,10,10,10)//Item间距
                 .build()
     }
+
+    /**
+     * 网格
+     */
     fun grid(){
         mutilRecyclerView
                 .gridBuilder(3)//获取实现网格效果的Builder
@@ -101,6 +114,10 @@ class ExampleActivity : AppCompatActivity() {
                 .setItemSpace(20,true)//Item间距
                 .build()
     }
+
+    /**
+     * 瀑布
+     */
     fun staggeredGrid(){
         mutilRecyclerView
                 .staggeredGridBuilder(StaggeredGridLayoutManager.GAP_HANDLING_NONE)//获取实现瀑布流效果的Builder
