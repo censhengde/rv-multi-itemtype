@@ -1,4 +1,4 @@
-package com.tencent.mutilrecyclerview.mutilrecyclerview;
+package com.tencent.multirecyclerview.widget;
 
 /**
  * Author：岑胜德 on 2021/1/6 16:15

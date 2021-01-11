@@ -1,15 +1,14 @@
-package com.tencent.mutilrecyclerview.example.itemtype;
+package com.tencent.multirecyclerview.example.itemtype;
 
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.tencent.mutilrecyclerview.R;
-import com.tencent.mutilrecyclerview.example.bean.ItemBean;
-import com.tencent.mutilrecyclerview.mutilrecyclerview.ItemType;
-import com.tencent.mutilrecyclerview.mutilrecyclerview.MutilViewHolder;
+import com.tencent.multirecyclerview.R;
+import com.tencent.multirecyclerview.example.bean.ItemBean;
+import com.tencent.multirecyclerview.widget.ItemType;
+import com.tencent.multirecyclerview.widget.MultiViewHolder;
 
 /**
  * Author：岑胜德 on 2021/1/6 18:04
@@ -45,7 +44,7 @@ public class AItemType implements ItemType<ItemBean> {
      * @param position
      */
     @Override
-    public void onBindViewHolder(@NonNull MutilViewHolder holder, @NonNull ItemBean data, int position) {
+    public void onBindViewHolder(@NonNull MultiViewHolder holder, @NonNull ItemBean data, int position) {
         TextView tvA = holder.getView(R.id.tv_a);
         tvA.setText(data.text);
     }
@@ -55,7 +54,7 @@ public class AItemType implements ItemType<ItemBean> {
      * @param holder
      */
     @Override
-    public void onInitItemSubViewListener(MutilViewHolder holder) {
+    public void onInitItemSubViewListener(MultiViewHolder holder) {
         TextView tv = holder.getView(R.id.tv_a);
         tv.setOnClickListener(v -> {
             Log.e("Item子View点击事件=====>", (String) tv.getText());
@@ -69,7 +68,7 @@ public class AItemType implements ItemType<ItemBean> {
      * @param position
      */
     @Override
-    public void onClickItemView(MutilViewHolder holder, ItemBean data, int position) {
+    public void onClickItemView(MultiViewHolder holder, ItemBean data, int position) {
         Log.e("Item点击事件=====>", data.toString());
     }
 

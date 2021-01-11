@@ -1,4 +1,4 @@
-package com.tencent.mutilrecyclerview.mutilrecyclerview;
+package com.tencent.multirecyclerview.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -14,32 +14,32 @@ import java.util.List;
  * <p>
  * 说明：
  */
-public class MutilRecyclerView extends RecyclerView implements IBuilder,ItemManager{
-    public MutilRecyclerView(@NonNull Context context) {
+public class MultiRecyclerView extends RecyclerView implements IBuilder,ItemManager{
+    public MultiRecyclerView(@NonNull Context context) {
         super(context);
     }
 
-    public MutilRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public MultiRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public MutilRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public MultiRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @Override
     public void setDatas(@NonNull List datas) {
-        ((MutilAdapter) getAdapter()).setDatas(datas);
+        ((MultiAdapter) getAdapter()).setDatas(datas);
     }
 
     @Override
     public void setItemType(@NonNull ItemType type) {
-        ((MutilAdapter) getAdapter()).setItemType(type);
+        ((MultiAdapter) getAdapter()).setItemType(type);
     }
 
     @Override
     public void setItemTypes(@NonNull List<ItemType<?>> types) {
-        ((MutilAdapter) getAdapter()).setItemTypes(types);
+        ((MultiAdapter) getAdapter()).setItemTypes(types);
     }
 
     @Override
@@ -68,11 +68,11 @@ public class MutilRecyclerView extends RecyclerView implements IBuilder,ItemMana
     }
 
     public static abstract class Builder<T extends Builder >{
-       final MutilRecyclerView recyclerView;
+       final MultiRecyclerView recyclerView;
 
-        Builder(MutilRecyclerView rv) {
+        Builder(MultiRecyclerView rv) {
             recyclerView = rv;
-            recyclerView.setAdapter(new MutilAdapter());
+            recyclerView.setAdapter(new MultiAdapter());
         }
 
 

@@ -1,4 +1,4 @@
-package com.tencent.mutilrecyclerview.mutilrecyclerview;
+package com.tencent.multirecyclerview.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -11,11 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
  * <p>
  * 说明：实现网格效果的Builder
  */
-public class GridBuilder extends MutilRecyclerView.Builder<GridBuilder> {
+public class GridBuilder extends MultiRecyclerView.Builder<GridBuilder> {
     private GridLayoutManager mLayoutManager;
     private final int spanCount;
 
-    GridBuilder(MutilRecyclerView rv, int spanCount) {
+    GridBuilder(MultiRecyclerView rv, int spanCount) {
         super(rv);
         this.spanCount = spanCount;
 

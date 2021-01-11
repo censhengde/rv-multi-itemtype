@@ -1,4 +1,4 @@
-package com.tencent.mutilrecyclerview.mutilrecyclerview;
+package com.tencent.multirecyclerview.widget;
 
 import androidx.annotation.NonNull;
 

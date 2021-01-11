@@ -1,4 +1,4 @@
-package com.tencent.mutilrecyclerview.example
+package com.tencent.multirecyclerview.example
 
 import android.content.Context
 import android.content.Intent
@@ -6,12 +6,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.tencent.mutilrecyclerview.R
-import com.tencent.mutilrecyclerview.example.bean.ItemBean
-import com.tencent.mutilrecyclerview.example.itemtype.AItemType
-import com.tencent.mutilrecyclerview.example.itemtype.BItemType
-import com.tencent.mutilrecyclerview.example.itemtype.CItemType
-import com.tencent.mutilrecyclerview.mutilrecyclerview.ItemType
+import com.tencent.multirecyclerview.R
+import com.tencent.multirecyclerview.example.bean.ItemBean
+import com.tencent.multirecyclerview.example.itemtype.AItemType
+import com.tencent.multirecyclerview.example.itemtype.BItemType
+import com.tencent.multirecyclerview.example.itemtype.CItemType
+import com.tencent.multirecyclerview.widget.ItemType
 import kotlinx.android.synthetic.main.activity_example.*
 import java.util.ArrayList
 

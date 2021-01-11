@@ -1,4 +1,4 @@
-package com.tencent.mutilrecyclerview.mutilrecyclerview;
+package com.tencent.multirecyclerview.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -11,11 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
  * <p>
  * 说明：实现线性效果的Builder
  */
-public class LinearBuilder extends MutilRecyclerView.Builder<LinearBuilder> {
+public class LinearBuilder extends MultiRecyclerView.Builder<LinearBuilder> {
 
     private LinearLayoutManager mLayoutManager;
 
-    LinearBuilder(MutilRecyclerView rv) {
+    LinearBuilder(MultiRecyclerView rv) {
         super(rv);
         mLayoutManager = new LinearLayoutManager(rv.getContext());
 

@@ -1,4 +1,4 @@
-package com.tencent.mutilrecyclerview.mutilrecyclerview;
+package com.tencent.multirecyclerview.widget;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
@@ -36,15 +36,15 @@ public interface ItemType<T> {
      * @param data 当前position对应的实体对象
      * @param position
      */
-    void onBindViewHolder(@NonNull MutilViewHolder holder, @NonNull T data, int position);
+    void onBindViewHolder(@NonNull MultiViewHolder holder, @NonNull T data, int position);
 
     /**
      * 初始化Item子View点击事件监听器
      */
-    void onInitItemSubViewListener(MutilViewHolder holder);
+    void onInitItemSubViewListener(MultiViewHolder holder);
 
     /**
      * 条目点击事件回调
      */
-    void onClickItemView(MutilViewHolder holder,T data,int position);
+    void onClickItemView(MultiViewHolder holder, T data, int position);
 }

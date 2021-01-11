@@ -1,4 +1,4 @@
-package com.tencent.mutilrecyclerview;
+package com.tencent.multirecyclerview;
 
 import org.junit.Test;
 

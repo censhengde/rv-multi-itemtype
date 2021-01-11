@@ -1,18 +1,10 @@
-package com.tencent.mutilrecyclerview.example
+package com.tencent.multirecyclerview.example
 
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
-import com.tencent.mutilrecyclerview.R
-import com.tencent.mutilrecyclerview.example.bean.ItemBean
-import com.tencent.mutilrecyclerview.example.itemtype.AItemType
-import com.tencent.mutilrecyclerview.example.itemtype.BItemType
-import com.tencent.mutilrecyclerview.example.itemtype.CItemType
-import com.tencent.mutilrecyclerview.mutilrecyclerview.ItemType
-import kotlinx.android.synthetic.main.activity_main.*
-import java.util.ArrayList
+import com.tencent.multirecyclerview.R
 
 class MainActivity : AppCompatActivity() {
 

@@ -1,4 +1,4 @@
-package com.tencent.mutilrecyclerview.mutilrecyclerview;
+package com.tencent.multirecyclerview.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -11,14 +11,14 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
  * <p>
  * 说明：实现瀑布效果的Builder
  */
-public class StaggeredGridBuilder extends MutilRecyclerView.Builder<StaggeredGridBuilder> {
+public class StaggeredGridBuilder extends MultiRecyclerView.Builder<StaggeredGridBuilder> {
     private StaggeredGridLayoutManager mLayoutManager;
     private int spanCount;
     private int gapStrategy;
     @RecyclerView.Orientation
     private int orientation = RecyclerView.VERTICAL;//默认垂直
 
-    StaggeredGridBuilder(MutilRecyclerView rv,int gapStrategy) {
+    StaggeredGridBuilder(MultiRecyclerView rv, int gapStrategy) {
         super(rv);
         this.gapStrategy=gapStrategy;
     }

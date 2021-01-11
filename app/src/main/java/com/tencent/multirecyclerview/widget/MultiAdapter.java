@@ -1,4 +1,4 @@
-package com.tencent.mutilrecyclerview.mutilrecyclerview;
+package com.tencent.multirecyclerview.widget;
 
 import android.util.SparseArray;
 import android.view.ViewGroup;
@@ -14,7 +14,7 @@ import java.util.List;
  * <p>
  * 说明：
  */
-final class MutilAdapter<T> extends RecyclerView.Adapter<MutilViewHolder> implements IBuilder {
+final class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> implements IBuilder {
     private final SparseArray<ItemType<T>> position_itemType_map = new SparseArray<>(3);
     private final SparseArray<ItemType<T>> viewType_itemType_map = new SparseArray<>(3);
     private List<T> datas;
@@ -49,9 +49,9 @@ final class MutilAdapter<T> extends RecyclerView.Adapter<MutilViewHolder> implem
 
     @NonNull
     @Override
-    public MutilViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MultiViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ItemType<T> type = viewType_itemType_map.get(viewType);
-        MutilViewHolder holder = MutilViewHolder.newInstance(parent.getContext(),parent, type.getItemLayoutRes());
+        MultiViewHolder holder = MultiViewHolder.newInstance(parent.getContext(),parent, type.getItemLayoutRes());
         holder.itemView.setOnClickListener((v) -> {
             type.onClickItemView(holder, datas.get(holder.getAdapterPosition()), holder.getAdapterPosition());
         });
@@ -60,7 +60,7 @@ final class MutilAdapter<T> extends RecyclerView.Adapter<MutilViewHolder> implem
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MutilViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MultiViewHolder holder, int position) {
         ItemType<T> type = position_itemType_map.get(position);
         type.onBindViewHolder(holder, datas.get(position), position);
     }

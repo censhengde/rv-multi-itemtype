@@ -1,8 +1,7 @@
-package com.tencent.mutilrecyclerview.mutilrecyclerview;
+package com.tencent.multirecyclerview.widget;
 
 import android.content.Context;
 import android.util.SparseArray;
-import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,16 +14,17 @@ import androidx.recyclerview.widget.RecyclerView;
  * <p>
  * 说明：
  */
-public class MutilViewHolder extends RecyclerView.ViewHolder {
+public class MultiViewHolder extends RecyclerView.ViewHolder {
     //由于findViewById频繁调用比较消耗性能，所以要缓存
     private final SparseArray<View> id_view_map;
 
-    public static @NonNull MutilViewHolder newInstance(Context context, ViewGroup parent,int layout){
+    public static @NonNull
+    MultiViewHolder newInstance(Context context, ViewGroup parent, int layout){
      View itemView=   LayoutInflater.from(context).inflate(layout,parent,false);
-     return new MutilViewHolder(itemView);
+     return new MultiViewHolder(itemView);
     }
 
-    private MutilViewHolder(@NonNull View itemView) {
+    private MultiViewHolder(@NonNull View itemView) {
         super(itemView);
         id_view_map=new SparseArray<>(5);
     }

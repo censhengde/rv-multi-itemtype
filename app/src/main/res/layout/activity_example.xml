@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".example.ExampleActivity">
-    <com.tencent.mutilrecyclerview.mutilrecyclerview.MutilRecyclerView
+    <com.tencent.multirecyclerview.widget.MultiRecyclerView
         android:id="@+id/mutilRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
