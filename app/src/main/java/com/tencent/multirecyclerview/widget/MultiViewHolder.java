@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
  * <p>
  * 说明：
  */
-public class MultiViewHolder extends RecyclerView.ViewHolder {
+public final class MultiViewHolder extends RecyclerView.ViewHolder {
     //由于findViewById频繁调用比较消耗性能，所以要缓存
     private final SparseArray<View> id_view_map;
 

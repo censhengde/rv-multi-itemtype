@@ -14,7 +14,8 @@ import java.util.List;
  * <p>
  * 说明：
  */
-public class MultiRecyclerView extends RecyclerView implements IBuilder,ItemManager{
+public class MultiRecyclerView extends RecyclerView implements IBuilder, ItemManager {
+
     public MultiRecyclerView(@NonNull Context context) {
         super(context);
     }
@@ -44,7 +45,7 @@ public class MultiRecyclerView extends RecyclerView implements IBuilder,ItemMana
 
     @Override
     public void removeItem(int position) {
-
+        getItemManager().removeItem(position);
     }
 
     @Override
@@ -62,13 +63,17 @@ public class MultiRecyclerView extends RecyclerView implements IBuilder,ItemMana
 
     }
 
+    public ItemManager getItemManager() {
+        return (ItemManager) getAdapter();
+    }
+
     @Override
     public void insertItem(int position, Object data) {
 
     }
 
-    public static abstract class Builder<T extends Builder >{
-       final MultiRecyclerView recyclerView;
+    public static abstract class Builder<T extends Builder> {
+        final MultiRecyclerView recyclerView;
 
         Builder(MultiRecyclerView rv) {
             recyclerView = rv;
@@ -76,10 +81,11 @@ public class MultiRecyclerView extends RecyclerView implements IBuilder,ItemMana
         }
 
 
-        public T setItemSpace(int l,int t,int r,int b){
-            recyclerView.addItemDecoration(new CommonItemSpace(l,t,r,b));
+        public T setItemSpace(int l, int t, int r, int b) {
+            recyclerView.addItemDecoration(new CommonItemSpace(l, t, r, b));
             return (T) this;
         }
+
         public abstract void build();
 
 
@@ -88,23 +94,24 @@ public class MultiRecyclerView extends RecyclerView implements IBuilder,ItemMana
             return (T) this;
         }
 
-        public  T setItemTypes(@NonNull List<ItemType<?>> itemTypes) {
-               recyclerView.setItemTypes(itemTypes);
-               return (T) this;
-        }
-
-        public  T setItemType(@NonNull ItemType<?> type) {
-           recyclerView.setItemType(type);
-           return (T) this;
-        }
-
-
-        public T  addItemDecoration(@NonNull ItemDecoration decor, int index){
-            recyclerView.addItemDecoration(decor,index);
+        public T setItemTypes(@NonNull List<ItemType<?>> itemTypes) {
+            recyclerView.setItemTypes(itemTypes);
             return (T) this;
         }
-        public T  addItemDecoration(@NonNull ItemDecoration decor){
-            return addItemDecoration(decor,-1);
+
+        public T setItemType(@NonNull ItemType<?> type) {
+            recyclerView.setItemType(type);
+            return (T) this;
+        }
+
+
+        public T addItemDecoration(@NonNull ItemDecoration decor, int index) {
+            recyclerView.addItemDecoration(decor, index);
+            return (T) this;
+        }
+
+        public T addItemDecoration(@NonNull ItemDecoration decor) {
+            return addItemDecoration(decor, -1);
         }
     }
 
@@ -113,11 +120,11 @@ public class MultiRecyclerView extends RecyclerView implements IBuilder,ItemMana
     }
 
     public GridBuilder gridBuilder(int span) {
-        return new GridBuilder(this,span);
+        return new GridBuilder(this, span);
     }
 
     public StaggeredGridBuilder staggeredGridBuilder(int gapStrategy) {
-        return new StaggeredGridBuilder(this,gapStrategy);
+        return new StaggeredGridBuilder(this, gapStrategy);
     }
 
 

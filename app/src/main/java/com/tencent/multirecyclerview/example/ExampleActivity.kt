@@ -80,7 +80,7 @@ class ExampleActivity : AppCompatActivity() {
      * 线性垂直
      */
     fun linearVertical(){
-        mutilRecyclerView
+        multiRecyclerView
                 .linearBuilder()//获取实现线性效果的Builder
                 .buildLayoutManager(this)
                 .setItemTypes(types)//设置类型
@@ -93,7 +93,7 @@ class ExampleActivity : AppCompatActivity() {
      * 线性水平
      */
     fun linearHorizontal(){
-        mutilRecyclerView
+        multiRecyclerView
                 .linearBuilder()//获取实现线性效果的Builder
                 .buildLayoutManager(this,RecyclerView.HORIZONTAL)
                 .setItemTypes(types)//设置类型
@@ -106,7 +106,7 @@ class ExampleActivity : AppCompatActivity() {
      * 网格
      */
     fun grid(){
-        mutilRecyclerView
+        multiRecyclerView
                 .gridBuilder(3)//获取实现网格效果的Builder
                 .buildLayoutManager(this)
                 .setItemTypes(types)//设置类型
@@ -119,7 +119,7 @@ class ExampleActivity : AppCompatActivity() {
      * 瀑布
      */
     fun staggeredGrid(){
-        mutilRecyclerView
+        multiRecyclerView
                 .staggeredGridBuilder(StaggeredGridLayoutManager.GAP_HANDLING_NONE)//获取实现瀑布流效果的Builder
                 .buildLayoutManager(2,RecyclerView.VERTICAL)
                 .setItemTypes(types)//设置类型

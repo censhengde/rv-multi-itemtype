@@ -14,7 +14,7 @@ import java.util.List;
  * <p>
  * 说明：
  */
-final class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> implements IBuilder {
+final class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> implements IBuilder,ItemManager<T> {
     private final SparseArray<ItemType<T>> position_itemType_map = new SparseArray<>(3);
     private final SparseArray<ItemType<T>> viewType_itemType_map = new SparseArray<>(3);
     private List<T> datas;
@@ -85,5 +85,36 @@ final class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> implem
     public void setItemType(@NonNull ItemType<?> type) {
         types = new ArrayList<>(1);
         types.add(type);
+    }
+
+    @Override
+    public void removeItem(int position) {
+        if (datas!=null){
+            datas.remove(position);
+            position_itemType_map.remove(position);//移除该位置的ItemType
+            getItemViewType(position);//重新匹配该位置的ItemType
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position,datas.size()-position);
+        }
+    }
+
+    @Override
+    public void insertItem(int position, T data) {
+
+    }
+
+    @Override
+    public void addItem(T data) {
+
+    }
+
+    @Override
+    public void updateItem(int position) {
+
+    }
+
+    @Override
+    public void updateAll() {
+
     }
 }

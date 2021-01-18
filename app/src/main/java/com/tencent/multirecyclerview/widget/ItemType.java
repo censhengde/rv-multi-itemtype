@@ -2,6 +2,7 @@ package com.tencent.multirecyclerview.widget;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Author：岑胜德 on 2021/1/6 14:41
@@ -21,7 +22,7 @@ public interface ItemType<T> {
      * @return true 表示匹配成功，然后以position为key，ItemType为value存进Map，意味着后面
      *        在Adapter的getViewType方法中可根据position拿到对应的ItemType，进而拿到viewType值。
      */
-    boolean matchItemType(T data,int position);
+    boolean matchItemType(@Nullable T data, int position);
 
     /**
      * 返回当前ItemType的布局文件id
@@ -36,7 +37,7 @@ public interface ItemType<T> {
      * @param data 当前position对应的实体对象
      * @param position
      */
-    void onBindViewHolder(@NonNull MultiViewHolder holder, @NonNull T data, int position);
+    void onBindViewHolder(@NonNull MultiViewHolder holder, @Nullable T data, int position);
 
     /**
      * 初始化Item子View点击事件监听器
@@ -46,5 +47,5 @@ public interface ItemType<T> {
     /**
      * 条目点击事件回调
      */
-    void onClickItemView(MultiViewHolder holder, T data, int position);
+    void onClickItemView(MultiViewHolder holder, @Nullable T data, int position);
 }
