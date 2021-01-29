@@ -1,2 +1,3 @@
-rootProject.name='MutilRecyclerView'
+rootProject.name='MultiRecyclerView'
 include ':app'
+include ':lib-multirecyclerview'

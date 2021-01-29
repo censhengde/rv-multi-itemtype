@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    tools:context=".example.MainActivity">
+    tools:context=".example.ui.MainActivity">
    <Button
        android:layout_width="100dp"
        android:layout_height="60dp"
