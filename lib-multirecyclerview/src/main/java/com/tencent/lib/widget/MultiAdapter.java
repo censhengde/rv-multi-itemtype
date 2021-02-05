@@ -11,11 +11,11 @@ import java.util.List;
  * <p>
  * 说明：未分页的Adapter
  */
-final class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> implements IBuilder<T>,ItemManager<T> {
+ class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> implements IBuilder<T>,ItemManager<T> {
 
-    private List<T> datas;
+    protected List<T> datas;
 
-    private final DelegateAdapter<T> delegateAdapter = new DelegateAdapter<T>() {
+    private final DelegateAdapter<T> delegateAdapter = new DelegateAdapter<T>(this) {
         @Nullable
         @Override
        public T getItem(int position) {
@@ -92,12 +92,14 @@ final class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> implem
     }
 
     @Override
-    public void refreshAll() {
+    public void refreshAll(@NonNull OnRefreshListener listener) {
 
     }
 
     @Override
-    public void loadMore() {
+    public void loadMore(@NonNull OnLoadMoreListener listener) {
 
     }
+
+
 }

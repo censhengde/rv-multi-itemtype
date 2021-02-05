@@ -79,6 +79,11 @@ class MultiRecyclerView @JvmOverloads constructor(context: Context, attrs: Attri
         return StaggeredGridBuilder(this, gapStrategy)
     }
 
+    /*获取分页Builder*/
+    fun pagedBuilder() = PagedBuilder(this)
+
+    /*实现单选、复选的Builder*/
+    fun checkedBuilder() = CheckedBuilder(this);
     fun loadData() {
         if (!isPaged){
             Log.e("MultiRecyclerView","未启用分页功能")

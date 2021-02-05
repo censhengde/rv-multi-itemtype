@@ -25,8 +25,10 @@ class PagedActivity : AppCompatActivity() {
                 /*风格*/
                 .linearBuilder()
                 .setItemSpace(5, 5, 5, 5)
+                .build()
                 /*分页*/
-                .isPaged
+        multiRecyclerView
+                .pagedBuilder()
                 .setDiffCallback(object : DiffUtil.ItemCallback<ItemBean>() {
                     override fun areItemsTheSame(oldItem: ItemBean, newItem: ItemBean): Boolean {
                         TODO("Not yet implemented")

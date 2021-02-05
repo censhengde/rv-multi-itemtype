@@ -50,7 +50,7 @@ final class MultiPage2Adapter<Key, Value> extends PagedListAdapter<Value, MultiV
     @Override
     public MultiViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ItemType<Value> type = viewType_itemType_map.get(viewType);
-        MultiViewHolder holder = MultiViewHolder.newInstance(parent.getContext(), parent, type.getItemLayoutRes());
+        MultiViewHolder holder = MultiViewHolder.create(parent.getContext(), parent, type.getItemLayoutRes());
         holder.itemView.setOnClickListener((v) -> {
             type.onClickItemView(holder, getItem(holder.getAdapterPosition()), holder.getAdapterPosition());
         });

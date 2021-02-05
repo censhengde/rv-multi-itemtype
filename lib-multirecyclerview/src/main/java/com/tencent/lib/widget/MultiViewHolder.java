@@ -19,7 +19,7 @@ public final class MultiViewHolder extends RecyclerView.ViewHolder {
     private final SparseArray<View> id_view_map;
 
     public static @NonNull
-    MultiViewHolder newInstance(Context context, ViewGroup parent, int layout){
+    MultiViewHolder create(Context context, ViewGroup parent, int layout){
      View itemView=   LayoutInflater.from(context).inflate(layout,parent,false);
      return new MultiViewHolder(itemView);
     }

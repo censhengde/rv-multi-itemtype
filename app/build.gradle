@@ -43,9 +43,9 @@ dependencies {
 
     implementation project(path: ':lib-multirecyclerview')
 
-    implementation  'com.scwang.smart:refresh-layout-kernel:2.0.3'      //核心必须依赖
-    implementation  'com.scwang.smart:refresh-header-classics:2.0.3'    //经典加载
-    implementation  'com.scwang.smart:refresh-footer-classics:2.0.3'    //经典加载
+    implementation 'com.scwang.smart:refresh-layout-kernel:2.0.3'      //核心必须依赖
+    implementation 'com.scwang.smart:refresh-header-classics:2.0.3'    //经典加载
+    implementation 'com.scwang.smart:refresh-footer-classics:2.0.3'    //经典加载
 }
 repositories {
     maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }

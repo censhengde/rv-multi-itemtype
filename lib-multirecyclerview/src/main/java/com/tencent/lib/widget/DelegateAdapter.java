@@ -4,6 +4,8 @@ import android.util.SparseArray;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.Adapter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,10 +16,15 @@ import java.util.List;
  */
 public abstract class DelegateAdapter<T> {
 
-    private final SparseArray<ItemType<T>> position_itemType_map = new SparseArray<>();
-    private final SparseArray<ItemType<T>> viewType_itemType_map = new SparseArray<>(8);
-    private List<ItemType<T>> types;
 
+    protected final SparseArray<ItemType<T>> position_itemType_map = new SparseArray<>();
+    protected final SparseArray<ItemType<T>> viewType_itemType_map = new SparseArray<>(8);
+    protected List<ItemType<T>> types;
+    protected RecyclerView.Adapter<?> realAdapter;
+
+    public DelegateAdapter(Adapter<?> realdapter) {
+        this.realAdapter = realdapter;
+    }
 
     public int getItemViewType(int position) {
         final int typeSize = types.size();
@@ -53,14 +60,16 @@ public abstract class DelegateAdapter<T> {
 
     @NonNull
     public MultiViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemType<T> type = viewType_itemType_map.get(viewType);
-        MultiViewHolder holder = MultiViewHolder.newInstance(parent.getContext(), parent, type.getItemLayoutRes());
+       final ItemType<T> type = viewType_itemType_map.get(viewType);
+        MultiViewHolder holder = MultiViewHolder.create(parent.getContext(), parent, type.getItemLayoutRes());
+        //Item条目点击事件
         holder.itemView.setOnClickListener((v) -> {
            final T data = getItem(holder.getAdapterPosition());
             if (data != null) {
                 type.onClickItemView(holder,data , holder.getAdapterPosition());
             }
         });
+        //Item子视图点击事件在次回调方法实现
         type.onInitItemSubViewListener(holder);
         return holder;
     }
@@ -85,5 +94,14 @@ public abstract class DelegateAdapter<T> {
     public final void removeItem(int position) {
         position_itemType_map.remove(position);//移除该位置的ItemType
         getItemViewType(position);//重新匹配该位置的ItemType
+    }
+
+
+
+
+     void checkItemType(T data) {
+        if (!(data instanceof CheckableItem)) {
+            throw new IllegalStateException(" Item 实体类必须是 CheckItem 类型 ");
+        }
     }
 }
