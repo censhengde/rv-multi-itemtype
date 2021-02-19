@@ -38,12 +38,12 @@ class PagedBuilder internal constructor(rv: MultiRecyclerView) : Builder<PagedBu
         assertNull(dataSource, "请先调用 setDataSource（） ")
         assertNull(pagingConfig, "请先调用 setPagingConfig（） ")
         pagedAdapter = MultiPaging3Adapter(diffItemCallback)
-        if (itemType != null) {
-            pagedAdapter.setItemType(itemType as Nothing)
-        }
-        if (itemTypes != null) {
-            pagedAdapter.setItemTypes(itemTypes as Nothing)
-        }
+//        if (itemType != null) {
+//            pagedAdapter.setItemType(itemType as Nothing)
+//        }
+//        if (itemTypes != null) {
+//            pagedAdapter.setItemTypes(itemTypes as Nothing)
+//        }
         recyclerView.adapter = pagedAdapter
     }
 }

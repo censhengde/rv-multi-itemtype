@@ -53,14 +53,15 @@ public abstract class CheckedDelegateAdapter<T extends CheckableItem> extends De
      * @return
      */
     public void checkItem(int position) {
+
+        final T data = getItem(position);
+        if (data == null) {
+            return;
+        }
         //========单选=================
         if (isSingleSelection) {
             //列表中已有被选中Item，且当前被选中的Item==上次被选中的,则将Item重置为未选中状态,此时全列表0个item被选中。
             if (position == mSelectedPosition) {
-                T data = getItem(position);
-                if (data == null) {
-                    return;
-                }
                 data.setChecked(false);
                 mSelectedPosition = SELECTED_NONE;
                 realAdapter.notifyItemChanged(position);
@@ -73,36 +74,31 @@ public abstract class CheckedDelegateAdapter<T extends CheckableItem> extends De
                 }
                 selectedData.setChecked(false);
                 realAdapter.notifyItemChanged(mSelectedPosition);
-                T data = getItem(position);
-                if (data == null) {
-                    return;
-                }
                 data.setChecked(true);
                 mSelectedPosition = position;
                 realAdapter.notifyItemChanged(mSelectedPosition);
             }
             //列表中尚未有Item被选中,则将当前Item置为被选中状态。
             else if (mSelectedPosition == SELECTED_NONE) {
-                T data = getItem(position);
-                if (data == null) {
-                    return;
-                }
                 data.setChecked(true);
                 mSelectedPosition = position;
                 realAdapter.notifyItemChanged(position);
             }
             //将选择的Item信息回调出去
             if (onCheckedItemCallback != null) {
-                onCheckedItemCallback.onCkeked(getItem(position), position);
+                onCheckedItemCallback.onCkeked(data, position);
             }
             //==========复选===============
         } else {
-            final T data = getItem(position);
-            //如果当前item没有被选中
-            if (data != null && !data.isChecked()) {
+            //如果当前item已经被选中，则取消被选中。
+            if (data.isChecked()) {
+                data.setChecked(false);
+                realAdapter.notifyItemChanged(position);
+            } else {//否则被选中
                 data.setChecked(true);
                 realAdapter.notifyItemChanged(position);
             }
+
         }
     }
 }

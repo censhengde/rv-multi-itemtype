@@ -15,6 +15,12 @@ public class CheckedBuilder extends AdapterBuilder<CheckedBuilder> {
         super(rv);
     }
 
+    private OnCompletedCheckedCallback onCompletedCheckedCallback;
+
+    public CheckedBuilder setOnCompletedCheckedCallback(OnCompletedCheckedCallback callback) {
+        this.onCompletedCheckedCallback = callback;
+        return this;
+    }
 
     public CheckedBuilder setOnCheckedItemCallbak(@Nullable OnCheckedItemCallback<?> callbak) {
         onCheckedItemCallback=callbak;
