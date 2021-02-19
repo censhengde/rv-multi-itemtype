@@ -3,8 +3,7 @@ package com.tencent.multirecyclerview.example.ui
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.ui.graphics.Color
-import com.tencent.lib.widget.CheckableItem
+import com.tencent.lib.widget.Checkable
 import com.tencent.lib.widget.ItemType
 import com.tencent.lib.widget.MultiViewHolder
 import com.tencent.multirecyclerview.R
@@ -22,7 +21,7 @@ class SelectActivity : AppCompatActivity() {
                 .build()
 
     }
-     class CheckableData constructor(private var checked: Boolean): CheckableItem {
+     class CheckableData constructor(private var checked: Boolean): Checkable {
 
         override fun setChecked(checked: Boolean) {
            this.checked=checked

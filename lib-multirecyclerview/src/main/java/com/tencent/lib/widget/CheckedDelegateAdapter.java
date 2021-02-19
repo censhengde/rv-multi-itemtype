@@ -2,6 +2,7 @@ package com.tencent.lib.widget;
 
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.Adapter;
 
 /**
@@ -9,19 +10,22 @@ import androidx.recyclerview.widget.RecyclerView.Adapter;
  *
  * 说明：
  */
-public abstract class CheckedDelegateAdapter<T extends CheckableItem> extends DelegateAdapter<T> {
+public abstract class CheckedDelegateAdapter<T extends Checkable> extends DelegateAdapter<T> {
 
     private static final int SELECTED_NONE = -1;//表示全列表都没有Item被选中
     private int mSelectedPosition = SELECTED_NONE;
     private OnCheckedItemCallback<T> onCheckedItemCallback;
     private boolean isSingleSelection = false;
+    private RecyclerView.Adapter realAdapter;
+
+    boolean checkable = false;//是否开启列表单选、多选功能
 
     public void setOnCheckedItemCallback(@NonNull OnCheckedItemCallback<T> callback) {
         onCheckedItemCallback = callback;
     }
 
-    public CheckedDelegateAdapter(Adapter<?> realdapter) {
-        super(realdapter);
+    public CheckedDelegateAdapter(Adapter realAdapter) {
+        this.realAdapter = realAdapter;
     }
 
     public void setSingleSelection(boolean singleSelection) {
@@ -38,7 +42,9 @@ public abstract class CheckedDelegateAdapter<T extends CheckableItem> extends De
         holder.itemView.setOnClickListener((v) -> {
             final T data = getItem(holder.getAdapterPosition());
             if (data != null) {
-                checkItem(holder.getAdapterPosition());//选中Item
+                if (checkable) {
+                    checkItem(holder.getAdapterPosition());//选中Item
+                }
                 type.onClickItemView(holder, data, holder.getAdapterPosition());
             }
         });
@@ -101,4 +107,6 @@ public abstract class CheckedDelegateAdapter<T extends CheckableItem> extends De
 
         }
     }
+
+    public abstract void complete(OnCompletedCheckedCallback<T> callback);
 }

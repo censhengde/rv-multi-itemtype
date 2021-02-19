@@ -8,7 +8,7 @@ import java.util.List;
  *
  * 说明：
  */
-public interface OnCompletedCheckedCallback<T extends CheckableItem> {
+public interface OnCompletedCheckedCallback<T extends Checkable> {
 
     /**
      *

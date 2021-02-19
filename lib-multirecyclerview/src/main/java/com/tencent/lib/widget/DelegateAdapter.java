@@ -4,8 +4,6 @@ import android.util.SparseArray;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.RecyclerView.Adapter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +18,11 @@ public abstract class DelegateAdapter<T> {
     protected final SparseArray<ItemType<T>> position_itemType_map = new SparseArray<>();
     protected final SparseArray<ItemType<T>> viewType_itemType_map = new SparseArray<>(8);
     protected List<ItemType<T>> types;
-    protected RecyclerView.Adapter<?> realAdapter;
 
-    public DelegateAdapter(Adapter<?> realdapter) {
-        this.realAdapter = realdapter;
+//    public DelegateAdapter(Adapter<?> realdapter) {
+//        this.realAdapter = realdapter;
+//    }
+    public DelegateAdapter() {
     }
 
     public int getItemViewType(int position) {
@@ -100,7 +99,7 @@ public abstract class DelegateAdapter<T> {
 
 
      void checkItemType(T data) {
-        if (!(data instanceof CheckableItem)) {
+        if (!(data instanceof Checkable)) {
             throw new IllegalStateException(" Item 实体类必须是 CheckItem 类型 ");
         }
     }

@@ -5,4 +5,13 @@
         <attr name="diffItemCallback" format="string"/>
         <attr name="dataSource" format="string"/>
     </declare-styleable>
+    <declare-styleable name="PagedRecyclerView">
+        <attr name="pageSize" format="integer" />
+        <attr name="prefetchDistance" format="integer" />
+        <attr name="enablePlaceholders" format="boolean" />
+        <attr name="initialLoadSize" format="integer" />
+        <attr name="maxSize" format="integer" />
+        <attr name="jumpThreshold" format="integer" />
+        <attr name="checkable" format="boolean" />
+    </declare-styleable>
 </resources>

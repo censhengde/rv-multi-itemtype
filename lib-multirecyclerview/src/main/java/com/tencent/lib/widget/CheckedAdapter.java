@@ -11,9 +11,27 @@ import java.util.List;
  *
  * 说明：
  */
-public class CheckedAdapter<T extends CheckableItem> extends MultiAdapter<T> {
+public class CheckedAdapter<T extends Checkable> extends MultiAdapter<T> {
+
+    private OnCompletedCheckedCallback onCompletedCheckedCallback;
 
     private final CheckedDelegateAdapter<T> delegateAdapter = new CheckedDelegateAdapter<T>(this) {
+        @Override
+        public void complete(OnCompletedCheckedCallback<T> callback) {
+            List<T> checked = new ArrayList<>();
+            //筛选出被选中的Item
+            if (datas != null && !datas.isEmpty()) {
+                for (T data : datas) {
+                    if (data.isChecked()) {
+                        checked.add(data);
+                    }
+                }
+            }
+            if (callback != null) {
+                callback.onCompletedChecked(checked);
+            }
+        }
+
         @Nullable
         @Override
         public T getItem(int position) {
@@ -70,5 +88,15 @@ public class CheckedAdapter<T extends CheckableItem> extends MultiAdapter<T> {
 
     public void setSingleSelection(boolean isSingleSelection) {
         delegateAdapter.setSingleSelection(isSingleSelection);
+    }
+
+    public void setOnCompletedCheckedCallback(OnCompletedCheckedCallback callback) {
+        this.onCompletedCheckedCallback = callback;
+    }
+
+    public void complete() {
+        if (onCompletedCheckedCallback != null) {
+            delegateAdapter.complete(onCompletedCheckedCallback);
+        }
     }
 }

@@ -5,7 +5,7 @@ package com.tencent.lib.widget;
  *
  * 说明：标识该对象是可被选中的
  */
-public interface CheckableItem {
+public interface Checkable {
     /*设置是否被选中*/
     void setChecked(boolean checked);
     /*获取选择状态*/
