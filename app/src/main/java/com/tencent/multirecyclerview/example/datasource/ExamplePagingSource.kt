@@ -1,6 +1,7 @@
 package com.tencent.multirecyclerview.example.datasource
 
 import androidx.paging.PagingSource
+import androidx.paging.PagingState
 import com.tencent.multirecyclerview.example.bean.ItemBean
 import java.lang.IllegalStateException
 
@@ -18,5 +19,9 @@ class ExamplePagingSource: PagingSource<Int, ItemBean>() {
         LoadResult.Error<Int,ItemBean>(IllegalStateException("  "))
 
         return LoadResult.Page(list,null,2);
+    }
+
+    override fun getRefreshKey(state: PagingState<Int, ItemBean>): Int? {
+        return 0
     }
 }

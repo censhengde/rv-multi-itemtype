@@ -39,8 +39,11 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
 
-    api "androidx.paging:paging-runtime:3.0.0-alpha12"
-    api "androidx.paging:paging-compose:1.0.0-alpha05"
-    implementation "androidx.paging:paging-runtime:2.1.2"
+    api ("androidx.paging:paging-runtime:3.0.0-beta01"){
+        exclude group: 'org.jetbrains.kotlinx', module: 'kotlinx-coroutines-core-jvm'
+    }
+//    api "androidx.paging:paging-compose:1.0.0-alpha07"
+
+//    implementation "androidx.paging:paging-runtime:2.1.2"
     api "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
 }

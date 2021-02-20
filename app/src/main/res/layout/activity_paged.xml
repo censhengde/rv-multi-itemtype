@@ -3,6 +3,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         tools:context="com.tencent.multirecyclerview.example.ui.PagedActivity">
 
     <com.scwang.smart.refresh.layout.SmartRefreshLayout
@@ -14,10 +15,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-        <com.tencent.lib.widget.MultiRecyclerView
-                android:id="@+id/multiRecyclerView"
+        <com.tencent.lib.widget.PagedRecyclerView
+                android:id="@+id/pagedRecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                app:pageSize="7"
+                app:prefetchDistance="3"
+                />
 
         <com.scwang.smart.refresh.footer.ClassicsFooter
                 android:layout_width="match_parent"

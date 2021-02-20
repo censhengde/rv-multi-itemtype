@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * 说明：
  */
+@Deprecated
  final class NewPageKeyedDataSource<Key, Value> extends PageKeyedDataSource<Key, Value> {
 
 

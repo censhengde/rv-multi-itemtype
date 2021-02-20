@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView.Adapter;
  *
  * 说明：
  */
-public abstract class CheckedDelegateAdapter<T extends Checkable> extends DelegateAdapter<T> {
+ abstract class CheckedDelegateAdapter<T extends Checkable> extends DelegateAdapter<T> {
 
     private static final int SELECTED_NONE = -1;//表示全列表都没有Item被选中
     private int mSelectedPosition = SELECTED_NONE;

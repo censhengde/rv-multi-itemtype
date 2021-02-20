@@ -12,9 +12,7 @@ import java.util.List;
  *
  * 说明：实现Item多样式的公共逻辑封装。
  */
-public abstract class DelegateAdapter<T> {
-
-
+ abstract class DelegateAdapter<T> {
     protected final SparseArray<ItemType<T>> position_itemType_map = new SparseArray<>();
     protected final SparseArray<ItemType<T>> viewType_itemType_map = new SparseArray<>(8);
     protected List<ItemType<T>> types;
@@ -29,6 +27,8 @@ public abstract class DelegateAdapter<T> {
         final int typeSize = types.size();
         //单样式
         if (typeSize == 1) {
+            viewType_itemType_map.put(types.get(0).getViewType(), types.get(0));
+            position_itemType_map.put(position, types.get(0));
             return types.get(0).getViewType();
         }
         //多样式
@@ -95,12 +95,4 @@ public abstract class DelegateAdapter<T> {
         getItemViewType(position);//重新匹配该位置的ItemType
     }
 
-
-
-
-     void checkItemType(T data) {
-        if (!(data instanceof Checkable)) {
-            throw new IllegalStateException(" Item 实体类必须是 CheckItem 类型 ");
-        }
-    }
 }

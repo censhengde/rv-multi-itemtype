@@ -21,25 +21,25 @@ class PagedActivity : AppCompatActivity() {
 
     private fun initRecyclerView() {
         /*链式调度有顺序讲究，原则是先风格、后分页*/
-        multiRecyclerView
+        pagedRecyclerView
                 /*风格*/
                 .linearBuilder()
                 .setItemSpace(5, 5, 5, 5)
                 .build()
                 /*分页*/
-        multiRecyclerView
+        pagedRecyclerView
                 .pagedBuilder()
                 .setDiffCallback(object : DiffUtil.ItemCallback<ItemBean>() {
                     override fun areItemsTheSame(oldItem: ItemBean, newItem: ItemBean): Boolean {
-                        TODO("Not yet implemented")
+                       return oldItem.equals(newItem)
                     }
 
                     override fun areContentsTheSame(oldItem: ItemBean, newItem: ItemBean): Boolean {
-                        TODO("Not yet implemented")
+                       return oldItem.text==newItem.text
                     }
 
                 })
-                .build()
+                .build(this)
         /*删除Item事件*/
 
 
@@ -48,7 +48,7 @@ class PagedActivity : AppCompatActivity() {
     private fun initRefreshLayout() {
         /*下拉刷新*/
         refresh_layout.setOnRefreshListener {
-           multiRecyclerView.getItemManager().refreshAll(object :OnRefreshListener{
+           pagedRecyclerView.getItemManager().refreshAll(object :OnRefreshListener{
                override fun onSuccess() {
 
                }
@@ -61,7 +61,7 @@ class PagedActivity : AppCompatActivity() {
         }
         /*上拉加载更多*/
         refresh_layout.setOnLoadMoreListener {
-            multiRecyclerView.getItemManager().loadMore(object :OnLoadMoreListener{
+            pagedRecyclerView.getItemManager().loadMore(object :OnLoadMoreListener{
                 override fun onSuccess() {
 
                 }

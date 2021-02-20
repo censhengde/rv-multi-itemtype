@@ -9,15 +9,39 @@ import java.util.List;
  *
  * 说明：
  */
-public  class AdapterBuilder<T extends AdapterBuilder> extends Builder<T> {
-  private   MultiAdapter adapter;
+public class AdapterBuilder<T extends AdapterBuilder> {
     @Nullable
     protected ItemType<?> itemType;
     @Nullable
     protected List<ItemType<?>>itemTypes;
-    AdapterBuilder(MultiRecyclerView rv) {
-        super(rv);
+
+    protected boolean checkable = false;
+
+    protected OnCheckedItemCallback onCheckedItemCallback;
+    protected boolean isSingleSelection = false;
+    protected OnCompletedCheckedCallback onCompletedCheckedCallback;
+
+    public T setOnCompletedCheckedCallback(OnCompletedCheckedCallback callback) {
+        this.onCompletedCheckedCallback = callback;
+        return (T) this;
     }
+
+    public T setOnCheckedItemCallbak(@Nullable OnCheckedItemCallback<?> callbak) {
+        onCheckedItemCallback = callbak;
+        return (T) this;
+    }
+
+    public T setSingleSelection(boolean singleSelection) {
+        isSingleSelection = singleSelection;
+        return (T) this;
+    }
+
+    public T checkable(boolean checkable) {
+        this.checkable = checkable;
+        return (T) this;
+    }
+
+
     /*单样式就调用这个*/
     public T setItemType(@NonNull ItemType<?> type) {
         this.itemType = type;
@@ -29,22 +53,6 @@ public  class AdapterBuilder<T extends AdapterBuilder> extends Builder<T> {
         itemTypes = types;
         return (T) this;
     }
-    /*默认实现*/
-    public void build() {
-//        MultiAdapter adapter=getAdapter();
-        adapter=new MultiAdapter<>();
-        if (itemType != null) {
-            adapter.setItemType(itemType);
-        }
-        if (itemTypes != null) {
-            adapter.setItemTypes(itemTypes);
-        }
-        recyclerView.setAdapter(adapter);
-    }
-    protected  MultiAdapter getAdapter(){
-        if (adapter==null){
-            new MultiAdapter();
-        }
-        return adapter;
-    }
+
+
 }

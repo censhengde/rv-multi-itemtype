@@ -1,7 +1,5 @@
 package com.tencent.lib.widget;
 
-import android.view.ViewGroup;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,48 +9,34 @@ import java.util.List;
  *
  * 说明：
  */
-public class CheckedAdapter<T extends Checkable> extends MultiAdapter<T> {
+class CheckedAdapter<T extends Checkable> extends MultiAdapter<T> {
 
-    private OnCompletedCheckedCallback onCompletedCheckedCallback;
+    private OnCompletedCheckedCallback<T> onCompletedCheckedCallback;
 
-    private final CheckedDelegateAdapter<T> delegateAdapter = new CheckedDelegateAdapter<T>(this) {
-        @Override
-        public void complete(OnCompletedCheckedCallback<T> callback) {
-            List<T> checked = new ArrayList<>();
-            //筛选出被选中的Item
-            if (datas != null && !datas.isEmpty()) {
-                for (T data : datas) {
-                    if (data.isChecked()) {
-                        checked.add(data);
+    CheckedAdapter() {
+        delegateAdapter = new CheckedDelegateAdapter<T>(this) {
+            @Override
+            public void complete(OnCompletedCheckedCallback<T> callback) {
+                List<T> checked = new ArrayList<>();
+                //筛选出被选中的Item
+                if (datas != null && !datas.isEmpty()) {
+                    for (T data : datas) {
+                        if (data.isChecked()) {
+                            checked.add(data);
+                        }
                     }
                 }
+                if (callback != null) {
+                    callback.onCompletedChecked(checked);
+                }
             }
-            if (callback != null) {
-                callback.onCompletedChecked(checked);
+
+            @Nullable
+            @Override
+            public T getItem(int position) {
+                return datas.get(position);
             }
-        }
-
-        @Nullable
-        @Override
-        public T getItem(int position) {
-            return datas.get(position);
-        }
-    };
-
-    @NonNull
-    @Override
-    public MultiViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return delegateAdapter.onCreateViewHolder(parent, viewType);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull MultiViewHolder holder, int position) {
-        delegateAdapter.onBindViewHolder(holder, position);
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return delegateAdapter.getItemViewType(position);
+        };
     }
 
     public void cancelAll() {
@@ -73,30 +57,21 @@ public class CheckedAdapter<T extends Checkable> extends MultiAdapter<T> {
         }
     }
 
-    @NonNull//but maybe empty
-    public List<T> getSelectedItem() {
-        final List<T> selected = new ArrayList<>();
-        if (datas != null && !datas.isEmpty()) {
-            for (T data : datas) {
-                if (data.isChecked()){
-                    selected.add(data);
-                }
-            }
-        }
-        return selected;
+
+    void setSingleSelection(boolean isSingleSelection) {
+        ((CheckedDelegateAdapter) delegateAdapter).setSingleSelection(isSingleSelection);
     }
 
-    public void setSingleSelection(boolean isSingleSelection) {
-        delegateAdapter.setSingleSelection(isSingleSelection);
-    }
-
-    public void setOnCompletedCheckedCallback(OnCompletedCheckedCallback callback) {
+    void setOnCompletedCheckedCallback(OnCompletedCheckedCallback<T> callback) {
         this.onCompletedCheckedCallback = callback;
     }
 
+    public void checkable(boolean checkable) {
+        ((CheckedDelegateAdapter) delegateAdapter).checkable = checkable;
+    }
     public void complete() {
         if (onCompletedCheckedCallback != null) {
-            delegateAdapter.complete(onCompletedCheckedCallback);
+            ((CheckedDelegateAdapter<T>) delegateAdapter).complete(onCompletedCheckedCallback);
         }
     }
 }

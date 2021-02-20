@@ -15,14 +15,17 @@ import java.util.List;
 
     protected List<T> datas;
 
-    private final DelegateAdapter<T> delegateAdapter = new DelegateAdapter<T>(this) {
+    protected  DelegateAdapter<T> delegateAdapter;
+
+    MultiAdapter() {
+    delegateAdapter=new DelegateAdapter<T>() {
         @Nullable
         @Override
-       public T getItem(int position) {
+        public T getItem(int position) {
             return datas.get(position);
         }
     };
-
+    }
 
     @NonNull
     @Override
@@ -48,7 +51,7 @@ import java.util.List;
 
     @Override
     public void setDatas(@NonNull List<T> datas) {
-        this.datas = (List<T>) datas;
+        this.datas =  datas;
     }
 
     @Override

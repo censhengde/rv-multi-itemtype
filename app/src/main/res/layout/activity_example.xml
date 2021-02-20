@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".example.ui.ExampleActivity">
     <com.tencent.lib.widget.MultiRecyclerView
-        android:id="@+id/multiRecyclerView"
+        android:id="@+id/pagedRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

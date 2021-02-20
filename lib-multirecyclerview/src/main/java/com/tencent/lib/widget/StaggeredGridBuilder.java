@@ -2,7 +2,6 @@ package com.tencent.lib.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
-
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -11,8 +10,8 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
  * <p>
  * 说明：实现瀑布效果的Builder
  */
-public class StaggeredGridBuilder extends StyleBuilder<StaggeredGridBuilder> {
-    private StaggeredGridLayoutManager mLayoutManager;
+public class StaggeredGridBuilder extends LayoutBuilder<StaggeredGridBuilder> {
+
     private int spanCount;
     private int gapStrategy;
     @RecyclerView.Orientation
@@ -24,13 +23,13 @@ public class StaggeredGridBuilder extends StyleBuilder<StaggeredGridBuilder> {
     }
 
     public StaggeredGridBuilder buildLayoutManager(int spanCount, @RecyclerView.Orientation int orientation) {
-        mLayoutManager = new StaggeredGridLayoutManager(spanCount, orientation);
+        layoutManager = new StaggeredGridLayoutManager(spanCount, orientation);
         return this;
     }
 
     public StaggeredGridBuilder buildLayoutManager(Context context, AttributeSet attrs, int defStyleAttr,
                                                    int defStyleRes) {
-        mLayoutManager = new StaggeredGridLayoutManager(context, attrs, defStyleAttr, defStyleRes);
+        layoutManager = new StaggeredGridLayoutManager(context, attrs, defStyleAttr, defStyleRes);
         return this;
     }
 
@@ -44,7 +43,7 @@ public class StaggeredGridBuilder extends StyleBuilder<StaggeredGridBuilder> {
     }
     @Override
     public void build() {
-        mLayoutManager.setGapStrategy(gapStrategy);
-        recyclerView.setLayoutManager(mLayoutManager);
+        ((StaggeredGridLayoutManager) layoutManager).setGapStrategy(gapStrategy);
+        super.build();
     }
 }

@@ -11,14 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
  * <p>
  * 说明：实现线性效果的Builder
  */
-public class LinearBuilder extends StyleBuilder<LinearBuilder> {
+public class LinearBuilder extends LayoutBuilder<LinearBuilder> {
 
-    private  LinearLayoutManager mLayoutManager;
 
     LinearBuilder(MultiRecyclerView rv) {
         super(rv);
-        mLayoutManager = new LinearLayoutManager(rv.getContext());
-
     }
 
     public LinearBuilder setItemSpace(int l, int t, int r, int b) {
@@ -27,7 +24,7 @@ public class LinearBuilder extends StyleBuilder<LinearBuilder> {
     }
 
     public LinearBuilder buildLayoutManager(Context context, @RecyclerView.Orientation int orientation, boolean reverseLayout) {
-        mLayoutManager = new LinearLayoutManager(context, orientation, reverseLayout);
+        layoutManager = new LinearLayoutManager(context, orientation, reverseLayout);
         return this;
     }
 
@@ -40,14 +37,15 @@ public class LinearBuilder extends StyleBuilder<LinearBuilder> {
 
     public LinearBuilder buildLayoutManager(Context context, AttributeSet attrs, int defStyleAttr,
                                              int defStyleRes){
-        mLayoutManager = new LinearLayoutManager(context, attrs, defStyleAttr,defStyleRes);
+        layoutManager = new LinearLayoutManager(context, attrs, defStyleAttr,defStyleRes);
         return this;
     }
 
     @Override
-    public void build()
-    {
-        recyclerView.setLayoutManager(mLayoutManager);
+    public void build() {
+        if (layoutManager==null){
+            layoutManager=new LinearLayoutManager(recyclerView.getContext(),RecyclerView.VERTICAL,false);
+        }
+        super.build();
     }
-
 }
