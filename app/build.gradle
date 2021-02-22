@@ -28,7 +28,11 @@ android {
     }
 
 }
-
+repositories {
+    flatDir {
+        dirs('libs')
+    }
+}
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -46,6 +50,8 @@ dependencies {
     implementation 'com.scwang.smart:refresh-layout-kernel:2.0.3'      //核心必须依赖
     implementation 'com.scwang.smart:refresh-header-classics:2.0.3'    //经典加载
     implementation 'com.scwang.smart:refresh-footer-classics:2.0.3'    //经典加载
+
+    implementation(name: 'lib-http-release', ext: 'aar')
 }
 repositories {
     maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }

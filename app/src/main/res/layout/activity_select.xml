@@ -9,8 +9,19 @@
             android:id="@+id/rv_selectable"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/btn_completed" />
+            android:layout_above="@id/btn_check_all" />
 
+    <Button
+            android:id="@+id/btn_check_all"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:onClick="onClickCheckAll"
+            android:background="@color/colorAccent"
+            android:text="全选"
+            android:layout_above="@id/btn_completed"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="20dp"
+            android:textSize="20sp" />
     <Button
             android:id="@+id/btn_completed"
             android:layout_width="match_parent"

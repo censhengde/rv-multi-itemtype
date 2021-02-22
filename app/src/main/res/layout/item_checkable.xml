@@ -2,14 +2,27 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/rl_item_view"
         android:layout_width="match_parent"
+        android:background="#CDDC39"
         android:layout_height="60dp">
 
     <TextView
             android:id="@+id/tv"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="60dp"
             android:gravity="center"
             android:textSize="20sp"/>
 
+    <Button
+            android:id="@+id/btn_delete_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:textColor="@android:color/holo_red_light"
+            android:background="@android:color/white"
+            android:layout_marginEnd="15dp"
+            android:text="删除" />
 
 </RelativeLayout>

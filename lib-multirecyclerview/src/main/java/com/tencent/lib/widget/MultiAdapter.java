@@ -75,13 +75,16 @@ import java.util.List;
     }
 
     @Override
-    public void insertItem(int position, T data) {
-
+    public void addItem(int position, T data) {
+        if (datas != null) {
+            datas.add(position, data);
+            notifyItemChanged(position);
+        }
     }
 
     @Override
     public void addItem(T data) {
-
+        addItem(datas.size(), data);
     }
 
     @Override
@@ -94,15 +97,6 @@ import java.util.List;
 
     }
 
-    @Override
-    public void refreshAll(@NonNull OnRefreshListener listener) {
-
-    }
-
-    @Override
-    public void loadMore(@NonNull OnLoadMoreListener listener) {
-
-    }
 
 
 }

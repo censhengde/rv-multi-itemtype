@@ -19,10 +19,10 @@ public class AdapterBuilder<T extends AdapterBuilder> {
 
     protected OnCheckedItemCallback onCheckedItemCallback;
     protected boolean isSingleSelection = false;
-    protected OnCompletedCheckedCallback onCompletedCheckedCallback;
+    protected OnCompletedCheckItemCallback onCompletedCheckItemCallback;
 
-    public T setOnCompletedCheckedCallback(OnCompletedCheckedCallback callback) {
-        this.onCompletedCheckedCallback = callback;
+    public T setOnCompletedCheckItemCallback(OnCompletedCheckItemCallback callback) {
+        this.onCompletedCheckItemCallback = callback;
         return (T) this;
     }
 

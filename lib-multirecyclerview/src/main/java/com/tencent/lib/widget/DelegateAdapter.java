@@ -60,7 +60,7 @@ import java.util.List;
     @NonNull
     public MultiViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
        final ItemType<T> type = viewType_itemType_map.get(viewType);
-        MultiViewHolder holder = MultiViewHolder.create(parent.getContext(), parent, type.getItemLayoutRes());
+        final MultiViewHolder holder = MultiViewHolder.create(parent.getContext(), parent, type.getItemLayoutRes());
         //Item条目点击事件
         holder.itemView.setOnClickListener((v) -> {
            final T data = getItem(holder.getAdapterPosition());
@@ -93,6 +93,10 @@ import java.util.List;
     public final void removeItem(int position) {
         position_itemType_map.remove(position);//移除该位置的ItemType
         getItemViewType(position);//重新匹配该位置的ItemType
+    }
+
+    final void addItem(int position) {
+
     }
 
 }

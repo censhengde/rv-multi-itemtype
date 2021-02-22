@@ -108,5 +108,5 @@ import androidx.recyclerview.widget.RecyclerView.Adapter;
         }
     }
 
-    public abstract void complete(OnCompletedCheckedCallback<T> callback);
+    public abstract void complete(OnCompletedCheckItemCallback<T> callback);
 }

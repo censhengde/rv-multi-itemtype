@@ -9,8 +9,10 @@ import android.util.AttributeSet
  *
  * 说明：
  */
-open class MultiRecyclerView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : BaseRecyclerView(context, attrs, defStyleAttr) {
-
+open class MultiRecyclerView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
+        BaseRecyclerView(context, attrs, defStyleAttr) {
+    private lateinit var itemManager: ItemManager<*>
+    private lateinit var checkManager: CheckManager
     fun linearBuilder(): LinearBuilder {
         return LinearBuilder(this)
     }
@@ -24,10 +26,17 @@ open class MultiRecyclerView @JvmOverloads constructor(context: Context, attrs: 
     }
 
    open fun adapterBuilder() = super.commonAdapterBuilder()
-    fun getItemManager() =adapter as ItemManager<*>
+    fun getItemManager() = itemManager
 
-
-    fun completed(){
-        ( adapter as CheckedAdapter<*>).complete()
+    fun getCheckManager() = checkManager
+    override fun setAdapter(adapter: Adapter<*>?) {
+        if (adapter is ItemManager<*>) {
+            itemManager = adapter
+        }
+        if (adapter is CheckManager) {
+            checkManager = adapter
+        }
+        super.setAdapter(adapter)
     }
+
 }

@@ -22,7 +22,7 @@ class PagedAdapterBuilder(val rv: PagedRecyclerView) : AdapterBuilder<PagedAdapt
     private var diffItemCallback: DiffUtil.ItemCallback<*>? = null
     private lateinit var dataSource: PagingSource< Any,  Any>
     private var pagingConfig: PagingConfig? = null
-    private lateinit var pagedAdapter: MultiPaging3Adapter<*>
+    private lateinit var pagedAdapter: MultiPagingAdapter<*>
 
 
     fun setDiffCallback(callback: DiffUtil.ItemCallback<out Any>): PagedAdapterBuilder {
@@ -53,9 +53,9 @@ class PagedAdapterBuilder(val rv: PagedRecyclerView) : AdapterBuilder<PagedAdapt
         }
         diffItemCallback?.let {
             pagedAdapter = if (checkable) {
-                CheckedPaging3Adapter(it as DiffUtil.ItemCallback<out Checkable>)
+                CheckedPagedAdapter(it as DiffUtil.ItemCallback<out Checkable>)
             } else {
-                MultiPaging3Adapter(it)
+                MultiPagingAdapter(it)
             }
         }
         //启动协程

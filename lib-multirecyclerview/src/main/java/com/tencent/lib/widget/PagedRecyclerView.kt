@@ -3,6 +3,7 @@ package com.tencent.lib.widget
 import android.content.Context
 import android.util.AttributeSet
 import androidx.paging.PagingConfig
+import com.tencent.lib.widget.paged.PagedManager
 
 /**
 
@@ -14,7 +15,7 @@ import androidx.paging.PagingConfig
 class PagedRecyclerView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : MultiRecyclerView(context, attrs, defStyleAttr) {
 
     val pagingConfig: PagingConfig
-
+    private lateinit var pagedManager: PagedManager
 
     init {
         val a = context.obtainStyledAttributes(attrs, R.styleable.PagedRecyclerView)
@@ -32,4 +33,5 @@ class PagedRecyclerView @JvmOverloads constructor(context: Context, attrs: Attri
         return PagedAdapterBuilder(this)
 }
 
+    fun getPagedManager() = pagedManager
 }

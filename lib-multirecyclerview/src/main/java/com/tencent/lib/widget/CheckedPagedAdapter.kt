@@ -10,15 +10,15 @@ import java.util.*
  * 说明：
 
  */
- internal class CheckedPaging3Adapter<T : Checkable>(diffCallback: DiffUtil.ItemCallback<T>) : MultiPaging3Adapter<T>(diffCallback) {
-    var onCompletedCheckedCallback: OnCompletedCheckedCallback<T>? = null
+ internal class CheckedPagedAdapter<T : Checkable>(diffCallback: DiffUtil.ItemCallback<T>) : MultiPagingAdapter<T>(diffCallback) {
+    var onCompletedCheckedCallback: OnCompletedCheckItemCallback<T>? = null
 
     init {
         delegateAdapter = object : CheckedDelegateAdapter<T>(this) {
-            override fun complete(callback: OnCompletedCheckedCallback<T>?) {
+            override fun complete(callback: OnCompletedCheckItemCallback<T>?) {
                 /*筛选出被选中的Item*/
                 val checkedItem = ArrayList<T>()
-                this@CheckedPaging3Adapter.snapshot().items.forEach {
+                this@CheckedPagedAdapter.snapshot().items.forEach {
                     if (it.isChecked) {
                         checkedItem.add(it)
                     }
@@ -27,7 +27,7 @@ import java.util.*
             }
 
             override fun getItem(position: Int): T? {
-                return this@CheckedPaging3Adapter.getItem(position)
+                return this@CheckedPagedAdapter.getItem(position)
             }
 
         }

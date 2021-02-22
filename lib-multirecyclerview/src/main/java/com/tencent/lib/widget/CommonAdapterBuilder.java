@@ -28,7 +28,7 @@ public class CommonAdapterBuilder extends AdapterBuilder<CommonAdapterBuilder> {
         if (checkable) {
             adapter = new CheckedAdapter<>();
             CheckedAdapter checkedAdapter = ((CheckedAdapter) adapter);
-            checkedAdapter.setOnCompletedCheckedCallback(onCompletedCheckedCallback);
+            checkedAdapter.setOnCompletedCheckItemCallback(onCompletedCheckItemCallback);
             checkedAdapter.setSingleSelection(isSingleSelection);
             checkedAdapter.checkable(checkable);
 

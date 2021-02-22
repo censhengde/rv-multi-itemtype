@@ -42,10 +42,10 @@ public interface ItemType<T> {
     /**
      * 初始化Item子View点击事件监听器
      */
-    void onInitItemSubViewListener(MultiViewHolder holder);
+    void onInitItemSubViewListener(@NonNull MultiViewHolder holder);
 
     /**
      * 条目点击事件回调
      */
-    void onClickItemView(MultiViewHolder holder, @NonNull T data, int position);
+    void onClickItemView(@NonNull MultiViewHolder holder, @NonNull T data, int position);
 }

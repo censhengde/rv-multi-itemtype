@@ -9,6 +9,7 @@ import java.util.List;
  * <p>
  * 说明：
  */
+@Deprecated
 public interface IBuilder<T> {
   void  setDatas(@NonNull List<T> datas);
 

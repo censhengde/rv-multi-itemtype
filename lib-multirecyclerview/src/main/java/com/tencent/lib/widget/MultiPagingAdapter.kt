@@ -3,6 +3,7 @@ package com.tencent.lib.widget
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import com.tencent.lib.widget.paged.PagedManager
 
 /**
 
@@ -11,12 +12,12 @@ import androidx.recyclerview.widget.DiffUtil
  * 说明：
 
  */
- internal open class MultiPaging3Adapter<T:Any >(diffCallback: DiffUtil.ItemCallback<T>) : PagingDataAdapter<T, MultiViewHolder>(diffCallback) {
+internal open class MultiPagingAdapter<T : Any>(diffCallback: DiffUtil.ItemCallback<T>) : PagingDataAdapter<T, MultiViewHolder>(diffCallback), PagedManager {
     internal var delegateAdapter: DelegateAdapter<T>
     init {
         this.delegateAdapter = object :DelegateAdapter<T>(){
             override fun getItem(position: Int): T? {
-            return this@MultiPaging3Adapter.getItem(position)
+                return this@MultiPagingAdapter.getItem(position)
             }
 
         }
@@ -43,4 +44,15 @@ import androidx.recyclerview.widget.DiffUtil
     fun setItemType(type: ItemType<T>) {
         delegateAdapter.setItemType(type)
     }
+
+    override fun loadMore() {
+
+    }
+
+    override fun refreshAll() {
+        super.refresh()
+    }
+
+    
+
 }

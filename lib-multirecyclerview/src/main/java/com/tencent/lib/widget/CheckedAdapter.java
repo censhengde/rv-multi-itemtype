@@ -1,5 +1,6 @@
 package com.tencent.lib.widget;
 
+import android.os.Bundle;
 import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,15 +10,16 @@ import java.util.List;
  *
  * 说明：
  */
-class CheckedAdapter<T extends Checkable> extends MultiAdapter<T> {
+class CheckedAdapter<T extends Checkable> extends MultiAdapter<T> implements CheckManager {
 
-    private OnCompletedCheckedCallback<T> onCompletedCheckedCallback;
+    private OnCompletedCheckItemCallback<T> onCompletedCheckItemCallback;
 
     CheckedAdapter() {
         delegateAdapter = new CheckedDelegateAdapter<T>(this) {
             @Override
-            public void complete(OnCompletedCheckedCallback<T> callback) {
-                List<T> checked = new ArrayList<>();
+            public void complete(OnCompletedCheckItemCallback<T> callback) {
+                if (callback != null) {
+               final List<T> checked = new ArrayList<>();
                 //筛选出被选中的Item
                 if (datas != null && !datas.isEmpty()) {
                     for (T data : datas) {
@@ -26,7 +28,6 @@ class CheckedAdapter<T extends Checkable> extends MultiAdapter<T> {
                         }
                     }
                 }
-                if (callback != null) {
                     callback.onCompletedChecked(checked);
                 }
             }
@@ -39,7 +40,8 @@ class CheckedAdapter<T extends Checkable> extends MultiAdapter<T> {
         };
     }
 
-    public void cancelAll() {
+    @Override
+    public void cancelCheckAll() {
         if (datas != null && !datas.isEmpty()) {
             for (T data : datas) {
                 data.setChecked(false);
@@ -48,6 +50,7 @@ class CheckedAdapter<T extends Checkable> extends MultiAdapter<T> {
         }
     }
 
+    @Override
     public void checkAll() {
         if (datas != null && !datas.isEmpty()) {
             for (T data : datas) {
@@ -62,16 +65,28 @@ class CheckedAdapter<T extends Checkable> extends MultiAdapter<T> {
         ((CheckedDelegateAdapter) delegateAdapter).setSingleSelection(isSingleSelection);
     }
 
-    void setOnCompletedCheckedCallback(OnCompletedCheckedCallback<T> callback) {
-        this.onCompletedCheckedCallback = callback;
+    void setOnCompletedCheckItemCallback(OnCompletedCheckItemCallback<T> callback) {
+        this.onCompletedCheckItemCallback = callback;
     }
 
     public void checkable(boolean checkable) {
         ((CheckedDelegateAdapter) delegateAdapter).checkable = checkable;
     }
-    public void complete() {
-        if (onCompletedCheckedCallback != null) {
-            ((CheckedDelegateAdapter<T>) delegateAdapter).complete(onCompletedCheckedCallback);
+
+    public void completeCheck() {
+        if (onCompletedCheckItemCallback != null) {
+            ((CheckedDelegateAdapter<T>) delegateAdapter).complete(onCompletedCheckItemCallback);
         }
+    }
+
+
+    @Override
+    public void saveCheckedItem(Bundle out) {
+
+    }
+
+    @Override
+    public void restoreCheckedItem(Bundle in) {
+
     }
 }

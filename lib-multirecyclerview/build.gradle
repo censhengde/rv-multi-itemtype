@@ -46,4 +46,5 @@ dependencies {
 
 //    implementation "androidx.paging:paging-runtime:2.1.2"
     api "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
+   implementation 'androidx.recyclerview:recyclerview-selection:1.1.0'
 }

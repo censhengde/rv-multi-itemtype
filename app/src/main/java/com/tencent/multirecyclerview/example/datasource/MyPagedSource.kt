@@ -2,8 +2,8 @@ package com.tencent.multirecyclerview.example.datasource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.tencent.lib.http.HttpClient
 import com.tencent.multirecyclerview.example.bean.ItemBean
-import java.lang.IllegalStateException
 
 /**
 
@@ -12,10 +12,12 @@ import java.lang.IllegalStateException
  * 说明：
 
  */
-class ExamplePagingSource: PagingSource<Int, ItemBean>() {
+class MyPagedSource : PagingSource<Int, ItemBean>() {
+    val url = "api/v1.6.0/HomePage/getHomePageData"
+
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ItemBean> {
         val list= listOf<ItemBean>()
-
+        val result=HttpClient.get(url).execute()
         LoadResult.Error<Int,ItemBean>(IllegalStateException("  "))
 
         return LoadResult.Page(list,null,2);
