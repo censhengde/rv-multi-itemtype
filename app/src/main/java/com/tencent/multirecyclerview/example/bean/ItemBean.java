@@ -1,6 +1,6 @@
 package com.tencent.multirecyclerview.example.bean;
 
-import com.tencent.lib.multi.SimpleCheckable;
+import com.tencent.lib.multi.core.SimpleCheckable;
 
 /**
  * Author：岑胜德 on 2021/1/6 18:05

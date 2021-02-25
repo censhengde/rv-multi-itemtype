@@ -1,4 +1,4 @@
-package com.tencent.lib.multi
+package com.tencent.lib.multi.paged
 
 import android.os.Bundle
 import android.view.ViewGroup
@@ -6,7 +6,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.*
 import androidx.recyclerview.widget.DiffUtil
-import com.tencent.lib.multi.paged.PagingManager
+import com.tencent.lib.multi.core.OnCompletedCheckItemCallback
+import com.tencent.lib.multi.core.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -19,11 +20,11 @@ import java.util.*
  * 说明：
 
  */
- open class MultiPagingAdapter<T : Any>(diffCallback: DiffUtil.ItemCallback<T>) : PagingDataAdapter<T, MultiViewHolder>(diffCallback), PagingManager ,CheckManager{
+ open class MultiPagingAdapter<T : Any>(diffCallback: DiffUtil.ItemCallback<T>) : PagingDataAdapter<T, MultiViewHolder>(diffCallback), PagingManager , CheckManager, ItemManager<T> {
     internal var delegateAdapter: DelegateAdapter<T>
     internal var onCompletedCheckedCallback: OnCompletedCheckItemCallback<T>? = null
     init {
-        this.delegateAdapter = object :DelegateAdapter<T>(this){
+        this.delegateAdapter = object : DelegateAdapter<T>(this){
             override fun getItem(position: Int): T? {
                 return this@MultiPagingAdapter.getItem(position)
             }
@@ -161,5 +162,16 @@ class Builder(val rv: PagingRecyclerView): AdapterBuilder<Builder>() {
     }
 
 }
+
+    /*有待开发*/
+    override fun removeItem(position: Int) {
+
+    }
+
+    override fun addItem(position: Int, data: T) {
+    }
+
+    override fun addItem(data: T) {
+    }
 
 }

@@ -1,5 +1,5 @@
 @file:JvmName("ParamUtils")
-package com.tencent.lib.multi
+package com.tencent.lib.multi.core
 
 import java.lang.IllegalArgumentException
 

@@ -7,9 +7,9 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.tencent.lib.multi.MultiViewHolder
-import com.tencent.lib.multi.OnCompletedCheckItemCallback
-import com.tencent.lib.multi.SimpleItemType
+import com.tencent.lib.multi.core.MultiViewHolder
+import com.tencent.lib.multi.core.OnCompletedCheckItemCallback
+import com.tencent.lib.multi.core.SimpleItemType
 import com.tencent.multirecyclerview.R
 import com.tencent.multirecyclerview.example.bean.ItemBean
 import com.tencent.multirecyclerview.example.viewmodel.SelectionViewModel

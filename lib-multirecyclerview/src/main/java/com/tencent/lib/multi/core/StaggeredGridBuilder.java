@@ -1,9 +1,11 @@
-package com.tencent.lib.multi;
+package com.tencent.lib.multi.core;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import com.tencent.lib.multi.CommonItemSpace;
+import com.tencent.lib.multi.StaggeredGridItemDecoration;
 
 /**
  * Author：岑胜德 on 2021/1/6 16:30

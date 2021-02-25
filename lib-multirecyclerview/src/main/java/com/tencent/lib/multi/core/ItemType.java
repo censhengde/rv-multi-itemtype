@@ -1,7 +1,8 @@
-package com.tencent.lib.multi;
+package com.tencent.lib.multi.core;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
+import com.tencent.lib.multi.core.MultiViewHolder;
 
 /**
  * Author：岑胜德 on 2021/1/6 14:41

@@ -1,10 +1,11 @@
-package com.tencent.lib.multi;
+package com.tencent.lib.multi.core;
 
 import android.content.Context;
 import android.util.AttributeSet;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.tencent.lib.multi.GridItemDecoration;
 
 /**
  * Author：岑胜德 on 2021/1/6 16:27

@@ -1,11 +1,11 @@
-package com.tencent.lib.multi
+package com.tencent.lib.multi.paged
 
 import android.content.Context
 import android.util.AttributeSet
-import androidx.paging.DataSource
 import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
-import com.tencent.lib.multi.paged.PagingManager
+import com.tencent.lib.multi.R
+import com.tencent.lib.multi.core.BaseRecyclerView
 
 /**
 
@@ -34,5 +34,12 @@ open class PagingRecyclerView @JvmOverloads constructor(context: Context, attrs:
     fun getPagedManager() = pagingManager
     override fun adapterBuilder(): MultiPagingAdapter.Builder {
         return MultiPagingAdapter.Builder(this)
+    }
+
+    override fun setAdapter(adapter: Adapter<*>?) {
+        if (adapter is PagingManager){
+            pagingManager=adapter
+        }
+        super.setAdapter(adapter)
     }
 }

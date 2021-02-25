@@ -9,7 +9,7 @@ import com.tencent.multirecyclerview.example.bean.ItemBean
 import com.tencent.multirecyclerview.example.itemtype.AItemType
 import com.tencent.multirecyclerview.example.itemtype.BItemType
 import com.tencent.multirecyclerview.example.itemtype.CItemType
-import com.tencent.lib.multi.ItemType
+import com.tencent.lib.multi.core.ItemType
 import kotlinx.android.synthetic.main.activity_example.*
 import java.util.ArrayList
 

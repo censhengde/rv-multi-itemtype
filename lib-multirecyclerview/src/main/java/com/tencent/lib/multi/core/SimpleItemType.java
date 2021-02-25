@@ -1,11 +1,11 @@
-package com.tencent.lib.multi;
+package com.tencent.lib.multi.core;
 
 import androidx.annotation.NonNull;
 
 /**
  * Author：岑胜德 on 2021/2/22 16:23
  *
- * 说明：单样式的 ItemType
+ * 说明：简单的 ItemType 实现
  */
 public abstract class SimpleItemType<T> implements ItemType<T> {
 

@@ -1,4 +1,4 @@
-package com.tencent.lib.multi;
+package com.tencent.lib.multi.core;
 
 import android.content.Context;
 import android.util.SparseArray;

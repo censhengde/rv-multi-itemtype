@@ -1,4 +1,4 @@
-package com.tencent.lib.multi;
+package com.tencent.lib.multi.paged;
 
 /**
  * Author：岑胜德 on 2021/1/29 17:38

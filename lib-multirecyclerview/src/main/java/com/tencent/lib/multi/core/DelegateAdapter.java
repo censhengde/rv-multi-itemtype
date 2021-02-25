@@ -1,4 +1,4 @@
-package com.tencent.lib.multi;
+package com.tencent.lib.multi.core;
 
 import android.util.SparseArray;
 import android.view.ViewGroup;
@@ -14,7 +14,7 @@ import java.util.List;
  *
  * 说明：实现Item多样式的公共逻辑封装。
  */
- abstract class DelegateAdapter<T> {
+public abstract class DelegateAdapter<T> {
 
 
     private static final int SELECTED_NONE = -1;//表示全列表都没有Item被选中
@@ -164,6 +164,7 @@ import java.util.List;
 
         }
     }
+    /*有待开发*/
     final void addItem(int position) {
 
     }

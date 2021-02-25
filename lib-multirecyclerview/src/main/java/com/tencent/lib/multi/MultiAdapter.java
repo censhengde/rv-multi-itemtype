@@ -5,6 +5,15 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
+import com.tencent.lib.multi.core.AdapterBuilder;
+import com.tencent.lib.multi.core.BaseRecyclerView;
+import com.tencent.lib.multi.core.CheckManager;
+import com.tencent.lib.multi.core.Checkable;
+import com.tencent.lib.multi.core.DelegateAdapter;
+import com.tencent.lib.multi.core.ItemManager;
+import com.tencent.lib.multi.core.ItemType;
+import com.tencent.lib.multi.core.MultiViewHolder;
+import com.tencent.lib.multi.core.OnCompletedCheckItemCallback;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,12 +22,12 @@ import java.util.List;
  * <p>
  * 说明：未分页的Adapter
  */
-public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> implements ItemManager<T>,CheckManager {
+public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> implements ItemManager<T>, CheckManager {
 
     private OnCompletedCheckItemCallback<T> onCompletedCheckItemCallback;
     protected List<T> datas;
 
-    protected  DelegateAdapter<T> delegateAdapter;
+    protected DelegateAdapter<T> delegateAdapter;
 
     public MultiAdapter() {
         delegateAdapter = new DelegateAdapter<T>(this) {
@@ -154,7 +163,7 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> imple
 
     }
 
-public static class Builder extends AdapterBuilder<Builder>{
+public static class Builder extends AdapterBuilder<Builder> {
     private List<?> datas;
     private BaseRecyclerView recyclerView;
     private MultiAdapter adapter;

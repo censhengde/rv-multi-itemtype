@@ -1,4 +1,4 @@
-package com.tencent.lib.multi
+package com.tencent.lib.multi.core
 
 import android.content.Context
 import android.util.AttributeSet
@@ -12,9 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 
  */
  abstract class BaseRecyclerView<T>(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : RecyclerView(context, attrs, defStyleAttr) {
-    var checkable = false//是否开启列表单选、多选功能
-
-
+    private lateinit var itemManager: ItemManager<*>
+    private lateinit var checkManager: CheckManager
     fun linearBuilder(): LinearBuilder {
         return LinearBuilder(this)
     }
@@ -28,4 +27,17 @@ import androidx.recyclerview.widget.RecyclerView
     }
 
     abstract fun adapterBuilder():T
+
+    fun getItemManager() = itemManager
+
+    fun getCheckManager() = checkManager
+    override fun setAdapter(adapter: Adapter<*>?) {
+        if (adapter is ItemManager<*>) {
+            itemManager = adapter
+        }
+        if (adapter is CheckManager) {
+            checkManager = adapter
+        }
+        super.setAdapter(adapter)
+    }
 }
