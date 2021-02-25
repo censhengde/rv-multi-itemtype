@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class LinearBuilder extends LayoutBuilder<LinearBuilder> {
 
 
-    LinearBuilder(MultiRecyclerView rv) {
+    LinearBuilder(BaseRecyclerView rv) {
         super(rv);
     }
 

@@ -10,22 +10,11 @@ import android.util.AttributeSet
  * 说明：
  */
 open class MultiRecyclerView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
-        BaseRecyclerView(context, attrs, defStyleAttr) {
+        BaseRecyclerView<MultiAdapter.Builder>(context, attrs, defStyleAttr) {
     private lateinit var itemManager: ItemManager<*>
     private lateinit var checkManager: CheckManager
-    fun linearBuilder(): LinearBuilder {
-        return LinearBuilder(this)
-    }
 
-    fun gridBuilder(span: Int): GridBuilder {
-        return GridBuilder(this, span)
-    }
-
-    fun staggeredGridBuilder(gapStrategy: Int): StaggeredGridBuilder {
-        return StaggeredGridBuilder(this, gapStrategy)
-    }
-
-   open fun adapterBuilder() = super.commonAdapterBuilder()
+   override fun adapterBuilder() = MultiAdapter.Builder(this)
     fun getItemManager() = itemManager
 
     fun getCheckManager() = checkManager

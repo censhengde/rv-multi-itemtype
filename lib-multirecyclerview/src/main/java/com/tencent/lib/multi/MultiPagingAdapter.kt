@@ -2,9 +2,14 @@ package com.tencent.lib.multi
 
 import android.os.Bundle
 import android.view.ViewGroup
-import androidx.paging.PagingDataAdapter
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.*
 import androidx.recyclerview.widget.DiffUtil
 import com.tencent.lib.multi.paged.PagingManager
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.util.*
 
 /**
@@ -102,6 +107,59 @@ import java.util.*
         delegateAdapter.setSingleSelection(isSingleSelection)
     }
 
+class Builder(val rv: PagingRecyclerView): AdapterBuilder<Builder>() {
+    private var diffItemCallback: DiffUtil.ItemCallback<*>? = null
+    private lateinit var dataSource: PagingSource<*, *>
+    private var pagingConfig: PagingConfig? = null
+    private lateinit var pagedAdapter: MultiPagingAdapter<*>
 
+
+    fun setDiffCallback(callback: DiffUtil.ItemCallback<out Any>): Builder {
+        diffItemCallback = callback
+        return this
+    }
+
+    fun setDataSource(dataSource: PagingSource<*, *>): Builder {
+        this.dataSource = dataSource
+        return this
+    }
+
+    fun setPagingConfig(pagingConfig: PagingConfig): Builder {
+        this.pagingConfig = pagingConfig
+        return this
+    }
+
+    fun build(owner: LifecycleOwner) {
+        if (pagingConfig == null) {
+            pagingConfig = rv.pagingConfig
+        }
+
+        var flow: Flow<*>? = null
+        pagingConfig?.let {
+            flow = Pager(it) {
+                dataSource as PagingSource<Any,Any>
+            }.flow.cachedIn(owner.lifecycleScope)
+        }
+        diffItemCallback?.let {
+            pagedAdapter = MultiPagingAdapter(it)
+            itemType?.let {
+                pagedAdapter.setItemType(it as Nothing)
+            }
+            itemTypes?.let {
+                pagedAdapter.setItemTypes(it as Nothing)
+            }
+            pagedAdapter.checkable(this.checkable)
+            pagedAdapter.setOnCompletedCheckItemCallback(this.onCompletedCheckItemCallback as Nothing)
+        }
+        //启动协程
+        owner.lifecycleScope.launch {
+            flow?.collectLatest { data ->
+                pagedAdapter.submitData(data as Nothing)
+            }
+
+        }
+    }
+
+}
 
 }

@@ -5,7 +5,7 @@
         <attr name="diffItemCallback" format="string"/>
         <attr name="dataSource" format="string"/>
     </declare-styleable>
-    <declare-styleable name="PagedRecyclerView">
+    <declare-styleable name="PagingRecyclerView">
         <attr name="pageSize" format="integer" />
         <attr name="prefetchDistance" format="integer" />
         <attr name="enablePlaceholders" format="boolean" />

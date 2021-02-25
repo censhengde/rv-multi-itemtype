@@ -26,7 +26,7 @@ class PagedActivity : AppCompatActivity() {
                 .build()
                 /*分页*/
         rv_paged
-                .pagedBuilder()
+                .adapterBuilder()
                 .setDiffCallback(object : DiffUtil.ItemCallback<ItemBean>() {
                     override fun areItemsTheSame(oldItem: ItemBean, newItem: ItemBean): Boolean {
                        return oldItem.equals(newItem)

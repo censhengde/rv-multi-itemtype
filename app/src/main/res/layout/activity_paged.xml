@@ -15,7 +15,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-        <com.tencent.lib.multi.PagedRecyclerView
+        <com.tencent.lib.multi.PagingRecyclerView
                 android:id="@+id/rv_paged"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

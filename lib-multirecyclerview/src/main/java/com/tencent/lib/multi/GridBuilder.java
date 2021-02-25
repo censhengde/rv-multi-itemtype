@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 public class GridBuilder extends LayoutBuilder<GridBuilder> {
     private final int spanCount;
-    GridBuilder(MultiRecyclerView rv, int spanCount) {
+    GridBuilder(BaseRecyclerView rv, int spanCount) {
         super(rv);
         this.spanCount = spanCount;
 

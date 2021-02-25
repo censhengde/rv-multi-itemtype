@@ -11,8 +11,21 @@ import androidx.recyclerview.widget.RecyclerView
  * 说明：
 
  */
-abstract class BaseRecyclerView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : RecyclerView(context, attrs, defStyleAttr) {
+ abstract class BaseRecyclerView<T>(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : RecyclerView(context, attrs, defStyleAttr) {
     var checkable = false//是否开启列表单选、多选功能
-    protected fun commonAdapterBuilder() = /*实现单选、复选的Builder*/CommonAdapterBuilder(this);
 
+
+    fun linearBuilder(): LinearBuilder {
+        return LinearBuilder(this)
+    }
+
+    fun gridBuilder(span: Int): GridBuilder {
+        return GridBuilder(this, span)
+    }
+
+    fun staggeredGridBuilder(gapStrategy: Int): StaggeredGridBuilder {
+        return StaggeredGridBuilder(this, gapStrategy)
+    }
+
+    abstract fun adapterBuilder():T
 }

@@ -12,7 +12,7 @@ public abstract class LayoutBuilder<T extends LayoutBuilder> {
 
     protected RecyclerView recyclerView;
     protected LayoutManager layoutManager;
-    LayoutBuilder(MultiRecyclerView rv) {
+    LayoutBuilder(BaseRecyclerView rv) {
         recyclerView = rv;
     }
 

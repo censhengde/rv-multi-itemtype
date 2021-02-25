@@ -17,7 +17,7 @@ public class StaggeredGridBuilder extends LayoutBuilder<StaggeredGridBuilder> {
     @RecyclerView.Orientation
     private int orientation = RecyclerView.VERTICAL;//默认垂直
 
-    StaggeredGridBuilder(MultiRecyclerView rv, int gapStrategy) {
+    StaggeredGridBuilder(BaseRecyclerView rv, int gapStrategy) {
         super(rv);
         this.gapStrategy=gapStrategy;
     }
