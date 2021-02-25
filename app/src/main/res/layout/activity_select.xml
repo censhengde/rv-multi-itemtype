@@ -5,7 +5,7 @@
         android:layout_height="match_parent"
         tools:context="com.tencent.multirecyclerview.example.ui.SelectActivity">
 
-    <com.tencent.lib.widget.MultiRecyclerView
+    <com.tencent.lib.multi.MultiRecyclerView
             android:id="@+id/rv_selectable"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

@@ -7,9 +7,9 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.tencent.lib.widget.MultiViewHolder
-import com.tencent.lib.widget.OnCompletedCheckItemCallback
-import com.tencent.lib.widget.SimpleItemType
+import com.tencent.lib.multi.MultiViewHolder
+import com.tencent.lib.multi.OnCompletedCheckItemCallback
+import com.tencent.lib.multi.SimpleItemType
 import com.tencent.multirecyclerview.R
 import com.tencent.multirecyclerview.example.bean.ItemBean
 import com.tencent.multirecyclerview.example.viewmodel.SelectionViewModel
@@ -73,7 +73,7 @@ class SelectActivity : AppCompatActivity(), OnCompletedCheckItemCallback<ItemBea
      * 点击 完成
      */
     fun onClickCompleted(view: View) {
-         rv_selectable.getCheckManager().completeCheck()
+         rv_selectable.getCheckManager().complete()
     }
 
     /**
@@ -85,7 +85,7 @@ class SelectActivity : AppCompatActivity(), OnCompletedCheckItemCallback<ItemBea
             rv_selectable.getCheckManager().checkAll()
             btn.text="取消全选"
         }else{
-            rv_selectable.getCheckManager().cancelCheckAll()
+            rv_selectable.getCheckManager().cancelAll()
             btn.text="全选"
         }
     }

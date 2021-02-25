@@ -14,6 +14,15 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += [
+                        "room.schemaLocation":"$projectDir/schemas".toString(),
+                        "room.incremental":"true",
+                        "room.expandProjection":"true"]
+            }
+        }
     }
 
     buildTypes {
@@ -52,6 +61,10 @@ dependencies {
     implementation 'com.scwang.smart:refresh-footer-classics:2.0.3'    //经典加载
 
     implementation(name: 'lib-http-release', ext: 'aar')
+
+    def room_version = "2.2.6"
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
 }
 repositories {
     maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }

@@ -1,9 +1,6 @@
 package com.tencent.multirecyclerview.example.bean;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-import com.tencent.lib.widget.Checkable;
-import com.tencent.lib.widget.SimpleCheckable;
+import com.tencent.lib.multi.SimpleCheckable;
 
 /**
  * Author：岑胜德 on 2021/1/6 18:05

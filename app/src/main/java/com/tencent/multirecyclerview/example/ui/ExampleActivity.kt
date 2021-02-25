@@ -4,14 +4,12 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.tencent.multirecyclerview.R
 import com.tencent.multirecyclerview.example.bean.ItemBean
 import com.tencent.multirecyclerview.example.itemtype.AItemType
 import com.tencent.multirecyclerview.example.itemtype.BItemType
 import com.tencent.multirecyclerview.example.itemtype.CItemType
-import com.tencent.lib.widget.ItemType
+import com.tencent.lib.multi.ItemType
 import kotlinx.android.synthetic.main.activity_example.*
 import java.util.ArrayList
 
@@ -106,7 +104,7 @@ class ExampleActivity : AppCompatActivity() {
      * 网格
      */
     fun grid(){
-        pagedRecyclerView
+        rv_paged
 //                .gridBuilder(3)//获取实现网格效果的Builder
 //                .buildLayoutManager(this)
 //                .setItemTypes(types)//设置类型

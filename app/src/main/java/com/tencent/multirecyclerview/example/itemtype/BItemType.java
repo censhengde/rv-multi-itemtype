@@ -7,8 +7,8 @@ import androidx.annotation.NonNull;
 
 import com.tencent.multirecyclerview.R;
 import com.tencent.multirecyclerview.example.bean.ItemBean;
-import com.tencent.lib.widget.ItemType;
-import com.tencent.lib.widget.MultiViewHolder;
+import com.tencent.lib.multi.ItemType;
+import com.tencent.lib.multi.MultiViewHolder;
 
 /**
  * Author：岑胜德 on 2021/1/6 18:04

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DiffUtil
 import com.tencent.multirecyclerview.R
 import com.tencent.multirecyclerview.example.bean.ItemBean
+import com.tencent.multirecyclerview.example.datasource.MyPagedSource
 import kotlinx.android.synthetic.main.activity_paged.*
 
 class PagedActivity : AppCompatActivity() {
@@ -18,14 +19,13 @@ class PagedActivity : AppCompatActivity() {
     }
 
     private fun initRecyclerView() {
-        /*链式调度有顺序讲究，原则是先风格、后分页*/
-        pagedRecyclerView
+        rv_paged
                 /*风格*/
                 .linearBuilder()
                 .setItemSpace(5, 5, 5, 5)
                 .build()
                 /*分页*/
-        pagedRecyclerView
+        rv_paged
                 .pagedBuilder()
                 .setDiffCallback(object : DiffUtil.ItemCallback<ItemBean>() {
                     override fun areItemsTheSame(oldItem: ItemBean, newItem: ItemBean): Boolean {
@@ -37,6 +37,7 @@ class PagedActivity : AppCompatActivity() {
                     }
 
                 })
+                .setDataSource(MyPagedSource())
                 .build(this)
         /*删除Item事件*/
 
@@ -46,33 +47,11 @@ class PagedActivity : AppCompatActivity() {
     private fun initRefreshLayout() {
         /*下拉刷新*/
         refresh_layout.setOnRefreshListener {
-//           pagedRecyclerView.getItemManager().refreshAll(object :OnRefreshListener{
-//               override fun onSuccess() {
-//
-//               }
-//
-//               override fun onFailure() {
-//
-//               }
-//
-//           })
+            rv_paged.getPagedManager().refresh()
         }
         /*上拉加载更多*/
         refresh_layout.setOnLoadMoreListener {
-//            pagedRecyclerView.getItemManager().loadMore(object :OnLoadMoreListener{
-//                override fun onSuccess() {
-//
-//                }
-//
-//                override fun onFailure() {
-//
-//                }
-//
-//                override fun onNomore() {
-//
-//                }
-//
-//            })
+            rv_paged.getPagedManager().retry()
         }
     }
 }
