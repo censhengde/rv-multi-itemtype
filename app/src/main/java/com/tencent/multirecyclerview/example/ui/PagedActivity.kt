@@ -9,12 +9,14 @@ import com.tencent.multirecyclerview.example.datasource.MyPagedSource
 import kotlinx.android.synthetic.main.activity_paged.*
 
 class PagedActivity : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
+
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_paged)
         initRecyclerView()
         initRefreshLayout()
+
 
     }
 

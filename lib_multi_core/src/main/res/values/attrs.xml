@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="MultiRecyclerView">
+        <attr name="isPaged" format="boolean"/>
+        <attr name="diffItemCallback" format="string"/>
+        <attr name="dataSource" format="string"/>
+    </declare-styleable>
+    <declare-styleable name="PagingRecyclerView">
+        <attr name="pageSize" format="integer" />
+        <attr name="prefetchDistance" format="integer" />
+        <attr name="enablePlaceholders" format="boolean" />
+        <attr name="initialLoadSize" format="integer" />
+        <attr name="maxSize" format="integer" />
+        <attr name="jumpThreshold" format="integer" />
+
+    </declare-styleable>
+    <declare-styleable name="BaseRecyclerView">
+        <attr name="checkable" format="boolean"/>
+        <attr name="singleSelection" format="boolean"/>
+    </declare-styleable>
+</resources>

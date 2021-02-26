@@ -24,7 +24,7 @@ class SelectActivity : AppCompatActivity(), OnCompletedCheckItemCallback<ItemBea
         viewmodle=ViewModelProvider(this).get(SelectionViewModel::class.java)
 
         rv_selectable.linearBuilder().setItemSpace(10,10,10,10).build()
-        rv_selectable.adapterBuilder()
+        rv_selectable.newAdapterBuilder()
 //                .checkable(true)/*开启选择功能,不调用则默认 false*/
 //                .setSingleSelection(false)/*是否单选模式，不调用则默认 false*/
 //                .setOnCompletedCheckItemCallback(this)/*选择完成回调*/

@@ -5,9 +5,5 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".example.ui.ExampleActivity">
-    <com.tencent.lib.multi.MultiRecyclerView
-        android:id="@+id/rv_paged"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

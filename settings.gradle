@@ -1,3 +1,4 @@
 rootProject.name='MultiRecyclerView'
 include ':app'
-include ':lib-multirecyclerview'
+include ':lib_multi_core'
+include ':lib_paging'
