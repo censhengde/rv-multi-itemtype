@@ -39,4 +39,8 @@ public final class MultiViewHolder extends RecyclerView.ViewHolder {
         }
         return v;
     }
+
+    public void onViewRecycled(){
+        id_view_map.clear();
+    }
 }

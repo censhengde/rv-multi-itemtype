@@ -20,13 +20,20 @@ public abstract class DelegateAdapter<T> {
     private static final int SELECTED_NONE = -1;//表示全列表都没有Item被选中
     private int mSelectedPosition = SELECTED_NONE;
     private OnCheckedItemCallback<T> onCheckedItemCallback;
-    private boolean isSingleSelection = false;
+    private boolean mSingleSelection = false;
     private RecyclerView.Adapter realAdapter;
 
     protected final SparseArray<ItemType<T>> position_itemType_map = new SparseArray<>();
     protected final SparseArray<ItemType<T>> viewType_itemType_map = new SparseArray<>(8);
     protected List<ItemType<T>> types;
     public boolean checkable = false;//是否开启列表单选、多选功能
+
+
+    public void setCheckedItemCount(int checkedItemCount) {
+        mCheckedItemCount = checkedItemCount;
+    }
+
+    private int mCheckedItemCount = 0;//当前列表被已被选中的Item数目
     public DelegateAdapter(Adapter realAdapter) {
         this.realAdapter = realAdapter;
     }
@@ -102,8 +109,8 @@ public abstract class DelegateAdapter<T> {
     }
 
     public final void removeItem(int position) {
-        position_itemType_map.remove(position);//移除该位置的ItemType
-        getItemViewType(position);//重新匹配该位置的ItemType
+            position_itemType_map.remove(position);//移除该位置的ItemType
+            getItemViewType(position);//重新匹配该位置的ItemType
     }
     /**
      * 列表选择算法
@@ -111,7 +118,7 @@ public abstract class DelegateAdapter<T> {
      * @param position
      * @return
      */
-    public void checkItem(int position) {
+    public final void checkItem(int position) {
 
         final T data = getItem(position);
         if (data == null) {
@@ -122,11 +129,12 @@ public abstract class DelegateAdapter<T> {
         }
         final   Checkable checkableData= (Checkable)data;
         //========单选=================
-        if (isSingleSelection) {
+        if (mSingleSelection) {
             //列表中已有被选中Item，且当前被选中的Item==上次被选中的,则将Item重置为未选中状态,此时全列表0个item被选中。
             if (position == mSelectedPosition) {
                 checkableData.setChecked(false);
                 mSelectedPosition = SELECTED_NONE;
+                mCheckedItemCount--;
                 realAdapter.notifyItemChanged(position);
             }
             //列表中已有被选中Item，但当前被选中Item！=上次被选中Item,则将上次的重置为未选中状态,再将当前Item置为被选中状态。
@@ -145,6 +153,7 @@ public abstract class DelegateAdapter<T> {
             else if (mSelectedPosition == SELECTED_NONE) {
                 checkableData.setChecked(true);
                 mSelectedPosition = position;
+                mCheckedItemCount++;
                 realAdapter.notifyItemChanged(position);
             }
             //将选择的Item信息回调出去
@@ -156,13 +165,19 @@ public abstract class DelegateAdapter<T> {
             //如果当前item已经被选中，则取消被选中。
             if (checkableData.isChecked()) {
                 checkableData.setChecked(false);
+                mCheckedItemCount--;
                 realAdapter.notifyItemChanged(position);
             } else {//否则被选中
                 checkableData.setChecked(true);
+                mCheckedItemCount++;
                 realAdapter.notifyItemChanged(position);
             }
 
         }
+    }
+
+    public int getCheckedItemCount() {
+        return mCheckedItemCount;
     }
     /*有待开发*/
     final void addItem(int position) {
@@ -175,7 +190,11 @@ public abstract class DelegateAdapter<T> {
     }
 
     public void setSingleSelection(boolean singleSelection) {
-        isSingleSelection = singleSelection;
+        mSingleSelection = singleSelection;
+    }
+
+    public boolean isSingleSelection() {
+        return mSingleSelection;
     }
     public abstract void complete(OnCompletedCheckItemCallback<T> callback);
 }

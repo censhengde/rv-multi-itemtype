@@ -35,13 +35,14 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> imple
         @Nullable
         @Override
         public T getItem(int position) {
-            return datas.get(position);
+            return datas == null ? null : datas.get(position);
         }
 
             @Override
             public void complete(OnCompletedCheckItemCallback<T> callback) {
-                if (callback != null) {
-                    final List<T> checked = new ArrayList<>();
+                final int count = this.getCheckedItemCount();
+                if (callback != null && count > 0) {//性能优化的一个点：当前列表没有被选中的Item就没有必要再遍历数据源
+                    final List<T> checked = new ArrayList<>(count);
                     //筛选出被选中的Item
                     if (datas != null && !datas.isEmpty()) {
                         for (T data : datas) {
@@ -74,12 +75,18 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> imple
 
     @Override
     public int getItemCount() {
-        return datas.size();
+
+        return datas == null ? 0 : datas.size();
     }
 
 
     public void setDatas(@NonNull List<T> datas) {
         this.datas =  datas;
+    }
+
+    public void setAndUpdateDatas(@NonNull List<T> datas) {
+        this.datas = datas;
+        notifyDataSetChanged();
     }
 
     public void setItemTypes(@NonNull List<ItemType<T>> types) {
@@ -93,6 +100,14 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> imple
     @Override
     public void removeItem(int position) {
         if (datas!=null){
+            /*如果删除的Item是被选中的Item，则数量要减一*/
+            final T item = datas.get(position);
+            if (item instanceof Checkable) {
+                final Checkable checkable = (Checkable) item;
+                if (checkable.isChecked()) {
+                    delegateAdapter.setCheckedItemCount(delegateAdapter.getCheckedItemCount() - 1);
+                }
+            }
             datas.remove(position);
             delegateAdapter.removeItem(position);
             notifyItemRemoved(position);
@@ -116,21 +131,27 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> imple
 
     @Override
     public void cancelAll() {
-        if (datas != null && !datas.isEmpty()) {
-            for (T data : datas) {
-                ((Checkable)data).setChecked(false);
+        /*复选模式下才进行全选*/
+        if (!delegateAdapter.isSingleSelection()) {
+            if (datas != null && !datas.isEmpty()) {
+                for (T data : datas) {
+                    ((Checkable) data).setChecked(false);
+                }
+                notifyDataSetChanged();
             }
-            notifyDataSetChanged();
         }
     }
 
     @Override
     public void checkAll() {
-        if (datas != null && !datas.isEmpty()) {
-            for (T data : datas) {
-                ((Checkable)data).setChecked(true);
+        /*复选模式下才进行全选*/
+        if (!delegateAdapter.isSingleSelection()) {
+            if (datas != null && !datas.isEmpty()) {
+                for (T data : datas) {
+                    ((Checkable) data).setChecked(true);
+                }
+                notifyDataSetChanged();
             }
-            notifyDataSetChanged();
         }
     }
 
@@ -195,4 +216,9 @@ public static class Builder extends AdapterBuilder<Builder> {
     }
 
 }
+
+    @Override
+    public void onViewRecycled(@NonNull MultiViewHolder holder) {
+        holder.onViewRecycled();
+    }
 }

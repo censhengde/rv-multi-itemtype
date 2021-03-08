@@ -27,7 +27,7 @@ class SelectActivity : AppCompatActivity(), OnCompletedCheckItemCallback<ItemBea
         rv_selectable.newAdapterBuilder()
 //                .checkable(true)/*开启选择功能,不调用则默认 false*/
 //                .setSingleSelection(false)/*是否单选模式，不调用则默认 false*/
-//                .setOnCompletedCheckItemCallback(this)/*选择完成回调*/
+                .setOnCompletedCheckItemCallback(this)/*选择完成回调*/
                 .setItemType(SelectionItemType())/*单样式*/
                 .setDatas(viewmodle.items)/*数据源*/
                 .build()
@@ -64,6 +64,7 @@ class SelectActivity : AppCompatActivity(), OnCompletedCheckItemCallback<ItemBea
     }
 
     override fun onCompletedChecked(datas: MutableList<ItemBean>) {
+            Log.e("===>", "onCompletedChecked")
         datas.forEach {
             Log.e("被选中：", it.text)
         }

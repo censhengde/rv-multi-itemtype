@@ -104,7 +104,7 @@ class ExampleActivity : AppCompatActivity() {
      * 网格
      */
     fun grid(){
-        rv_paged
+        
 //                .gridBuilder(3)//获取实现网格效果的Builder
 //                .buildLayoutManager(this)
 //                .setItemTypes(types)//设置类型

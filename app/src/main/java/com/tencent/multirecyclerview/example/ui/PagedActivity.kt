@@ -28,7 +28,7 @@ class PagedActivity : AppCompatActivity() {
                 .build()
                 /*分页*/
         rv_paged
-                .adapterBuilder()
+                .newAdapterBuilder()
                 .setDiffCallback(object : DiffUtil.ItemCallback<ItemBean>() {
                     override fun areItemsTheSame(oldItem: ItemBean, newItem: ItemBean): Boolean {
                        return oldItem.equals(newItem)
@@ -49,11 +49,11 @@ class PagedActivity : AppCompatActivity() {
     private fun initRefreshLayout() {
         /*下拉刷新*/
         refresh_layout.setOnRefreshListener {
-            rv_paged.getPagedManager().refresh()
+            rv_paged.getPagingManager().refresh()
         }
         /*上拉加载更多*/
         refresh_layout.setOnLoadMoreListener {
-            rv_paged.getPagedManager().retry()
+            rv_paged.getPagingManager().retry()
         }
     }
 }
