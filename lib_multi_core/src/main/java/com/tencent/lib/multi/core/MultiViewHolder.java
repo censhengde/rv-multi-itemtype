@@ -5,7 +5,6 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,15 +16,22 @@ import androidx.recyclerview.widget.RecyclerView;
 public final class MultiViewHolder extends RecyclerView.ViewHolder {
     //由于findViewById频繁调用比较消耗性能，所以要缓存
     private final SparseArray<View> id_view_map;
-
+    boolean isInvalid = false;
     public static @NonNull
     MultiViewHolder create(Context context, ViewGroup parent, int layout){
-     View itemView=   LayoutInflater.from(context).inflate(layout,parent,false);
-     return new MultiViewHolder(itemView);
+        View itemView;
+        if (layout == 0) {
+            itemView = new View(context);
+            return new MultiViewHolder(itemView, true);
+        } else {
+            itemView = LayoutInflater.from(context).inflate(layout, parent, false);
+        }
+        return new MultiViewHolder(itemView, false);
     }
 
-    private MultiViewHolder(@NonNull View itemView) {
+    private MultiViewHolder(@NonNull View itemView, boolean invalid) {
         super(itemView);
+        this.isInvalid = invalid;
         id_view_map=new SparseArray<>(10);
     }
     public <T extends View> T getView(int id){
@@ -39,7 +45,9 @@ public final class MultiViewHolder extends RecyclerView.ViewHolder {
         }
         return v;
     }
-
+    public boolean isInvalid(){
+        return isInvalid;
+    }
     public void onViewRecycled(){
         id_view_map.clear();
     }

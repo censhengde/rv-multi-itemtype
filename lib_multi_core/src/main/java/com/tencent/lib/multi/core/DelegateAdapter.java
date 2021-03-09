@@ -1,6 +1,7 @@
 package com.tencent.lib.multi.core;
 
 import android.util.SparseArray;
+import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,6 +40,9 @@ public abstract class DelegateAdapter<T> {
     }
 
     public int getItemViewType(int position) {
+        if (types==null||types.isEmpty()){
+            return 0;
+        }
         final int typeSize = types.size();
         //单样式
         if (typeSize == 1) {
@@ -47,26 +51,23 @@ public abstract class DelegateAdapter<T> {
             return types.get(0).getViewType();
         }
         //多样式
-        if (typeSize > 1) {
-            //先从缓存获取
-            ItemType<T> itemType = position_itemType_map.get(position);
-            if (itemType == null) {//如果缓存没有
-                T data = getItem(position);
-                if (data == null) {
-                    return 0;
-                }
-                //为当前position的实体对象指定它的ItemType
-                for (ItemType<T> type : types) {
-                    if (type.matchItemType(data, position)) {
-                        itemType = type;
-                        position_itemType_map.put(position, itemType);
-                        viewType_itemType_map.put(itemType.getViewType(), itemType);
-                    }
+        //先从缓存获取
+        ItemType<T> itemType = position_itemType_map.get(position);
+        if (itemType == null) {//如果缓存没有
+            T data = getItem(position);
+            if (data == null) {
+                return 0;
+            }
+            //为当前position的实体对象指定它的ItemType
+            for (ItemType<T> type : types) {
+                if (type.matchItemType(data, position)) {
+                    itemType = type;
+                    position_itemType_map.put(position, itemType);
+                    viewType_itemType_map.put(itemType.getViewType(), itemType);
                 }
             }
-            return itemType == null ? 0 : itemType.getViewType();
         }
-        return 0;
+        return itemType == null ? 0 : itemType.getViewType();
     }
 
     @Nullable
@@ -75,6 +76,9 @@ public abstract class DelegateAdapter<T> {
     @NonNull
     public MultiViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final ItemType<T> type = viewType_itemType_map.get(viewType);
+        if (type==null){
+             return MultiViewHolder.create(parent.getContext(),parent,0);
+        }
         final MultiViewHolder holder = MultiViewHolder
                 .create(parent.getContext(), parent, type.getItemLayoutRes());
         //条目点击
@@ -92,6 +96,9 @@ public abstract class DelegateAdapter<T> {
     }
 
     public void onBindViewHolder(@NonNull MultiViewHolder holder, int position) {
+        if (holder.isInvalid){
+            return;
+        }
         final T data=getItem(position);
         if (data!=null){
         ItemType<T> type = position_itemType_map.get(position);
