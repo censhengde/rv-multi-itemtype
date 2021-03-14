@@ -8,6 +8,11 @@ import androidx.annotation.NonNull;
  * 说明：简单的 ItemType 实现
  */
 public abstract class SimpleItemType<T> implements ItemType<T> {
+     private OnClickItemListener<T> mItemListener;
+
+    public void setItemListener(OnClickItemListener<T> itemListener) {
+        mItemListener = itemListener;
+    }
 
     @Override
     public int getViewType() {
@@ -28,7 +33,9 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
 
     @Override
     public void onClickItemView(@NonNull MultiViewHolder holder, @NonNull T data, int position) {
-
+              if (mItemListener!=null){
+                  mItemListener.onClickItem(data,position);
+              }
     }
 
 

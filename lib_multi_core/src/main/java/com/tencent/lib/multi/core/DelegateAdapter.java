@@ -1,7 +1,6 @@
 package com.tencent.lib.multi.core;
 
 import android.util.SparseArray;
-import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -70,6 +69,9 @@ public abstract class DelegateAdapter<T> {
         return itemType == null ? 0 : itemType.getViewType();
     }
 
+    public void clearItemTypes() {
+        position_itemType_map.clear();
+    }
     @Nullable
     public abstract T getItem(int position);
 

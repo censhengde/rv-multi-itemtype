@@ -66,7 +66,9 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> imple
     @Override
     public void onBindViewHolder(@NonNull MultiViewHolder holder, int position) {
         delegateAdapter.onBindViewHolder(holder, position);
+
     }
+
 
     @Override
     public int getItemViewType(int position) {
@@ -79,13 +81,18 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> imple
         return datas == null ? 0 : datas.size();
     }
 
+    @Nullable
+    public T getItem(int position) {
+        return delegateAdapter.getItem(position);
+    }
 
     public void setDatas(@NonNull List<T> datas) {
         this.datas =  datas;
+        delegateAdapter.clearItemTypes();//确保ItemType记录重新匹配
     }
 
     public void setAndUpdateDatas(@NonNull List<T> datas) {
-        this.datas = datas;
+        setDatas(datas);
         notifyDataSetChanged();
     }
 
@@ -155,7 +162,9 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> imple
         }
     }
 
+    public void updateItem(int position) {
 
+    }
     public void setSingleSelection(boolean isSingleSelection) {
         delegateAdapter.setSingleSelection(isSingleSelection);
     }
@@ -164,7 +173,7 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> imple
         this.onCompletedCheckItemCallback = callback;
     }
 
-    public void checkable(boolean checkable) {
+    public void setCheckable(boolean checkable) {
          delegateAdapter.checkable = checkable;
     }
 
@@ -203,7 +212,7 @@ public static class Builder extends AdapterBuilder<Builder> {
         adapter = new MultiAdapter<>();
         adapter.setOnCompletedCheckItemCallback(onCompletedCheckItemCallback);
         adapter.setSingleSelection(recyclerView.getSingleSelection());
-        adapter.checkable(recyclerView.getCheckable());
+        adapter.setCheckable(recyclerView.getCheckable());
         adapter.setDatas(datas);
         if (itemType != null) {
             adapter.setItemType(itemType);
