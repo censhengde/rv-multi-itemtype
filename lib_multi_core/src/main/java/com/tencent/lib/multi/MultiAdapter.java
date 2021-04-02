@@ -35,6 +35,9 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> imple
         @Nullable
         @Override
         public T getItem(int position) {
+            if (isInValidPostion(position)) {
+                return null;
+            }
             return datas == null ? null : datas.get(position);
         }
 
@@ -55,6 +58,10 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> imple
                 }
             }
     };
+    }
+
+    private boolean isInValidPostion(int position) {
+        return position < 0 && position >= getItemCount();
     }
 
     @NonNull
