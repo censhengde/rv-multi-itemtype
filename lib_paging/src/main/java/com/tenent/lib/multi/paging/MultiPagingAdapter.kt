@@ -21,10 +21,10 @@ import java.util.*
 
  */
  open class MultiPagingAdapter<T : Any>(diffCallback: DiffUtil.ItemCallback<T>) : PagingDataAdapter<T, MultiViewHolder>(diffCallback), PagingManager , CheckManager, ItemManager<T> {
-    internal var delegateAdapter: DelegateAdapter<T>
+    internal var delegateAdapter: MultiHelper<T>
     internal var onCompletedCheckedCallback: OnCompletedCheckItemCallback<T>? = null
     init {
-        this.delegateAdapter = object : DelegateAdapter<T>(this){
+        this.delegateAdapter = object : MultiHelper<T>(this){
             override fun getItem(position: Int): T? {
                 return this@MultiPagingAdapter.getItem(position)
             }
@@ -59,12 +59,10 @@ import java.util.*
         delegateAdapter.onBindViewHolder(holder, position)
     }
 
-    fun setItemTypes(types: MutableList<ItemType<T>>) {
-        delegateAdapter.setItemTypes(types)
-    }
+
 
     fun setItemType(type: ItemType<T>) {
-        delegateAdapter.setItemType(type)
+        delegateAdapter.addItemType(type)
     }
 
     override fun complete() {
@@ -146,9 +144,7 @@ class Builder(val rv: PagingRecyclerView): AdapterBuilder<Builder>(rv) {
             itemType?.let {
                 pagedAdapter.setItemType(it as Nothing)
             }
-            itemTypes?.let {
-                pagedAdapter.setItemTypes(it as Nothing)
-            }
+
             pagedAdapter.checkable(recyclerView.checkable)
             pagedAdapter.setSingleSelection(recyclerView.singleSelection)
             pagedAdapter.setOnCompletedCheckItemCallback(this.onCompletedCheckItemCallback as Nothing)

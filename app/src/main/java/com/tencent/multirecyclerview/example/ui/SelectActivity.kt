@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.tencent.lib.multi.core.MultiHelper
 import com.tencent.lib.multi.core.MultiViewHolder
 import com.tencent.lib.multi.core.OnCompletedCheckItemCallback
 import com.tencent.lib.multi.core.SimpleItemType
@@ -42,23 +43,12 @@ class SelectActivity : AppCompatActivity(), OnCompletedCheckItemCallback<ItemBea
         override fun getItemLayoutRes(): Int {
            return R.layout.item_checkable
         }
-        /*这里进行选中/未选中状态设置*/
-        override fun onBindViewHolder(holder: MultiViewHolder, data: ItemBean, position: Int) {
-            holder.getView<TextView>(R.id.tv)?.text = data.text
 
-            if (data.isChecked) {
-                holder.getView<TextView>(R.id.tv)?.setTextColor(android.graphics.Color.RED)
-            } else {
-                holder.getView<TextView>(R.id.tv)?.setTextColor(android.graphics.Color.GRAY)
-            }
 
-        }
 
-        override fun onInitItemSubViewListener(holder: MultiViewHolder) {
-                 //点击删除Item事件
-                 holder.getView<Button>(R.id.btn_delete_item)?.setOnClickListener {
-                     rv_selectable.getItemManager().removeItem(holder.absoluteAdapterPosition)
-                 }
+
+        override fun onBindViewHolder(holder: MultiViewHolder, helper: MultiHelper<ItemBean>, position: Int) {
+
         }
 
     }

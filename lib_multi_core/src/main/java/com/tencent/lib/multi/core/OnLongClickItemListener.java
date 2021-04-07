@@ -9,8 +9,8 @@ import androidx.annotation.Nullable;
  *
  * 说明：
  */
-public interface OnClickItemListener<T> {
+public interface OnLongClickItemListener<T> {
 
-    void onClickItem(@NonNull View v, @Nullable T item, int position);
+    boolean onLongClickItem(@NonNull View v,@Nullable T item, int position);
 
 }

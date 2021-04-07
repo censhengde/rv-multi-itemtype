@@ -1,21 +1,19 @@
 package com.tencent.multirecyclerview.example.itemtype;
 
-import android.util.Log;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
-
+import com.tencent.lib.multi.core.MultiHelper;
+import com.tencent.lib.multi.core.MultiViewHolder;
+import com.tencent.lib.multi.core.SimpleItemType;
 import com.tencent.multirecyclerview.R;
 import com.tencent.multirecyclerview.example.bean.ItemBean;
-import com.tencent.lib.multi.core.ItemType;
-import com.tencent.lib.multi.core.MultiViewHolder;
 
 /**
  * Author：岑胜德 on 2021/1/6 18:04
  * <p>
  * 说明：
  */
-public class AItemType implements ItemType<ItemBean> {
+public class AItemType extends SimpleItemType<ItemBean> {
 
     /**
      * 返回当前item类型的标识
@@ -37,40 +35,33 @@ public class AItemType implements ItemType<ItemBean> {
         return R.layout.item_a;
     }
 
+    @Override
+    public void onCreateItemView(@NonNull MultiViewHolder holder, @NonNull MultiHelper<ItemBean> helper) {
+        super.onCreateItemView(holder, helper);
+
+        registItemSubViewClickListener(R.id.tv_a, holder, helper);
+        registItemSubViewLongClickListener(R.id.tv_a, holder, helper);
+
+    }
+
     /**
      * 绑定数据
      * @param holder
-     * @param data 当前position对应的实体对象
      * @param position
      */
+
     @Override
-    public void onBindViewHolder(@NonNull MultiViewHolder holder, @NonNull ItemBean data, int position) {
-        TextView tvA = holder.getView(R.id.tv_a);
-        tvA.setText(data.text);
+    public void onBindViewHolder(@NonNull MultiViewHolder holder, @NonNull MultiHelper<ItemBean> helper, int position) {
+        ItemBean itemBean = helper.getItem(position);
+        if (itemBean != null) {
+            TextView tv = holder.getView(R.id.tv_a);
+            tv.setText(itemBean.text);
+        }
     }
 
     /**
      * 设置item子View的监听
      * @param holder
      */
-    @Override
-    public void onInitItemSubViewListener(MultiViewHolder holder) {
-        TextView tv = holder.getView(R.id.tv_a);
-        tv.setOnClickListener(v -> {
-            Log.e("Item子View点击事件=====>", (String) tv.getText());
-        });
-    }
-
-    /**
-     * item点击事件回调
-     * @param holder
-     * @param data
-     * @param position
-     */
-    @Override
-    public void onClickItemView(MultiViewHolder holder, ItemBean data, int position) {
-        Log.e("Item点击事件=====>", data.toString());
-    }
-
 
 }

@@ -17,7 +17,7 @@ public abstract class LayoutBuilder<T extends LayoutBuilder> {
     }
 
     public  void build(){
-       ParamUtils.assertNull(layoutManager,"LayoutManager 不允许为 null");
+       Utils.assertNull(layoutManager,"LayoutManager 不允许为 null");
         recyclerView.setLayoutManager(layoutManager);
     }
 

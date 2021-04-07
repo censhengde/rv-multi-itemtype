@@ -51,4 +51,6 @@ public final class MultiViewHolder extends RecyclerView.ViewHolder {
     public void onViewRecycled(){
         id_view_map.clear();
     }
+
+
 }

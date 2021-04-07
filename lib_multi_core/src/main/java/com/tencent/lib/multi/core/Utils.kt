@@ -1,4 +1,4 @@
-@file:JvmName("ParamUtils")
+@file:JvmName("Utils")
 package com.tencent.lib.multi.core
 
 import java.lang.IllegalArgumentException
@@ -15,3 +15,4 @@ fun assertNull(any: Any?,msg:String){
         throw IllegalArgumentException(msg)
     }
 }
+

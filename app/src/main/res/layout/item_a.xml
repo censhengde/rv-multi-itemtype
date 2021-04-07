@@ -9,7 +9,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="18sp"
-        android:gravity="center"
+            android:gravity="center"
+            android:tag="tv_a"
         android:layout_gravity="center|center_vertical"
         android:text="A 类 Item"/>
 

@@ -2,7 +2,7 @@ package com.tencent.lib.multi.core;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
-import com.tencent.lib.multi.core.MultiViewHolder;
+import java.util.List;
 
 /**
  * Author：岑胜德 on 2021/1/6 14:41
@@ -10,6 +10,7 @@ import com.tencent.lib.multi.core.MultiViewHolder;
  * 说明：Item类型的抽象，内容有：
  */
 public interface ItemType<T> {
+
     /**
      * @return 返回当前ItemType 的viewtype
      */
@@ -34,18 +35,22 @@ public interface ItemType<T> {
     /**
      * 意义与Adapter相同
      * @param holder
-     * @param data 当前position对应的实体对象
      * @param position
      */
-    void onBindViewHolder(@NonNull MultiViewHolder holder, @NonNull T data, int position);
+    void onBindViewHolder(@NonNull MultiViewHolder holder, @NonNull MultiHelper<T> helper, int position);
+
+    void onBindViewHolder(@NonNull MultiViewHolder holder, @NonNull MultiHelper<T> helper, int position,
+            @NonNull List<Object> payloads);
 
     /**
-     * 初始化Item子View点击事件监听器
+     * 初始化Item子View点击事件监听器,不要做数据的绑定。
      */
-    void onInitItemSubViewListener(@NonNull MultiViewHolder holder);
+    void onCreateItemView(@NonNull MultiViewHolder holder, @NonNull MultiHelper<T> helper);
 
     /**
      * 条目点击事件回调
      */
-    void onClickItemView(@NonNull MultiViewHolder holder, @NonNull T data, int position);
+    void onClickItem(@NonNull MultiViewHolder holder, @NonNull T data, int position);
+
+    boolean onLongClickItem(@NonNull MultiViewHolder holder, @NonNull T data, int position);
 }

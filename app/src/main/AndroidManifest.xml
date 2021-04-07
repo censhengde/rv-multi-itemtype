@@ -9,10 +9,11 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-<!--        <activity android:name=".example.ui.SelectActivity" />-->
-        <activity android:name=".example.ui.PagedActivity" />
-        <activity android:name=".example.ui.ExampleActivity" />
-        <activity android:name=".example.ui.SelectActivity">
+<!--        <activity android:name=".example.ui.AnnotationTestActivity"></activity>-->
+<!--        <activity android:name=".example.ui.NestedScrollActivity" /> &lt;!&ndash; <activity android:name=".example.ui.SelectActivity" /> &ndash;&gt;-->
+<!--        <activity android:name=".example.ui.PagedActivity" />-->
+<!--        <activity android:name=".example.ui.ExampleActivity" />-->
+        <activity android:name=".example.ui.AnnotationTestActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

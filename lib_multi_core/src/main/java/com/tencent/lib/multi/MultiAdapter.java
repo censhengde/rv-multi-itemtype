@@ -9,12 +9,12 @@ import com.tencent.lib.multi.core.AdapterBuilder;
 import com.tencent.lib.multi.core.BaseRecyclerView;
 import com.tencent.lib.multi.core.CheckManager;
 import com.tencent.lib.multi.core.Checkable;
-import com.tencent.lib.multi.core.DelegateAdapter;
 import com.tencent.lib.multi.core.ItemManager;
 import com.tencent.lib.multi.core.ItemType;
+import com.tencent.lib.multi.core.MultiHelper;
 import com.tencent.lib.multi.core.MultiViewHolder;
 import com.tencent.lib.multi.core.OnCompletedCheckItemCallback;
-import com.tencent.lib.multi.core.ParamUtils;
+import com.tencent.lib.multi.core.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,17 +28,14 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> imple
     private OnCompletedCheckItemCallback<T> onCompletedCheckItemCallback;
     protected List<T> datas;
 
-    protected DelegateAdapter<T> delegateAdapter;
+    protected MultiHelper<T> mMultiHelper;
 
     public MultiAdapter() {
-        delegateAdapter = new DelegateAdapter<T>(this) {
+        mMultiHelper = new MultiHelper<T>(this) {
         @Nullable
         @Override
         public T getItem(int position) {
-            if (isInValidPostion(position)) {
-                return null;
-            }
-            return datas == null ? null : datas.get(position);
+           return MultiAdapter.this.getItem(position);
         }
 
             @Override
@@ -61,25 +58,30 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> imple
     }
 
     private boolean isInValidPostion(int position) {
-        return position < 0 && position >= getItemCount();
+        return  position<0||datas==null||position>=datas.size();
     }
 
     @NonNull
     @Override
     public MultiViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return delegateAdapter.onCreateViewHolder(parent, viewType);
+        return mMultiHelper.onCreateViewHolder(parent, viewType);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MultiViewHolder holder, int position) {
-        delegateAdapter.onBindViewHolder(holder, position);
 
     }
+
+    @Override
+    public void onBindViewHolder(@NonNull MultiViewHolder holder, int position, @NonNull List<Object> payloads) {
+        mMultiHelper.onBindViewHolder(holder, position, payloads);
+    }
+
 
 
     @Override
     public int getItemViewType(int position) {
-        return delegateAdapter.getItemViewType(position);
+        return mMultiHelper.getItemViewType(position);
     }
 
     @Override
@@ -90,25 +92,23 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> imple
 
     @Nullable
     public T getItem(int position) {
-        return delegateAdapter.getItem(position);
+        return isInValidPostion(position)? null : datas.get(position);
     }
 
+    /*list 引用改变*/
     public void setDatas(@NonNull List<T> datas) {
-        this.datas =  datas;
-        delegateAdapter.clearItemTypes();//确保ItemType记录重新匹配
-    }
-
-    public void setAndUpdateDatas(@NonNull List<T> datas) {
-        setDatas(datas);
+        mMultiHelper.clearItemTypes();//确保ItemType记录重新匹配
+        if (datas == this.datas) {
+            notifyDataSetChanged();
+            return;
+        }
+        this.datas = datas;
         notifyDataSetChanged();
     }
 
-    public void setItemTypes(@NonNull List<ItemType<T>> types) {
-        this.delegateAdapter.setItemTypes(types);
-    }
-
-    public void setItemType(@NonNull ItemType<T> type) {
-        delegateAdapter.setItemType(type);
+    public MultiAdapter<T> addItemType(@NonNull ItemType<T> type) {
+        mMultiHelper.addItemType(type);
+        return this;
     }
 
     @Override
@@ -119,11 +119,11 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> imple
             if (item instanceof Checkable) {
                 final Checkable checkable = (Checkable) item;
                 if (checkable.isChecked()) {
-                    delegateAdapter.setCheckedItemCount(delegateAdapter.getCheckedItemCount() - 1);
+                    mMultiHelper.setCheckedItemCount(mMultiHelper.getCheckedItemCount() - 1);
                 }
             }
             datas.remove(position);
-            delegateAdapter.removeItem(position);
+            mMultiHelper.removeItem(position);
             notifyItemRemoved(position);
             notifyItemRangeChanged(position,datas.size()-position);
         }
@@ -146,7 +146,7 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> imple
     @Override
     public void cancelAll() {
         /*复选模式下才进行全选*/
-        if (!delegateAdapter.isSingleSelection()) {
+        if (!mMultiHelper.isSingleSelection()) {
             if (datas != null && !datas.isEmpty()) {
                 for (T data : datas) {
                     ((Checkable) data).setChecked(false);
@@ -156,10 +156,11 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> imple
         }
     }
 
+
     @Override
     public void checkAll() {
         /*复选模式下才进行全选*/
-        if (!delegateAdapter.isSingleSelection()) {
+        if (!mMultiHelper.isSingleSelection()) {
             if (datas != null && !datas.isEmpty()) {
                 for (T data : datas) {
                     ((Checkable) data).setChecked(true);
@@ -173,7 +174,7 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> imple
 
     }
     public void setSingleSelection(boolean isSingleSelection) {
-        delegateAdapter.setSingleSelection(isSingleSelection);
+        mMultiHelper.setSingleSelection(isSingleSelection);
     }
 
     public void setOnCompletedCheckItemCallback(OnCompletedCheckItemCallback<T> callback) {
@@ -181,12 +182,12 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> imple
     }
 
     public void setCheckable(boolean checkable) {
-         delegateAdapter.checkable = checkable;
+        mMultiHelper.checkable = checkable;
     }
 
     public void complete() {
         if (onCompletedCheckItemCallback != null) {
-            delegateAdapter.complete(onCompletedCheckItemCallback);
+            mMultiHelper.complete(onCompletedCheckItemCallback);
         }
     }
 
@@ -199,6 +200,10 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> imple
     @Override
     public void restoreCheckedItem(Bundle in) {
 
+    }
+
+    public void checkItem(int position) {
+        mMultiHelper.checkItem(position);
     }
 
 public static class Builder extends AdapterBuilder<Builder> {
@@ -215,18 +220,16 @@ public static class Builder extends AdapterBuilder<Builder> {
     }
 
     public void build() {
-        ParamUtils.assertNull(datas, "datas 不允许 为 null");
+        Utils.assertNull(datas, "datas 不允许 为 null");
         adapter = new MultiAdapter<>();
         adapter.setOnCompletedCheckItemCallback(onCompletedCheckItemCallback);
         adapter.setSingleSelection(recyclerView.getSingleSelection());
         adapter.setCheckable(recyclerView.getCheckable());
         adapter.setDatas(datas);
         if (itemType != null) {
-            adapter.setItemType(itemType);
+            adapter.addItemType(itemType);
         }
-        if (itemTypes != null) {
-            adapter.setItemTypes(itemTypes);
-        }
+
         final RecyclerView rv = recyclerView;
         rv.setAdapter(adapter);
     }

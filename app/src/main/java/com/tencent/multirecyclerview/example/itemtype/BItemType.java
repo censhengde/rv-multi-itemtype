@@ -5,6 +5,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.tencent.lib.multi.core.MultiHelper;
+import com.tencent.lib.multi.core.SimpleItemType;
 import com.tencent.multirecyclerview.R;
 import com.tencent.multirecyclerview.example.bean.ItemBean;
 import com.tencent.lib.multi.core.ItemType;
@@ -15,7 +17,7 @@ import com.tencent.lib.multi.core.MultiViewHolder;
  * <p>
  * 说明：
  */
-public class BItemType implements ItemType<ItemBean> {
+public class BItemType extends SimpleItemType<ItemBean> {
 
     @Override
     public int getViewType() {
@@ -33,24 +35,10 @@ public class BItemType implements ItemType<ItemBean> {
         return R.layout.item_b;
     }
 
-
     @Override
-    public void onBindViewHolder(@NonNull MultiViewHolder holder, @NonNull ItemBean data, int position) {
-          TextView tv= holder.getView(R.id.tv_b);
-          tv.setText(data.text);
+    public void onBindViewHolder(@NonNull MultiViewHolder holder, @NonNull MultiHelper<ItemBean> helper, int position) {
+
     }
 
 
-    @Override
-    public void onInitItemSubViewListener(MultiViewHolder holder) {
-        TextView tv = holder.getView(R.id.tv_b);
-        tv.setOnClickListener(v -> {
-            Log.e("Item子View点击事件=====>", (String) tv.getText());
-        });
-    }
-
-    @Override
-    public void onClickItemView(MultiViewHolder holder, ItemBean data, int position) {
-        Log.e("Item点击事件=====>", data.text);
-    }
 }

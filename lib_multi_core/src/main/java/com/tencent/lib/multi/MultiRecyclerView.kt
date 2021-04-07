@@ -15,6 +15,8 @@ open class MultiRecyclerView @JvmOverloads constructor(context: Context, attrs: 
 
 
    override fun newAdapterBuilder() = MultiAdapter.Builder(this)
-
+   fun getMultiAdapter(): MultiAdapter<*>? {
+      return adapter as MultiAdapter<*>?
+   }
 
 }

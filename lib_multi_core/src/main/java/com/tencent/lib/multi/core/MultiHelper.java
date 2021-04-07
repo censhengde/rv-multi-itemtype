@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.Adapter;
+import com.tencent.lib.multi.R;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
  *
  * 说明：实现Item多样式的公共逻辑封装。
  */
-public abstract class DelegateAdapter<T> {
+public abstract class MultiHelper<T> {
 
 
     private static final int SELECTED_NONE = -1;//表示全列表都没有Item被选中
@@ -22,10 +23,9 @@ public abstract class DelegateAdapter<T> {
     private OnCheckedItemCallback<T> onCheckedItemCallback;
     private boolean mSingleSelection = false;
     private RecyclerView.Adapter realAdapter;
-
     protected final SparseArray<ItemType<T>> position_itemType_map = new SparseArray<>();
     protected final SparseArray<ItemType<T>> viewType_itemType_map = new SparseArray<>(8);
-    protected List<ItemType<T>> types;
+    protected final List<ItemType<T>> types=new ArrayList<>();
     public boolean checkable = false;//是否开启列表单选、多选功能
 
 
@@ -34,7 +34,8 @@ public abstract class DelegateAdapter<T> {
     }
 
     private int mCheckedItemCount = 0;//当前列表被已被选中的Item数目
-    public DelegateAdapter(Adapter realAdapter) {
+
+    public MultiHelper(Adapter realAdapter) {
         this.realAdapter = realAdapter;
     }
 
@@ -75,6 +76,9 @@ public abstract class DelegateAdapter<T> {
     @Nullable
     public abstract T getItem(int position);
 
+    public int getItemCount() {
+        return realAdapter == null ? 0 : realAdapter.getItemCount();
+    }
     @NonNull
     public MultiViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final ItemType<T> type = viewType_itemType_map.get(viewType);
@@ -90,31 +94,52 @@ public abstract class DelegateAdapter<T> {
                 if (checkable) {
                     checkItem(holder.getAdapterPosition());//选中Item
                 }
-                type.onClickItemView(holder, data, holder.getAdapterPosition());
+                type.onClickItem(holder, data, holder.getAdapterPosition());
             }
         });
-        type.onInitItemSubViewListener(holder);
+        //长按事件
+        holder.itemView.setOnLongClickListener((v) -> {
+            final T data = getItem(holder.getAdapterPosition());
+            if (data != null) {
+                if (checkable) {
+                    checkItem(holder.getAdapterPosition());//选中Item
+                }
+                return type.onLongClickItem(holder, data, holder.getAdapterPosition());
+            }
+            return false;
+        });
+
+        type.onCreateItemView(holder, this);
         return holder;
+    }
+
+    public void onBindViewHolder(@NonNull MultiViewHolder holder, int position, @NonNull List<Object> payloads) {
+        if (holder.isInvalid) {
+            return;
+        }
+        if (payloads.isEmpty()) {
+            this.onBindViewHolder(holder, position);
+        } else {
+            final ItemType<T> type = position_itemType_map.get(position);
+            if (type != null) {
+                type.onBindViewHolder(holder, this, position, payloads);
+            }
+        }
     }
 
     public void onBindViewHolder(@NonNull MultiViewHolder holder, int position) {
         if (holder.isInvalid){
             return;
         }
-        final T data=getItem(position);
-        if (data!=null){
         ItemType<T> type = position_itemType_map.get(position);
-        type.onBindViewHolder(holder, data, position);
+        if (type!=null){
+            type.onBindViewHolder(holder, this, position);
         }
     }
 
-    public void setItemType(@NonNull ItemType<T> type) {
-        types = new ArrayList<>(1);
+    public MultiHelper addItemType(@NonNull ItemType<T> type) {
         types.add(type);
-    }
-
-    public void setItemTypes(@NonNull List<ItemType<T>> types) {
-        this.types = types;
+        return this;
     }
 
     public final void removeItem(int position) {
@@ -193,7 +218,6 @@ public abstract class DelegateAdapter<T> {
 
     }
 
-
     public void setOnCheckedItemCallback(@NonNull OnCheckedItemCallback<T> callback) {
         onCheckedItemCallback = callback;
     }
@@ -206,4 +230,6 @@ public abstract class DelegateAdapter<T> {
         return mSingleSelection;
     }
     public abstract void complete(OnCompletedCheckItemCallback<T> callback);
+
+
 }
