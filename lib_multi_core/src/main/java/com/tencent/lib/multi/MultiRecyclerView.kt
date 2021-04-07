@@ -11,10 +11,9 @@ import com.tencent.lib.multi.core.BaseRecyclerView
  * 说明：
  */
 open class MultiRecyclerView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
-        BaseRecyclerView<MultiAdapter.Builder>(context, attrs, defStyleAttr) {
+        BaseRecyclerView(context, attrs, defStyleAttr) {
 
 
-   override fun newAdapterBuilder() = MultiAdapter.Builder(this)
    fun getMultiAdapter(): MultiAdapter<*>? {
       return adapter as MultiAdapter<*>?
    }

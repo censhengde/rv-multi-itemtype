@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         tools:context="com.tencent.multirecyclerview.example.ui.AnnotationTestActivity">
 
     <com.tencent.lib.multi.MultiRecyclerView
-            android:id="@+id/recyclerview"
+            android:id="@+id/recyclerview1"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-</RelativeLayout>
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+    <com.tencent.lib.multi.MultiRecyclerView
+            android:id="@+id/recyclerview2"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1" />
+</LinearLayout>

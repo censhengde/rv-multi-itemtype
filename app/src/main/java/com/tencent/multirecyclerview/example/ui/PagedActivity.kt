@@ -27,20 +27,7 @@ class PagedActivity : AppCompatActivity() {
                 .setItemSpace(5, 5, 5, 5)
                 .build()
                 /*分页*/
-        rv_paged
-                .newAdapterBuilder()
-                .setDiffCallback(object : DiffUtil.ItemCallback<ItemBean>() {
-                    override fun areItemsTheSame(oldItem: ItemBean, newItem: ItemBean): Boolean {
-                       return oldItem.equals(newItem)
-                    }
 
-                    override fun areContentsTheSame(oldItem: ItemBean, newItem: ItemBean): Boolean {
-                       return oldItem.text==newItem.text
-                    }
-
-                })
-                .setDataSource(MyPagedSource())
-                .build(this)
         /*删除Item事件*/
 
 

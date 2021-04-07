@@ -48,9 +48,7 @@ public final class MultiViewHolder extends RecyclerView.ViewHolder {
     public boolean isInvalid(){
         return isInvalid;
     }
-    public void onViewRecycled(){
-        id_view_map.clear();
-    }
+
 
 
 }

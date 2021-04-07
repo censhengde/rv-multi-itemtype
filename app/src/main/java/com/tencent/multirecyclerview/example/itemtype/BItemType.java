@@ -1,16 +1,12 @@
 package com.tencent.multirecyclerview.example.itemtype;
 
-import android.util.Log;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
-
 import com.tencent.lib.multi.core.MultiHelper;
+import com.tencent.lib.multi.core.MultiViewHolder;
 import com.tencent.lib.multi.core.SimpleItemType;
 import com.tencent.multirecyclerview.R;
 import com.tencent.multirecyclerview.example.bean.ItemBean;
-import com.tencent.lib.multi.core.ItemType;
-import com.tencent.lib.multi.core.MultiViewHolder;
 
 /**
  * Author：岑胜德 on 2021/1/6 18:04
@@ -36,8 +32,19 @@ public class BItemType extends SimpleItemType<ItemBean> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MultiViewHolder holder, @NonNull MultiHelper<ItemBean> helper, int position) {
+    public void onViewHolderCreated(@NonNull MultiViewHolder holder, @NonNull MultiHelper<ItemBean> helper) {
+        super.onViewHolderCreated(holder, helper);
+        registItemClickListener(holder, helper);
+        registItemSubViewClickListener(R.id.tv_b, holder, helper);
+    }
 
+    @Override
+    public void onBindViewHolder(@NonNull MultiViewHolder holder, @NonNull MultiHelper<ItemBean> helper, int position) {
+        ItemBean data = helper.getItem(position);
+        if (data != null) {
+            TextView tv = holder.getView(R.id.tv_b);
+            tv.setText(data.text);
+        }
     }
 
 

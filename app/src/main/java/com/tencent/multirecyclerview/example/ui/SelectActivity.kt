@@ -25,13 +25,7 @@ class SelectActivity : AppCompatActivity(), OnCompletedCheckItemCallback<ItemBea
         viewmodle=ViewModelProvider(this).get(SelectionViewModel::class.java)
 
         rv_selectable.linearBuilder().setItemSpace(10,10,10,10).build()
-        rv_selectable.newAdapterBuilder()
-//                .checkable(true)/*开启选择功能,不调用则默认 false*/
-//                .setSingleSelection(false)/*是否单选模式，不调用则默认 false*/
-                .setOnCompletedCheckItemCallback(this)/*选择完成回调*/
-                .setItemType(SelectionItemType())/*单样式*/
-                .setDatas(viewmodle.items)/*数据源*/
-                .build()
+
 
     }
 
@@ -64,7 +58,6 @@ class SelectActivity : AppCompatActivity(), OnCompletedCheckItemCallback<ItemBea
      * 点击 完成
      */
     fun onClickCompleted(view: View) {
-         rv_selectable.getCheckManager().complete()
     }
 
     /**
@@ -73,10 +66,8 @@ class SelectActivity : AppCompatActivity(), OnCompletedCheckItemCallback<ItemBea
     fun onClickCheckAll(view: View) {
         val btn=view as Button
         if (btn.text.equals("全选")){
-            rv_selectable.getCheckManager().checkAll()
             btn.text="取消全选"
         }else{
-            rv_selectable.getCheckManager().cancelAll()
             btn.text="全选"
         }
     }

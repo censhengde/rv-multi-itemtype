@@ -31,7 +31,9 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
     private Map<String, Method> mOnLongClickItemSubViewMethods;
     private String mKey;
 
-    public void regist(String key, Object observer, boolean clickItem, boolean clickItemSubView, boolean longClickItem,
+    /*注册观察者*/
+    public final void regist(String key, Object observer, boolean clickItem, boolean clickItemSubView,
+            boolean longClickItem,
             boolean longClickItemSubView) {
         mObserver = observer;
         mKey = key == null ? "" : key;
@@ -53,10 +55,12 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
                     continue;
                 }
             }
-            if (mOnClickItemSubViewMethods == null && clickItemSubView) {
+            if (clickItemSubView) {
                 OnClickItemSubView onClickItemSubView = method.getAnnotation(OnClickItemSubView.class);
                 if (onClickItemSubView != null && onClickItemSubView.key().equals(mKey)) {
-                    mOnClickItemSubViewMethods = new ArrayMap<>(onClickItemSubView.tags().length);
+                    if (mOnClickItemSubViewMethods == null) {
+                        mOnClickItemSubViewMethods = new ArrayMap<>(onClickItemSubView.tags().length);
+                    }
                     for (String tag : onClickItemSubView.tags()) {
                         mOnClickItemSubViewMethods.put(tag, method);
                     }
@@ -64,10 +68,12 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
                 }
             }
 
-            if (mOnLongClickItemSubViewMethods == null && longClickItemSubView) {
+            if (longClickItemSubView) {
                 OnLongClickItemSubView onLongClickItemSubView = method.getAnnotation(OnLongClickItemSubView.class);
                 if (onLongClickItemSubView != null && onLongClickItemSubView.key().equals(mKey)) {
-                    mOnLongClickItemSubViewMethods = new ArrayMap<>(onLongClickItemSubView.tags().length);
+                    if (mOnLongClickItemSubViewMethods == null) {
+                        mOnLongClickItemSubViewMethods = new ArrayMap<>(onLongClickItemSubView.tags().length);
+                    }
                     for (String tag : onLongClickItemSubView.tags()) {
                         mOnLongClickItemSubViewMethods.put(tag, method);
                     }
@@ -109,7 +115,7 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
 
 
     @Override
-    public void onCreateItemView(@NonNull MultiViewHolder holder, @NonNull MultiHelper<T> helper) {
+    public void onViewHolderCreated(@NonNull MultiViewHolder holder, @NonNull MultiHelper<T> helper) {
         mContext = holder.itemView.getContext();
         mResources = holder.itemView.getResources();
 
@@ -121,48 +127,56 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
 
     }
 
-    @Override
-    public void onClickItem(@NonNull MultiViewHolder holder, @NonNull T data, int position) {
-              if (mItemListener!=null){
-                  mItemListener.onClickItem(holder.itemView, data, position);
-              }
-        invokeOnClickItem(holder.itemView, data, position);
-    }
 
-    @Override
-    public boolean onLongClickItem(@NonNull MultiViewHolder holder, @NonNull T data, int position) {
-        if (mOnLongClickItemListener != null) {
-            return mOnLongClickItemListener.onLongClickItem(holder.itemView, data, position);
-        }
-        return false;
-    }
-
-    protected void invokeOnClickItem(View view, T item, int position) {
-        if (mOnClickItemM != null) {
-            mOnClickItemM.setAccessible(true);
-            try {
-                mOnClickItemM.invoke(mObserver, view, item, position);
-            } catch (Exception e) {
-                e.printStackTrace();
+    /*item 点击事件注册*/
+    protected final void registItemClickListener(MultiViewHolder holder, MultiHelper<T> helper) {
+        holder.itemView.setOnClickListener(v -> {
+            int position = holder.getAdapterPosition();
+            T data = helper.getItem(position);
+            if (data == null) {
+                Log.e(TAG, "item 点击：data 为 null");
+                return;
             }
-        }
-    }
-
-    protected boolean invokeOnLongClickItem(View view, T item, int position) {
-        boolean consume = false;
-        if (mOnLongClickItemM != null) {
-            mOnLongClickItemM.setAccessible(true);
-            try {
-                consume = (boolean) mOnLongClickItemM.invoke(mObserver, view, item, position);
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (mOnClickItemM != null) {
+                mOnClickItemM.setAccessible(true);
+                try {
+                    mOnClickItemM.invoke(mObserver, v, data, position);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-        }
 
-        return consume;
-
+            if (mItemListener != null) {
+                mItemListener.onClickItem(v, data, position);
+            }
+        });
     }
 
+    /*item 长点击事件注册*/
+    protected final void registItemLongClickListener(MultiViewHolder holder, MultiHelper<T> helper) {
+        holder.itemView.setOnLongClickListener(v -> {
+            boolean consume = false;
+            int position = holder.getAdapterPosition();
+            T data = helper.getItem(position);
+            if (data == null) {
+                Log.e(TAG, "item 长点击：data 为 null");
+                return consume;
+            }
+            if (mOnLongClickItemM != null) {
+                mOnLongClickItemM.setAccessible(true);
+                try {
+                    consume = (boolean) mOnLongClickItemM.invoke(mObserver, v, data, position);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (mOnLongClickItemListener != null) {
+                consume = mOnLongClickItemListener.onLongClickItem(v, data, position);
+            }
+            return consume;
+        });
+    }
     /*注册item sub view 点击事件监听*/
     protected final void registItemSubViewClickListener(int viewId, MultiViewHolder holder, MultiHelper<T> helper) {
         View view = holder.getView(viewId);
@@ -183,6 +197,10 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
                 throw new IllegalArgumentException(" Item sub view tag 必须为 String 类型");
             }
             String tagStr = (String) tag;
+            if (mOnClickItemSubViewMethods == null) {
+                Log.e(TAG, "请检查 regist（）方法是否正确调用：mOnClickItemSubViewMethods == null");
+                return;
+            }
             Method method = mOnClickItemSubViewMethods.get(tagStr);
             if (method == null) {
                 Log.e(TAG, "未找到目标方法");
@@ -218,6 +236,10 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
                 throw new IllegalArgumentException(" Item sub view tag 必须为 String 类型");
             }
             String tagStr = (String) tag;
+            if (mOnLongClickItemSubViewMethods == null) {
+                Log.e(TAG, "请检查 regist（）方法是否正确调用：mOnLongClickItemSubViewMethods == null");
+                return consume;
+            }
             Method method = mOnLongClickItemSubViewMethods.get(tagStr);
             if (method == null) {
                 Log.e(TAG, "未找到目标方法");

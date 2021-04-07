@@ -14,7 +14,7 @@ import com.tencent.lib.multi.core.BaseRecyclerView
  * 说明：分页的RecyclerView，针对Page3框架进行封装
 
  */
-open class PagingRecyclerView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : BaseRecyclerView<MultiPagingAdapter.Builder>(context, attrs, defStyleAttr) {
+open class PagingRecyclerView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : BaseRecyclerView(context, attrs, defStyleAttr) {
 
     val pagingConfig: PagingConfig
     private lateinit var pagingManager: PagingManager
@@ -32,9 +32,7 @@ open class PagingRecyclerView @JvmOverloads constructor(context: Context, attrs:
     }
 
     fun getPagingManager() = pagingManager
-    override fun newAdapterBuilder(): MultiPagingAdapter.Builder {
-        return MultiPagingAdapter.Builder(this)
-    }
+
 
     override fun setAdapter(adapter: Adapter<*>?) {
         if (adapter is PagingManager){

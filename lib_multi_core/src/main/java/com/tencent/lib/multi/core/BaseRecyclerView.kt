@@ -12,15 +12,11 @@ import com.tencent.lib.multi.R
  * 说明：
 
  */
- abstract class BaseRecyclerView<T>(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : RecyclerView(context, attrs, defStyleAttr) {
-    private lateinit var itemManager: ItemManager<*>
-    private lateinit var checkManager: CheckManager
-    var checkable: Boolean
+ abstract class BaseRecyclerView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : RecyclerView(context, attrs, defStyleAttr) {
     var singleSelection: Boolean
 
     init {
         val a = context.obtainStyledAttributes(attrs, R.styleable.BaseRecyclerView)
-        checkable = a.getBoolean(R.styleable.BaseRecyclerView_checkable, false)
         singleSelection = a.getBoolean(R.styleable.BaseRecyclerView_singleSelection, false)
         a.recycle()
     }
@@ -37,18 +33,4 @@ import com.tencent.lib.multi.R
         return StaggeredGridBuilder(this, gapStrategy)
     }
 
-    abstract fun newAdapterBuilder(): T
-
-    fun getItemManager() = itemManager
-
-    fun getCheckManager() = checkManager
-    override fun setAdapter(adapter: Adapter<*>?) {
-        if (adapter is ItemManager<*>) {
-            itemManager = adapter
-        }
-        if (adapter is CheckManager) {
-            checkManager = adapter
-        }
-        super.setAdapter(adapter)
-    }
 }

@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.Adapter;
-import com.tencent.lib.multi.R;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,13 +19,11 @@ public abstract class MultiHelper<T> {
 
     private static final int SELECTED_NONE = -1;//表示全列表都没有Item被选中
     private int mSelectedPosition = SELECTED_NONE;
-    private OnCheckedItemCallback<T> onCheckedItemCallback;
     private boolean mSingleSelection = false;
     private RecyclerView.Adapter realAdapter;
     protected final SparseArray<ItemType<T>> position_itemType_map = new SparseArray<>();
     protected final SparseArray<ItemType<T>> viewType_itemType_map = new SparseArray<>(8);
     protected final List<ItemType<T>> types=new ArrayList<>();
-    public boolean checkable = false;//是否开启列表单选、多选功能
 
 
     public void setCheckedItemCount(int checkedItemCount) {
@@ -82,34 +79,13 @@ public abstract class MultiHelper<T> {
     @NonNull
     public MultiViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final ItemType<T> type = viewType_itemType_map.get(viewType);
-        if (type==null){
+        if (type==null){//表示无效
              return MultiViewHolder.create(parent.getContext(),parent,0);
         }
         final MultiViewHolder holder = MultiViewHolder
                 .create(parent.getContext(), parent, type.getItemLayoutRes());
-        //条目点击
-        holder.itemView.setOnClickListener((v) -> {
-            final T data = getItem(holder.getAdapterPosition());
-            if (data != null) {
-                if (checkable) {
-                    checkItem(holder.getAdapterPosition());//选中Item
-                }
-                type.onClickItem(holder, data, holder.getAdapterPosition());
-            }
-        });
-        //长按事件
-        holder.itemView.setOnLongClickListener((v) -> {
-            final T data = getItem(holder.getAdapterPosition());
-            if (data != null) {
-                if (checkable) {
-                    checkItem(holder.getAdapterPosition());//选中Item
-                }
-                return type.onLongClickItem(holder, data, holder.getAdapterPosition());
-            }
-            return false;
-        });
 
-        type.onCreateItemView(holder, this);
+        type.onViewHolderCreated(holder, this);
         return holder;
     }
 
@@ -190,10 +166,7 @@ public abstract class MultiHelper<T> {
                 mCheckedItemCount++;
                 realAdapter.notifyItemChanged(position);
             }
-            //将选择的Item信息回调出去
-            if (onCheckedItemCallback != null) {
-                onCheckedItemCallback.onCkeked(data, position);
-            }
+
             //==========复选===============
         } else {
             //如果当前item已经被选中，则取消被选中。
@@ -218,9 +191,6 @@ public abstract class MultiHelper<T> {
 
     }
 
-    public void setOnCheckedItemCallback(@NonNull OnCheckedItemCallback<T> callback) {
-        onCheckedItemCallback = callback;
-    }
 
     public void setSingleSelection(boolean singleSelection) {
         mSingleSelection = singleSelection;

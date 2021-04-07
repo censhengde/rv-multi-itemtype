@@ -2,15 +2,10 @@ package com.tenent.lib.multi.paging
 
 import android.os.Bundle
 import android.view.ViewGroup
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
 import androidx.paging.*
 import androidx.recyclerview.widget.DiffUtil
 import com.tencent.lib.multi.core.OnCompletedCheckItemCallback
 import com.tencent.lib.multi.core.*
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import java.util.*
 
 /**
@@ -20,7 +15,7 @@ import java.util.*
  * 说明：
 
  */
- open class MultiPagingAdapter<T : Any>(diffCallback: DiffUtil.ItemCallback<T>) : PagingDataAdapter<T, MultiViewHolder>(diffCallback), PagingManager , CheckManager, ItemManager<T> {
+ open class MultiPagingAdapter<T : Any>(diffCallback: DiffUtil.ItemCallback<T>) : PagingDataAdapter<T, MultiViewHolder>(diffCallback), PagingManager {
     internal var delegateAdapter: MultiHelper<T>
     internal var onCompletedCheckedCallback: OnCompletedCheckItemCallback<T>? = null
     init {
@@ -65,18 +60,18 @@ import java.util.*
         delegateAdapter.addItemType(type)
     }
 
-    override fun complete() {
+     fun complete() {
         delegateAdapter .complete(onCompletedCheckedCallback)
     }
 
-    override fun saveCheckedItem(out: Bundle?) {
+     fun saveCheckedItem(out: Bundle?) {
 
     }
 
-    override fun restoreCheckedItem(`in`: Bundle?) {
+     fun restoreCheckedItem(`in`: Bundle?) {
     }
 
-    override fun cancelAll() {
+     fun cancelAll() {
         snapshot().items.forEach {
             if (it is Checkable){
             (it).isChecked = false
@@ -89,7 +84,7 @@ import java.util.*
         this.onCompletedCheckedCallback = callback
     }
 
-    override fun checkAll() {
+     fun checkAll() {
         snapshot().items.forEach {
            if (it is Checkable){
             it.isChecked = true
@@ -98,77 +93,23 @@ import java.util.*
         notifyDataSetChanged()
     }
 
-     fun checkable(checkable: Boolean) {
-        delegateAdapter.checkable = checkable
-    }
+
 
      fun setSingleSelection(isSingleSelection: Boolean) {
         delegateAdapter.setSingleSelection(isSingleSelection)
     }
 
-class Builder(val rv: PagingRecyclerView): AdapterBuilder<Builder>(rv) {
-    private var diffItemCallback: DiffUtil.ItemCallback<*>? = null
-    private lateinit var dataSource: PagingSource<*, *>
-    private var pagingConfig: PagingConfig? = null
-    private lateinit var pagedAdapter: MultiPagingAdapter<*>
 
-
-    fun setDiffCallback(callback: DiffUtil.ItemCallback<out Any>): Builder {
-        diffItemCallback = callback
-        return this
-    }
-
-    fun setDataSource(dataSource: PagingSource<*, *>): Builder {
-        this.dataSource = dataSource
-        return this
-    }
-
-    fun setPagingConfig(pagingConfig: PagingConfig): Builder {
-        this.pagingConfig = pagingConfig
-        return this
-    }
-
-    fun build(owner: LifecycleOwner) {
-        if (pagingConfig == null) {
-            pagingConfig = rv.pagingConfig
-        }
-
-        var flow: Flow<*>? = null
-        pagingConfig?.let {
-            flow = Pager(it) {
-                dataSource as PagingSource<Any,Any>
-            }.flow.cachedIn(owner.lifecycleScope)
-        }
-        diffItemCallback?.let {
-            pagedAdapter = MultiPagingAdapter(it)
-            itemType?.let {
-                pagedAdapter.setItemType(it as Nothing)
-            }
-
-            pagedAdapter.checkable(recyclerView.checkable)
-            pagedAdapter.setSingleSelection(recyclerView.singleSelection)
-            pagedAdapter.setOnCompletedCheckItemCallback(this.onCompletedCheckItemCallback as Nothing)
-        }
-        //启动协程
-        owner.lifecycleScope.launch {
-            flow?.collectLatest { data ->
-                pagedAdapter.submitData(data as Nothing)
-            }
-
-        }
-    }
-
-}
 
     /*有待开发*/
-    override fun removeItem(position: Int) {
+     fun removeItem(position: Int) {
 
     }
 
-    override fun addItem(position: Int, data: T) {
+     fun addItem(position: Int, data: T) {
     }
 
-    override fun addItem(data: T) {
+     fun addItem(data: T) {
     }
 
 }

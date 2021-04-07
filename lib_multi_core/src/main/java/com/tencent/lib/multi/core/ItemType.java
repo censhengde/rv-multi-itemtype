@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Author：岑胜德 on 2021/1/6 14:41
  * <p>
- * 说明：Item类型的抽象，内容有：
+ * 说明：某一种Item类型的抽象。
  */
 public interface ItemType<T> {
 
@@ -43,14 +43,8 @@ public interface ItemType<T> {
             @NonNull List<Object> payloads);
 
     /**
-     * 初始化Item子View点击事件监听器,不要做数据的绑定。
+     * ViewHolder已经创建完成，在这里可以注册Item及其子View点击事件监听器,但不要做数据的绑定。
      */
-    void onCreateItemView(@NonNull MultiViewHolder holder, @NonNull MultiHelper<T> helper);
+    void onViewHolderCreated(@NonNull MultiViewHolder holder, @NonNull MultiHelper<T> helper);
 
-    /**
-     * 条目点击事件回调
-     */
-    void onClickItem(@NonNull MultiViewHolder holder, @NonNull T data, int position);
-
-    boolean onLongClickItem(@NonNull MultiViewHolder holder, @NonNull T data, int position);
 }

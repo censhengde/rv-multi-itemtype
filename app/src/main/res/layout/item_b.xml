@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:gravity="center"
+            android:tag="tv_b"
         android:layout_gravity="center|center_vertical"
         android:text="B 类 Item"/>
     <TextView
