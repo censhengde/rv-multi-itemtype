@@ -6,8 +6,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.tencent.lib.multi.MultiAdapter
 import com.tencent.lib.multi.core.OnClickItem
-import com.tencent.lib.multi.core.OnClickItemSubView
-import com.tencent.lib.multi.core.OnLongClickItemSubView
+import com.tencent.lib.multi.core.OnClickItemChildView
+import com.tencent.lib.multi.core.OnLongClickItemChildView
 import com.tencent.multirecyclerview.R
 import com.tencent.multirecyclerview.example.bean.ItemBean
 import com.tencent.multirecyclerview.example.itemtype.AItemType
@@ -44,26 +44,26 @@ class AnnotationTestActivity : AppCompatActivity() {
         return itemBeans
     }
 
-    @OnClickItem(key="recyclerview1")
+    @OnClickItem(rv="recyclerview1")
     private fun onClickItem(view: View, itemBean: ItemBean, position: Int) {
         Toast.makeText(this, "recyclerview1 item 条目点击：${itemBean.text}", Toast.LENGTH_SHORT).show()
     }
-    @OnClickItem(key="recyclerview2")
+    @OnClickItem(rv="recyclerview2")
     private fun onClickItem2(view: View, itemBean: ItemBean, position: Int) {
         Toast.makeText(this, "recyclerview2 item 条目点击：${itemBean.text}", Toast.LENGTH_SHORT).show()
     }
 
     /*由于 view id 在module中不是常量，所以采用tag作为view 身份标识*/
-    @OnClickItemSubView(key="recyclerview1",tags= ["tv_a"])
+    @OnClickItemChildView(rv="recyclerview1",tags= ["tv_a"])
     private fun onClickItemSubView(view: View, itemBean: ItemBean, position: Int) {
         Toast.makeText(this, " recyclerview1 item 条目sub view点击：${itemBean.text}", Toast.LENGTH_SHORT).show()
     }
-    @OnClickItemSubView(key="recyclerview2",tags= ["tv_b"])
+    @OnClickItemChildView(rv="recyclerview2",tags= ["tv_b"])
     private fun onClickItemSubView2(view: View, itemBean: ItemBean, position: Int) {
         Toast.makeText(this, "recyclerview2 item 条目sub view点击：${itemBean.text}", Toast.LENGTH_SHORT).show()
     }
     /*由于 view id 在module中不是常量，所以采用tag作为view 身份标识*/
-    @OnLongClickItemSubView(tags= ["tv_a"])
+    @OnLongClickItemChildView(tags= ["tv_a"])
     private fun onLongClickItemSubView(view: View, itemBean: ItemBean, position: Int) :Boolean{
         Toast.makeText(this, "item 条目sub view长按点击：${itemBean.text}", Toast.LENGTH_SHORT).show()
       return true

@@ -34,8 +34,8 @@ public class BItemType extends SimpleItemType<ItemBean> {
     @Override
     public void onViewHolderCreated(@NonNull MultiViewHolder holder, @NonNull MultiHelper<ItemBean> helper) {
         super.onViewHolderCreated(holder, helper);
-        registItemClickListener(holder, helper);
-        registItemSubViewClickListener(R.id.tv_b, holder, helper);
+        registOnClickItemListener(holder, helper);
+        registOnClickItemChildViewListener(R.id.tv_b, holder, helper);
     }
 
     @Override

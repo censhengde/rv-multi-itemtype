@@ -14,5 +14,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface OnClickItem {
     /*用于标识是哪个控件的Item点击*/
-    String key() default "";
+    String rv() default "";
+    String it() default "";
 }
