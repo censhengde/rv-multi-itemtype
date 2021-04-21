@@ -26,7 +26,52 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
     private Method mOnLongClickItemM;
     private Map<String, Method> mOnClickItemChildViewMethods;
     private Map<String, Method> mOnLongClickItemChildViewMethods;
+    private boolean mEnableOnClickItem;
+    private boolean mEnableOnLongClickItem;
+    private boolean mEnableOnClickItemChild;
+    private boolean mEnableOnLongClickItemChild;
+    private String mRv;
+    private String mIt;
 
+    public SimpleItemType setObserver(Object observer) {
+        mObserver = observer;
+        return this;
+    }
+
+    public SimpleItemType setRv(String rv) {
+        mRv = rv;
+        return this;
+    }
+
+    public SimpleItemType setIt(String it) {
+        mIt = it;
+        return this;
+    }
+
+    public SimpleItemType setEnableOnClickItem(boolean enable) {
+        mEnableOnClickItem = enable;
+        return this;
+    }
+
+    public SimpleItemType setEnableOnLongClickItem(boolean enable) {
+        mEnableOnLongClickItem = enable;
+        return this;
+    }
+
+    public SimpleItemType setEnableOnClickItemChild(boolean enable) {
+        mEnableOnClickItemChild = enable;
+        return this;
+    }
+
+    public SimpleItemType setEnableOnLongClickItemChild(boolean enable) {
+        mEnableOnLongClickItemChild = enable;
+        return this;
+    }
+
+    public void regist() {
+        regist(mObserver, mRv, mIt, mEnableOnClickItem, mEnableOnClickItemChild, mEnableOnLongClickItem,
+                mEnableOnLongClickItemChild);
+    }
 
     /*注册观察者*/
     public final void regist(Object observer, String rv, String it,

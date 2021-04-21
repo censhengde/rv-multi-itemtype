@@ -21,14 +21,14 @@ class AnnotationTestActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_annotation_test)
         val aItemType = AItemType()
-        aItemType.regist("recyclerview1", this, true, true, false, true)
+        aItemType.regist( this,"recyclerview1", "",true, true, false, true)
         val adapter = MultiAdapter<ItemBean>()
         adapter.addItemType(aItemType).setDatas(getDatas(ItemBean.TYPE_A))
         recyclerview1.adapter = adapter
         recyclerview1.linearBuilder().build()
 
         val bItemtype = BItemType()
-        bItemtype.regist("recyclerview2", this, true, true, false, false)
+        bItemtype.regist(this,"recyclerview2", "", true, true, false, false)
         val adapter2 = MultiAdapter<ItemBean>()
                 .setDatas(getDatas(ItemBean.TYPE_B))
                 .addItemType(bItemtype)
