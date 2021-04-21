@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface OnClickItem {
-    /*用于标识是哪个控件的Item点击*/
-    String rv() default "";
-    String it() default "";
+
+    String rv() default "";/*用于标识是哪个RecyclerView控件的Item点击*/
+    String it() default "";/*用于标识是哪一类ItemType的点击*/
 }

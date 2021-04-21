@@ -15,5 +15,6 @@ import java.lang.annotation.Target;
 public @interface OnLongClickItemChildView {
     /*用于标识是哪个RecyclerView控件的Item点击*/
     String rv() default "";
+    String it() default "";
     String[] tags();
 }

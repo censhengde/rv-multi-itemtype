@@ -26,22 +26,22 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
     private Method mOnLongClickItemM;
     private Map<String, Method> mOnClickItemChildViewMethods;
     private Map<String, Method> mOnLongClickItemChildViewMethods;
-    private String mKey;
+
 
     /*注册观察者*/
-    public final void regist(String rv, Object observer,
-            boolean clickItem,
+    public final void regist(Object observer, String rv, String it,
+            boolean clickItem,/*true 表示对该点击事件感兴趣*/
             boolean clickItemChildView,
             boolean longClickItem,
             boolean longClickItemChildView) {
         mObserver = observer;
-        mKey = rv == null ? "" : rv;
+        rv = rv == null ? "" : rv;
         Class<?> clazz = observer.getClass();
         Method[] methods = clazz.getDeclaredMethods();
         for (Method method : methods) {
             if (mOnClickItemM == null && clickItem) {
                 OnClickItem onClickItem = method.getAnnotation(OnClickItem.class);
-                if (onClickItem != null && onClickItem.rv().equals(mKey)) {
+                if (onClickItem != null && onClickItem.rv().equals(rv) && onClickItem.it().equals(it)) {
                     mOnClickItemM = method;
                     continue;
                 }
@@ -49,17 +49,19 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
 
             if (mOnLongClickItemM == null && longClickItem) {
                 OnLongClickItem onLongClickItem = method.getAnnotation(OnLongClickItem.class);
-                if (onLongClickItem != null && onLongClickItem.rv().equals(mKey)) {
+                if (onLongClickItem != null && onLongClickItem.rv().equals(rv) && onLongClickItem.it().equals(it)) {
                     mOnLongClickItemM = method;
                     continue;
                 }
             }
             if (clickItemChildView) {
                 OnClickItemChildView onClickItemChildView = method.getAnnotation(OnClickItemChildView.class);
-                if (onClickItemChildView != null && onClickItemChildView.rv().equals(mKey)) {
+                if (onClickItemChildView != null && onClickItemChildView.rv().equals(rv) && onClickItemChildView.it()
+                        .equals(it)) {
                     if (mOnClickItemChildViewMethods == null) {
                         mOnClickItemChildViewMethods = new ArrayMap<>(onClickItemChildView.tags().length);
                     }
+                    /*key 不同，但value同*/
                     for (String tag : onClickItemChildView.tags()) {
                         mOnClickItemChildViewMethods.put(tag, method);
                     }
@@ -70,7 +72,8 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
             if (longClickItemChildView) {
                 OnLongClickItemChildView onLongClickItemChildView = method
                         .getAnnotation(OnLongClickItemChildView.class);
-                if (onLongClickItemChildView != null && onLongClickItemChildView.rv().equals(mKey)) {
+                if (onLongClickItemChildView != null && onLongClickItemChildView.rv().equals(rv)
+                        && onLongClickItemChildView.it().equals(it)) {
                     if (mOnLongClickItemChildViewMethods == null) {
                         mOnLongClickItemChildViewMethods = new ArrayMap<>(onLongClickItemChildView.tags().length);
                     }
@@ -123,9 +126,13 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
     protected final void registOnClickItemListener(MultiViewHolder holder, MultiHelper<T> helper) {
         holder.itemView.setOnClickListener(v -> {
             int position = holder.getAdapterPosition();
+            if (position==RecyclerView.NO_POSITION){
+                Log.e(TAG, "item 点击异常: position="+position);
+                return;
+            }
             T data = helper.getItem(position);
-            if (data == null || position == RecyclerView.NO_POSITION) {
-                Log.e(TAG, "item 点击异常:data="+data+" position="+position);
+            if (data == null) {
+                Log.e(TAG, "item 点击异常:data="+data);
                 return;
             }
             if (mItemListener != null) {
@@ -149,9 +156,13 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
         holder.itemView.setOnLongClickListener(v -> {
             boolean consume = false;
             int position = holder.getAdapterPosition();
+            if (position==RecyclerView.NO_POSITION){
+                Log.e(TAG, "item 长点击异常: position="+position);
+                return consume;
+            }
             T data = helper.getItem(position);
-            if (data == null || position == RecyclerView.NO_POSITION) {
-                Log.e(TAG, "item 长点击异常:data="+data+" position="+position);
+            if (data == null) {
+                Log.e(TAG, "item 长点击异常:data="+data);
                 return consume;
             }
             if (mOnLongClickItemListener != null) {
@@ -176,9 +187,13 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
         View view = holder.getView(viewId);
         view.setOnClickListener(v -> {
             int position = holder.getAdapterPosition();
+            if (position==RecyclerView.NO_POSITION){
+                Log.e(TAG, "item child view 点击异常: position="+position);
+                return;
+            }
             T data = helper.getItem(position);
-            if (data == null || position == RecyclerView.NO_POSITION) {
-                Log.e(TAG, "item child view 点击异常:data="+data+" position="+position);
+            if (data == null) {
+                Log.e(TAG, "item child view 点击异常:data="+data);
                 return;
             }
 
@@ -217,9 +232,13 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
         view.setOnLongClickListener(v -> {
             boolean consume = false;
             int position = holder.getAdapterPosition();
+            if (position==RecyclerView.NO_POSITION){
+                Log.e(TAG, "item child view 长点击异常: position="+position);
+                return consume;
+            }
             T data = helper.getItem(position);
-            if (data == null || position == RecyclerView.NO_POSITION) {
-                Log.e(TAG, "item child view 长点击异常:data="+data+" position="+position);
+            if (data == null ) {
+                Log.e(TAG, "item child view 长点击异常:data="+data);
                 return consume;
             }
 

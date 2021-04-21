@@ -14,7 +14,8 @@ import java.util.List;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface OnClickItemChildView {
-        /*用于标识是哪个RecyclerView控件的Item点击*/
-        String rv() default "";
+
+        String rv() default "";/*用于标识是哪个RecyclerView控件的Item点击*/
+        String it() default "";/*用于标识是哪一ItemType的Item点击*/
         String[] tags();
 }

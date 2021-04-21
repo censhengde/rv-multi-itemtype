@@ -12,8 +12,9 @@ import com.tencent.lib.multi.R
  * 说明：
 
  */
- abstract class BaseRecyclerView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : RecyclerView(context, attrs, defStyleAttr) {
+abstract class BaseRecyclerView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : RecyclerView(context, attrs, defStyleAttr) {
     var singleSelection: Boolean
+    private var itemTypes: MutableList<ItemType<*>>? = null
 
     init {
         val a = context.obtainStyledAttributes(attrs, R.styleable.BaseRecyclerView)
@@ -33,4 +34,7 @@ import com.tencent.lib.multi.R
         return StaggeredGridBuilder(this, gapStrategy)
     }
 
+    open fun bindObserver(observer: Any, rv: String) {}
+    abstract fun setItemTypes(types: MutableList<ItemType<*>>)
+    abstract fun addItemType(type: ItemType<*>): BaseRecyclerView
 }

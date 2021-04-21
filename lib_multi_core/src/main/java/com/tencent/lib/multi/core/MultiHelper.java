@@ -23,7 +23,7 @@ public abstract class MultiHelper<T> {
     private RecyclerView.Adapter realAdapter;
     protected final SparseArray<ItemType<T>> position_itemType_map = new SparseArray<>();
     protected final SparseArray<ItemType<T>> viewType_itemType_map = new SparseArray<>(8);
-    protected final List<ItemType<T>> types=new ArrayList<>();
+    protected  List<ItemType<T>> types;
 
 
     public void setCheckedItemCount(int checkedItemCount) {
@@ -114,10 +114,16 @@ public abstract class MultiHelper<T> {
     }
 
     public MultiHelper addItemType(@NonNull ItemType<T> type) {
+        if (types==null){
+            types=new ArrayList<>();
+        }
         types.add(type);
         return this;
     }
 
+    public void setItemTypes(List<ItemType<T>> types) {
+        this.types = types;
+    }
     public final void removeItem(int position) {
             position_itemType_map.remove(position);//移除该位置的ItemType
             getItemViewType(position);//重新匹配该位置的ItemType

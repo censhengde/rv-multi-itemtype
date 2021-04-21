@@ -106,6 +106,9 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> {
         return this;
     }
 
+    public void setItemTypes(List<ItemType<T>> types) {
+        mMultiHelper.setItemTypes(types);
+    }
     public void removeItem(int position) {
         if (datas!=null){
             /*如果删除的Item是被选中的Item，则数量要减一*/
