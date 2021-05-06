@@ -48,10 +48,8 @@ public abstract class MultiHelper<T> {
             return types.get(0).getViewType();
         }
         //多样式
-        //先从缓存获取
-        ItemType<T> itemType = position_itemType_map.get(position);
-        if (itemType == null) {//如果缓存没有
-            T data = getItem(position);
+        ItemType<T> itemType = null;
+        final T data = getItem(position);
             if (data == null) {
                 return 0;
             }
@@ -63,7 +61,6 @@ public abstract class MultiHelper<T> {
                     viewType_itemType_map.put(itemType.getViewType(), itemType);
                 }
             }
-        }
         return itemType == null ? 0 : itemType.getViewType();
     }
 
