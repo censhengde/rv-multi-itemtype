@@ -1,4 +1,4 @@
-rootProject.name='MultiRecyclerView'
+rootProject.name='MultiAdapter'
 include ':app'
 include ':lib_multi_core'
 include ':lib_paging'
