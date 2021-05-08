@@ -101,6 +101,10 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> {
         return this;
     }
 
+    @NonNull
+    public List<ItemType<T>> getItemTypeRecord() {
+        return mMultiHelper.getItemTypeRecord();
+    }
     public MultiAdapter<T> addItemType(@NonNull ItemType<T> type) {
         mMultiHelper.addItemType(type);
         return this;

@@ -75,6 +75,7 @@ public abstract class MultiHelper<T> {
                 return 0;
             }
         }
+        //如果已经存在该ItemType，则不需要重新put
         if (viewType_itemType_map.get(itemType.getViewType())==null) {
             viewType_itemType_map.put(itemType.getViewType(), itemType);
         }
