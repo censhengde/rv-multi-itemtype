@@ -1,7 +1,7 @@
-package com.tencent.multirecyclerview.example.viewmodel;
+package com.tencent.multiadapter.example.viewmodel;
 
 import androidx.lifecycle.ViewModel;
-import com.tencent.multirecyclerview.example.bean.ItemBean;
+import com.tencent.multiadapter.example.bean.ItemBean;
 import java.util.ArrayList;
 import java.util.List;
 

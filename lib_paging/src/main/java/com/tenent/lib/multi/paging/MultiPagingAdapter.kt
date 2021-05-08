@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.ViewGroup
 import androidx.paging.*
 import androidx.recyclerview.widget.DiffUtil
-import com.tencent.lib.multi.core.OnCompletedCheckItemCallback
+import com.tencent.lib.multi.core.OnCompletedCheckCallback
 import com.tencent.lib.multi.core.*
 import java.util.*
 
@@ -17,14 +17,14 @@ import java.util.*
  */
  open class MultiPagingAdapter<T : Any>(diffCallback: DiffUtil.ItemCallback<T>) : PagingDataAdapter<T, MultiViewHolder>(diffCallback), PagingManager {
     internal var delegateAdapter: MultiHelper<T>
-    internal var onCompletedCheckedCallback: OnCompletedCheckItemCallback<T>? = null
+    internal var onCompletedCheckedCallback: OnCompletedCheckCallback<T>? = null
     init {
         this.delegateAdapter = object : MultiHelper<T>(this){
             override fun getItem(position: Int): T? {
                 return this@MultiPagingAdapter.getItem(position)
             }
 
-            override fun complete(callback: OnCompletedCheckItemCallback<T>?) {
+            override fun complete(callback: OnCompletedCheckCallback<T>?) {
                 callback?.let {
                     /*筛选出被选中的Item*/
                     val checkedItem = ArrayList<T>()
@@ -80,7 +80,7 @@ import java.util.*
         notifyDataSetChanged()
     }
 
-    fun setOnCompletedCheckItemCallback(callback: OnCompletedCheckItemCallback<T>) {
+    fun setOnCompletedCheckItemCallback(callback: OnCompletedCheckCallback<T>) {
         this.onCompletedCheckedCallback = callback
     }
 

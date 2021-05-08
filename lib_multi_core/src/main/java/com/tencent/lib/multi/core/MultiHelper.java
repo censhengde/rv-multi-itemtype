@@ -21,9 +21,11 @@ public abstract class MultiHelper<T> {
     private int mSelectedPosition = SELECTED_NONE;
     private boolean mSingleSelection = false;
     private RecyclerView.Adapter realAdapter;
-    protected final SparseArray<ItemType<T>> position_itemType_map = new SparseArray<>();
-    protected final SparseArray<ItemType<T>> viewType_itemType_map = new SparseArray<>(8);
-    protected  List<ItemType<T>> types;
+    private final SparseArray<ItemType<T>> viewType_itemType_map = new SparseArray<>();
+    private List<ItemType<T>> mTypes;
+
+    /*index与数据集index一一对应*/
+    private final List<ItemType<T>> mItemTypeRecord = new ArrayList<>();
 
 
     public void setCheckedItemCount(int checkedItemCount) {
@@ -37,36 +39,48 @@ public abstract class MultiHelper<T> {
     }
 
     public int getItemViewType(int position) {
-        if (types==null||types.isEmpty()){
+        if (mTypes == null || mTypes.isEmpty()) {
             return 0;
         }
-        final int typeSize = types.size();
+        ItemType<T> itemType = null;
+        final int typeSize = mTypes.size();
         //单样式
         if (typeSize == 1) {
-            viewType_itemType_map.put(types.get(0).getViewType(), types.get(0));
-            position_itemType_map.put(position, types.get(0));
-            return types.get(0).getViewType();
+            try {
+                itemType = mItemTypeRecord.get(position);//第一次进来会越界，说明尚无记录
+            } catch (Exception e) {
+                itemType = mTypes.get(0);
+                mItemTypeRecord.add(itemType);
+            }
         }
         //多样式
-        ItemType<T> itemType = null;
-        final T data = getItem(position);
+        else {
+            final T data = getItem(position);
             if (data == null) {
                 return 0;
             }
-            //为当前position的实体对象指定它的ItemType
-            for (ItemType<T> type : types) {
-                if (type.matchItemType(data, position)) {
-                    itemType = type;
-                    position_itemType_map.put(position, itemType);
-                    viewType_itemType_map.put(itemType.getViewType(), itemType);
+            try {
+                itemType = mItemTypeRecord.get(position);//第一次进来会越界，说明尚无记录
+            } catch (Exception e) {
+                //为当前position的实体对象指定它的ItemType
+                for (ItemType<T> type : mTypes) {
+                    if (type.matchItemType(data, position)) {
+                        itemType = type;
+                        mItemTypeRecord.add(itemType);
+                        viewType_itemType_map.put(itemType.getViewType(), itemType);
+                    }
                 }
             }
-        return itemType == null ? 0 : itemType.getViewType();
+            if (itemType == null) {
+                return 0;
+            }
+        }
+        if (viewType_itemType_map.get(itemType.getViewType())==null) {
+            viewType_itemType_map.put(itemType.getViewType(), itemType);
+        }
+        return itemType.getViewType();
     }
 
-    public void clearItemTypes() {
-        position_itemType_map.clear();
-    }
     @Nullable
     public abstract T getItem(int position);
 
@@ -93,38 +107,52 @@ public abstract class MultiHelper<T> {
         if (payloads.isEmpty()) {
             this.onBindViewHolder(holder, position);
         } else {
-            final ItemType<T> type = position_itemType_map.get(position);
-            if (type != null) {
-                type.onBindViewHolder(holder, this, position, payloads);
+            try {
+                /*可能有越界风险*/
+                final ItemType<T> type = mItemTypeRecord.get(position);
+                if (type != null) {
+                    type.onBindViewHolder(holder, this, position, payloads);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
 
+    /**
+     * 当涉及item的增、删、改时，数据集元素的增删改必须与ItemTypeRecord增删改同步
+     */
+    @NonNull
+    public List<ItemType<T>> getItemTypeRecord() {
+        return mItemTypeRecord;
+    }
     public void onBindViewHolder(@NonNull MultiViewHolder holder, int position) {
         if (holder.isInvalid){
             return;
         }
-        ItemType<T> type = position_itemType_map.get(position);
-        if (type!=null){
-            type.onBindViewHolder(holder, this, position);
+        try {
+            ItemType<T> type = mItemTypeRecord.get(position);
+            if (type != null) {
+                type.onBindViewHolder(holder, this, position);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     public MultiHelper addItemType(@NonNull ItemType<T> type) {
-        if (types==null){
-            types=new ArrayList<>();
+        if (mTypes == null) {
+            mTypes = new ArrayList<>();
         }
-        types.add(type);
+        mTypes.add(type);
         return this;
     }
 
     public void setItemTypes(List<ItemType<T>> types) {
-        this.types = types;
+        this.mTypes = types;
     }
-    public final void removeItem(int position) {
-            position_itemType_map.remove(position);//移除该位置的ItemType
-            getItemViewType(position);//重新匹配该位置的ItemType
-    }
+
+
     /**
      * 列表选择算法
      *
@@ -189,10 +217,7 @@ public abstract class MultiHelper<T> {
     public int getCheckedItemCount() {
         return mCheckedItemCount;
     }
-    /*有待开发*/
-    final void addItem(int position) {
 
-    }
 
 
     public void setSingleSelection(boolean singleSelection) {
@@ -202,7 +227,7 @@ public abstract class MultiHelper<T> {
     public boolean isSingleSelection() {
         return mSingleSelection;
     }
-    public abstract void complete(OnCompletedCheckItemCallback<T> callback);
+    public abstract void complete(OnCompletedCheckCallback<T> callback);
 
 
 }

@@ -1,4 +1,4 @@
-package com.tencent.multirecyclerview.example.bean;
+package com.tencent.multiadapter.example.bean;
 
 import com.tencent.lib.multi.core.SimpleCheckable;
 

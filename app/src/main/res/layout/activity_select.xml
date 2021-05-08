@@ -4,7 +4,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        tools:context="com.tencent.multirecyclerview.example.ui.SelectActivity">
+        tools:context="com.tencent.multiadapter.example.ui.SelectActivity">
 
     <com.tencent.lib.multi.MultiRecyclerView
             android:id="@+id/rv_selectable"

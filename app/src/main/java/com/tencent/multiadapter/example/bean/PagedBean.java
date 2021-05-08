@@ -1,4 +1,4 @@
-package com.tencent.multirecyclerview.example.bean;
+package com.tencent.multiadapter.example.bean;
 
 /**
  * Author：岑胜德 on 2021/2/22 17:17

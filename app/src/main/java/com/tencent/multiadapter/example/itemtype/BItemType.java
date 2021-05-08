@@ -1,12 +1,12 @@
-package com.tencent.multirecyclerview.example.itemtype;
+package com.tencent.multiadapter.example.itemtype;
 
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import com.tencent.lib.multi.core.MultiHelper;
 import com.tencent.lib.multi.core.MultiViewHolder;
 import com.tencent.lib.multi.core.SimpleItemType;
-import com.tencent.multirecyclerview.R;
-import com.tencent.multirecyclerview.example.bean.ItemBean;
+import com.tencent.multiadapter.R;
+import com.tencent.multiadapter.example.bean.ItemBean;
 
 /**
  * Author：岑胜德 on 2021/1/6 18:04
@@ -22,7 +22,6 @@ public class BItemType extends SimpleItemType<ItemBean> {
 
     @Override
     public boolean matchItemType(ItemBean data, int position) {
-
         return getViewType()==data.viewType;
     }
 

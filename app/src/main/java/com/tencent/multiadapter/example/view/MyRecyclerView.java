@@ -1,4 +1,4 @@
-package com.tencent.multirecyclerview.example.view;
+package com.tencent.multiadapter.example.view;
 
 import android.content.Context;
 import android.util.AttributeSet;

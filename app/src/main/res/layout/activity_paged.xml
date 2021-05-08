@@ -4,7 +4,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        tools:context="com.tencent.multirecyclerview.example.ui.PagedActivity">
+        tools:context="com.tencent.multiadapter.example.ui.PagedActivity">
 
     <com.scwang.smart.refresh.layout.SmartRefreshLayout
             android:id="@+id/refresh_layout"

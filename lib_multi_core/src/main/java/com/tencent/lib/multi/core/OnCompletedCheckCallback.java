@@ -8,7 +8,7 @@ import java.util.List;
  *
  * 说明：把列表中被选中的Item回调出去
  */
-public interface OnCompletedCheckItemCallback<T> {
+public interface OnCompletedCheckCallback<T> {
 
     /**
      *

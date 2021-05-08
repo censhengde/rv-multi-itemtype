@@ -8,7 +8,7 @@ import com.tencent.lib.multi.core.Checkable;
 import com.tencent.lib.multi.core.ItemType;
 import com.tencent.lib.multi.core.MultiHelper;
 import com.tencent.lib.multi.core.MultiViewHolder;
-import com.tencent.lib.multi.core.OnCompletedCheckItemCallback;
+import com.tencent.lib.multi.core.OnCompletedCheckCallback;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> {
 
-    private OnCompletedCheckItemCallback<T> onCompletedCheckItemCallback;
+    private OnCompletedCheckCallback<T> onCompletedCheckCallback;
     protected List<T> datas;
 
     protected MultiHelper<T> mMultiHelper;
@@ -33,7 +33,7 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> {
         }
 
             @Override
-            public void complete(OnCompletedCheckItemCallback<T> callback) {
+            public void complete(OnCompletedCheckCallback<T> callback) {
                 final int count = this.getCheckedItemCount();
                 if (callback != null && count > 0) {//性能优化的一个点：当前列表没有被选中的Item就没有必要再遍历数据源
                     final List<T> checked = new ArrayList<>(count);
@@ -91,7 +91,7 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> {
 
     /*list 引用改变*/
     public MultiAdapter<T> setDatas(@NonNull List<T> datas) {
-        mMultiHelper.clearItemTypes();//确保ItemType记录重新匹配
+        mMultiHelper.getItemTypeRecord().clear();//确保ItemType记录重新匹配
         if (datas == this.datas) {
             notifyDataSetChanged();
             return this;
@@ -120,7 +120,7 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> {
                 }
             }
             datas.remove(position);
-            mMultiHelper.removeItem(position);
+            mMultiHelper.getItemTypeRecord().remove(position);
             notifyItemRemoved(position);
             notifyItemRangeChanged(position,datas.size()-position);
         }
@@ -165,15 +165,15 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> {
         return this;
     }
 
-    public MultiAdapter<T> setOnCompletedCheckItemCallback(OnCompletedCheckItemCallback<T> callback) {
-        this.onCompletedCheckItemCallback = callback;
+    public MultiAdapter<T> setOnCompletedCheckCallback(OnCompletedCheckCallback<T> callback) {
+        this.onCompletedCheckCallback = callback;
         return this;
     }
 
 
     public void complete() {
-        if (onCompletedCheckItemCallback != null) {
-            mMultiHelper.complete(onCompletedCheckItemCallback);
+        if (onCompletedCheckCallback != null) {
+            mMultiHelper.complete(onCompletedCheckCallback);
         }
     }
 

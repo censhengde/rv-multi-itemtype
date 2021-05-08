@@ -1,10 +1,10 @@
-package com.tencent.multirecyclerview.example.datasource
+package com.tencent.multiadapter.example.datasource
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import com.tencent.multirecyclerview.example.bean.PagedBean
+import com.tencent.multiadapter.example.bean.PagedBean
 
 /**
 

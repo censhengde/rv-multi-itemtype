@@ -1,9 +1,9 @@
-package com.tencent.multirecyclerview.example.datasource
+package com.tencent.multiadapter.example.datasource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.tencent.lib.http.HttpClient
-import com.tencent.multirecyclerview.example.bean.PagedBean
+import com.tencent.multiadapter.example.bean.PagedBean
 import java.util.*
 
 /**

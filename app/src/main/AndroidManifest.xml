@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        package="com.tencent.multirecyclerview">
+        package="com.tencent.multiadapter">
 
     <application
             android:allowBackup="true"
@@ -9,11 +9,8 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-<!--        <activity android:name=".example.ui.AnnotationTestActivity"></activity>-->
-<!--        <activity android:name=".example.ui.NestedScrollActivity" /> &lt;!&ndash; <activity android:name=".example.ui.SelectActivity" /> &ndash;&gt;-->
-<!--        <activity android:name=".example.ui.PagedActivity" />-->
-<!--        <activity android:name=".example.ui.ExampleActivity" />-->
-        <activity android:name=".example.ui.AnnotationTestActivity">
+<!--        <activity android:name=".example.ui.MultiItemActivity"></activity>-->
+        <activity android:name="com.tencent.multiadapter.example.ui.MultiItemActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

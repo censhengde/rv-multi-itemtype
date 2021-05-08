@@ -3,7 +3,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.tencent.multirecyclerview.example.ui.NestedScrollActivity">
+        tools:context="com.tencent.multiadapter.example.ui.NestedScrollActivity">
 
     <RelativeLayout
             android:layout_width="match_parent"
