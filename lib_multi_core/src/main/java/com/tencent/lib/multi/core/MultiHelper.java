@@ -16,7 +16,7 @@ import java.util.List;
  */
 public abstract class MultiHelper<T> {
 
-
+    public static final int DEFAULT_VIEW_TYPE = 0;
     private static final int SELECTED_NONE = -1;//表示全列表都没有Item被选中
     private int mSelectedPosition = SELECTED_NONE;
     private boolean mSingleSelection = false;
@@ -24,7 +24,9 @@ public abstract class MultiHelper<T> {
     private final SparseArray<ItemType<T>> viewType_itemType_map = new SparseArray<>();
     private List<ItemType<T>> mTypes;
 
-    /*index与数据集index一一对应*/
+    /*index与Adapter position一一对应,表示某position想要表现的ItemType，
+    注意，并非一定与数据集的index对应。
+    */
     private final List<ItemType<T>> mItemTypeRecord = new ArrayList<>();
 
 
@@ -40,46 +42,58 @@ public abstract class MultiHelper<T> {
 
     public int getItemViewType(int position) {
         if (mTypes == null || mTypes.isEmpty()) {
-            return 0;
+            return DEFAULT_VIEW_TYPE;
         }
-        ItemType<T> itemType = null;
+        ItemType<T> currentType = null;
         final int typeSize = mTypes.size();
         //单样式
         if (typeSize == 1) {
             try {
-                itemType = mItemTypeRecord.get(position);//第一次进来会越界，说明尚无记录
+                currentType = mItemTypeRecord.get(position);//第一次进来会越界，说明尚无记录
             } catch (Exception e) {
-                itemType = mTypes.get(0);
-                mItemTypeRecord.add(itemType);
+                currentType = mTypes.get(0);
+                mItemTypeRecord.add(currentType);
             }
         }
         //多样式
         else {
             final T data = getItem(position);
             if (data == null) {
-                return 0;
+                return DEFAULT_VIEW_TYPE;
             }
             try {
-                itemType = mItemTypeRecord.get(position);//第一次进来会越界，说明尚无记录
+                currentType = mItemTypeRecord.get(position);//第一次进来会越界，说明尚无记录
+                //如果当前position 的ItemType不再与当前的data所指定的ItemType匹配，说明当前data已经被更改，
+                // 需重新匹配当前data所指定的ItemType
+                if (!currentType.matchItemType(data, position)) {
+                    for (ItemType<T> type : mTypes) {
+                        if (type.matchItemType(data, position)) {
+                            //更新当前position的ItemType记录
+                            currentType = type;
+                            mItemTypeRecord.set(position, type);
+                            break;
+                        }
+                    }
+                }
             } catch (Exception e) {
                 //为当前position的实体对象指定它的ItemType
                 for (ItemType<T> type : mTypes) {
                     if (type.matchItemType(data, position)) {
-                        itemType = type;
-                        mItemTypeRecord.add(itemType);
-                        viewType_itemType_map.put(itemType.getViewType(), itemType);
+                        currentType = type;
+                        mItemTypeRecord.add(currentType);
+                        break;
                     }
                 }
             }
-            if (itemType == null) {
-                return 0;
+            if (currentType == null) {
+                return DEFAULT_VIEW_TYPE;
             }
         }
         //如果已经存在该ItemType，则不需要重新put
-        if (viewType_itemType_map.get(itemType.getViewType())==null) {
-            viewType_itemType_map.put(itemType.getViewType(), itemType);
+        if (viewType_itemType_map.get(currentType.getViewType()) == null) {
+            viewType_itemType_map.put(currentType.getViewType(), currentType);
         }
-        return itemType.getViewType();
+        return currentType.getViewType();
     }
 
     @Nullable

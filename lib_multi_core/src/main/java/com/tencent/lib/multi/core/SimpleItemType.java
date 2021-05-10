@@ -33,42 +33,42 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
     private String mRv;
     private String mIt;
 
-    public SimpleItemType setObserver(Object observer) {
+    public final SimpleItemType setObserver(@NonNull Object observer) {
         mObserver = observer;
         return this;
     }
 
-    public SimpleItemType setRv(String rv) {
+    public final SimpleItemType setRv(@NonNull String rv) {
         mRv = rv;
         return this;
     }
 
-    public SimpleItemType setIt(String it) {
+    public final SimpleItemType setIt(@NonNull String it) {
         mIt = it;
         return this;
     }
 
-    public SimpleItemType setEnableOnClickItem(boolean enable) {
-        mEnableOnClickItem = enable;
+    public final SimpleItemType enableClickItem() {
+        mEnableOnClickItem = true;
         return this;
     }
 
-    public SimpleItemType setEnableOnLongClickItem(boolean enable) {
-        mEnableOnLongClickItem = enable;
+    public final SimpleItemType enableLongClickItem() {
+        mEnableOnLongClickItem = true;
         return this;
     }
 
-    public SimpleItemType setEnableOnClickItemChild(boolean enable) {
-        mEnableOnClickItemChild = enable;
+    public final SimpleItemType enableClickItemChildView() {
+        mEnableOnClickItemChild = true;
         return this;
     }
 
-    public SimpleItemType setEnableOnLongClickItemChild(boolean enable) {
-        mEnableOnLongClickItemChild = enable;
+    public final SimpleItemType enableLongClickItemChildView() {
+        mEnableOnLongClickItemChild = true;
         return this;
     }
 
-    public void regist() {
+    public final void regist() {
         regist(mObserver, mRv, mIt, mEnableOnClickItem, mEnableOnClickItemChild, mEnableOnLongClickItem,
                 mEnableOnLongClickItemChild);
     }
@@ -168,7 +168,7 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
 
 
     /*item 点击事件注册*/
-    protected final void registOnClickItemListener(MultiViewHolder holder, MultiHelper<T> helper) {
+    protected final void registClickItemListener(MultiViewHolder holder, MultiHelper<T> helper) {
         holder.itemView.setOnClickListener(v -> {
             int position = holder.getAdapterPosition();
             if (position==RecyclerView.NO_POSITION){
@@ -197,7 +197,7 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
     }
 
     /*item 长点击事件注册*/
-    protected final void registOnLongClickItemListener(MultiViewHolder holder, MultiHelper<T> helper) {
+    protected final void registLongClickItemListener(MultiViewHolder holder, MultiHelper<T> helper) {
         holder.itemView.setOnLongClickListener(v -> {
             boolean consume = false;
             int position = holder.getAdapterPosition();
@@ -228,7 +228,7 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
     }
 
     /*注册item child view 点击事件监听*/
-    protected final void registOnClickItemChildViewListener(int viewId, MultiViewHolder holder, MultiHelper<T> helper) {
+    protected final void registClickItemChildViewListener(int viewId, MultiViewHolder holder, MultiHelper<T> helper) {
         View view = holder.getView(viewId);
         view.setOnClickListener(v -> {
             int position = holder.getAdapterPosition();
@@ -271,7 +271,7 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
     }
 
     /*注册item child view 长按点击事件监听*/
-    protected final void registOnLongClickItemChildViewListener(int viewId, MultiViewHolder holder,
+    protected final void registLongClickItemChildViewListener(int viewId, MultiViewHolder holder,
             MultiHelper<T> helper) {
         View view = holder.getView(viewId);
         view.setOnLongClickListener(v -> {
