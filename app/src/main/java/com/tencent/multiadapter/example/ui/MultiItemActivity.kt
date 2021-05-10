@@ -17,18 +17,23 @@ import kotlinx.android.synthetic.main.activity_multi_item.*
 import java.util.*
 
 class MultiItemActivity : AppCompatActivity() {
-
+    lateinit var adapter: MultiAdapter<ItemBean>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_multi_item)
         val aItemType = AItemType()
+        aItemType.setObserver(this)
+                .setRv("rv")
+                .setIt("item_a")
+                .enableClickItem()
+                .regist()
         val bItemType = BItemType()
         val cItemType = CItemType()
-        val adapter = MultiAdapter<ItemBean>()
+        adapter = MultiAdapter<ItemBean>()
         adapter.addItemType(aItemType)
                 .addItemType(bItemType)
                 .addItemType(cItemType)
-        adapter.setDatas(getData())
+        adapter.setData(getData())
         rv_list.adapter = adapter
 
     }
@@ -54,6 +59,7 @@ class MultiItemActivity : AppCompatActivity() {
     @OnClickItem(rv = "rv", it = "item_a")
     private fun onClickItem(view: View, itemBean: ItemBean, position: Int) {
         Toast.makeText(this, "ItemBean:${itemBean.text},position:$position", Toast.LENGTH_SHORT).show()
+        adapter.removeItem(position)
     }
     /**
      * Item 子View点击事件

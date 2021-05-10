@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.ViewGroup
 import androidx.paging.*
 import androidx.recyclerview.widget.DiffUtil
-import com.tencent.lib.multi.core.OnCompletedCheckCallback
+import com.tencent.lib.multi.core.OnCheckingFinishedCallback
 import com.tencent.lib.multi.core.*
 import java.util.*
 
@@ -17,15 +17,15 @@ import java.util.*
  */
  open class MultiPagingAdapter<T : Any>(diffCallback: DiffUtil.ItemCallback<T>) : PagingDataAdapter<T, MultiViewHolder>(diffCallback), PagingManager {
     internal var delegateAdapter: MultiHelper<T>
-    internal var onCompletedCheckedCallback: OnCompletedCheckCallback<T>? = null
+    internal var onCompletedCheckedFinishedCallback: OnCheckingFinishedCallback<T>? = null
     init {
         this.delegateAdapter = object : MultiHelper<T>(this){
             override fun getItem(position: Int): T? {
                 return this@MultiPagingAdapter.getItem(position)
             }
 
-            override fun complete(callback: OnCompletedCheckCallback<T>?) {
-                callback?.let {
+            override fun finishChecking(finishedCallback: OnCheckingFinishedCallback<T>?) {
+                finishedCallback?.let {
                     /*筛选出被选中的Item*/
                     val checkedItem = ArrayList<T>()
                     this@MultiPagingAdapter.snapshot().items.forEach {
@@ -33,7 +33,7 @@ import java.util.*
                             checkedItem.add(it)
                         }
                     }
-                    callback.onCompletedChecked(checkedItem)
+                    finishedCallback.onCheckingFinished(checkedItem)
                 }
             }
 
@@ -61,7 +61,7 @@ import java.util.*
     }
 
      fun complete() {
-        delegateAdapter .complete(onCompletedCheckedCallback)
+        delegateAdapter .finishChecking(onCompletedCheckedFinishedCallback)
     }
 
      fun saveCheckedItem(out: Bundle?) {
@@ -80,8 +80,8 @@ import java.util.*
         notifyDataSetChanged()
     }
 
-    fun setOnCompletedCheckItemCallback(callback: OnCompletedCheckCallback<T>) {
-        this.onCompletedCheckedCallback = callback
+    fun setOnCompletedCheckItemCallback(finishedCallback: OnCheckingFinishedCallback<T>) {
+        this.onCompletedCheckedFinishedCallback = finishedCallback
     }
 
      fun checkAll() {
@@ -96,7 +96,7 @@ import java.util.*
 
 
      fun setSingleSelection(isSingleSelection: Boolean) {
-        delegateAdapter.setSingleSelection(isSingleSelection)
+        delegateAdapter.setSingleChecking(isSingleSelection)
     }
 
 

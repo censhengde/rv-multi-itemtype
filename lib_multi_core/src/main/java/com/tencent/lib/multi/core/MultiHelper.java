@@ -19,7 +19,7 @@ public abstract class MultiHelper<T> {
     public static final int DEFAULT_VIEW_TYPE = 0;
     private static final int SELECTED_NONE = -1;//表示全列表都没有Item被选中
     private int mSelectedPosition = SELECTED_NONE;
-    private boolean mSingleSelection = false;
+    private boolean mSingleChecking = false;
     private RecyclerView.Adapter realAdapter;
     private final SparseArray<ItemType<T>> viewType_itemType_map = new SparseArray<>();
     private List<ItemType<T>> mTypes;
@@ -135,10 +135,13 @@ public abstract class MultiHelper<T> {
     }
 
     /**
-     * 当涉及item的增、删、改时，数据集元素的增删改必须与ItemTypeRecord增删改同步
+     * 当涉及item的增、删、改时，数据集元素的增删改必须与ItemTypeRecord增删改同步。
+     * 一般来说当我们明确知道某position的ItemType的改变时，应主动调用这个方法进行更新，因为由
+     * {@getItemViewType}自动匹配的话执行过程相对复杂度较高，消耗略大。例子见MultiAdapter removeItem方法。
+     * @return ItemType记录
      */
     @NonNull
-    public List<ItemType<T>> getItemTypeRecord() {
+    public final List<ItemType<T>> getItemTypeRecord() {
         return mItemTypeRecord;
     }
     public void onBindViewHolder(@NonNull MultiViewHolder holder, int position) {
@@ -185,7 +188,7 @@ public abstract class MultiHelper<T> {
         }
         final   Checkable checkableData= (Checkable)data;
         //========单选=================
-        if (mSingleSelection) {
+        if (mSingleChecking) {
             //列表中已有被选中Item，且当前被选中的Item==上次被选中的,则将Item重置为未选中状态,此时全列表0个item被选中。
             if (position == mSelectedPosition) {
                 checkableData.setChecked(false);
@@ -235,14 +238,15 @@ public abstract class MultiHelper<T> {
 
 
 
-    public void setSingleSelection(boolean singleSelection) {
-        mSingleSelection = singleSelection;
+    public void setSingleChecking(boolean single) {
+        mSingleChecking = single;
     }
 
-    public boolean isSingleSelection() {
-        return mSingleSelection;
+    public boolean isSingleChecking() {
+        return mSingleChecking;
     }
-    public abstract void complete(OnCompletedCheckCallback<T> callback);
+
+    public abstract void finishChecking(OnCheckingFinishedCallback<T> callback);
 
 
 }
