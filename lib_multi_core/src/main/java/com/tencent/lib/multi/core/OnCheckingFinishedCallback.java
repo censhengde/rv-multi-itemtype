@@ -11,8 +11,8 @@ import java.util.List;
 public interface OnCheckingFinishedCallback<T> {
 
     /**
-     * @param datas 被选中的Item集合
+     * @param checked 被选中的Item集合
      */
-    void onCheckingFinished(@NonNull List<T> datas);
+    void onCheckingFinished(@NonNull List<T> checked);
 
 }

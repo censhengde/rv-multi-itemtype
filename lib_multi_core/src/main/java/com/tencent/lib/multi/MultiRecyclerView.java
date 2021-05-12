@@ -37,19 +37,7 @@ public class MultiRecyclerView extends BaseRecyclerView {
         }
         return null;
     }
-    @Override
-    public void setItemTypes(@NotNull List<ItemType<?>> types) {
-           if (getMultiAdapter()!=null){
-               getMultiAdapter().setItemTypes(types);
-           }
-    }
 
-    @NotNull
-    @Override
-    public MultiRecyclerView addItemType(@NotNull ItemType<?> type) {
-        if (getMultiAdapter()!=null){
-            getMultiAdapter().addItemType(type);
-        }
-        return this;
-    }
+
+
 }

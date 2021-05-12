@@ -34,7 +34,5 @@ abstract class BaseRecyclerView @JvmOverloads constructor(context: Context, attr
         return StaggeredGridBuilder(this, gapStrategy)
     }
 
-    open fun bindObserver(observer: Any, rv: String) {}
-    abstract fun setItemTypes(types: MutableList<ItemType<*>>)
-    abstract fun addItemType(type: ItemType<*>): BaseRecyclerView
+
 }

@@ -7,7 +7,7 @@ import android.os.Parcelable;
  *
  * 说明：标识该Item是可被选中的
  */
-public interface Checkable extends Parcelable {
+public interface Checkable  {
     /*设置是否被选中*/
     void setChecked(boolean checked);
     /*获取选择状态*/

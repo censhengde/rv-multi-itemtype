@@ -9,23 +9,9 @@ import com.tencent.lib.multi.core.Checkable;
  *
  * 说明：简单的 Checkable 实现类
  */
-public abstract class SimpleCheckable<T> implements Checkable {
-
-    public final Parcelable.Creator<T> CREATOR = new Parcelable.Creator<T>() {
-
-        @Override
-        public T createFromParcel(Parcel source) {
-            return null;
-        }
-
-        @Override
-        public T[] newArray(int size) {
-            return null;
-        }
-    };
+public abstract class SimpleCheckable implements Checkable {
 
     private boolean isChecked;
-
     @Override
     public void setChecked(boolean checked) {
         this.isChecked = checked;
@@ -36,13 +22,4 @@ public abstract class SimpleCheckable<T> implements Checkable {
         return isChecked;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-
-    }
 }

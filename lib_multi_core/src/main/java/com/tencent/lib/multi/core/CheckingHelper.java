@@ -142,6 +142,10 @@ public abstract class CheckingHelper<T> {
      * @param payload
      */
     public final void checkRange(int start, int itemCount, @Nullable Object payload) {
+        handleRangeInternal(start, itemCount, payload, true);
+    }
+
+    private void handleRangeInternal(int start, int itemCount, @Nullable Object payload, boolean check) {
         final int size = getDataSize();
         final int end = (start + itemCount - 1);
         if (start < 0 || itemCount <= 0 || end >= size) {
@@ -151,15 +155,26 @@ public abstract class CheckingHelper<T> {
             final T item = getItem(i);
             if (item instanceof Checkable) {
                 final Checkable checkable = (Checkable) item;
-                if (!checkable.isChecked()) {
-                    checkable.setChecked(true);
-                    mCheckedItemCount++;
-                    mAdapter.notifyItemChanged(i, payload);
+                /*如果是选中*/
+                if (check) {
+                    /**/
+                    if (!checkable.isChecked()) {
+                        checkable.setChecked(true);
+                        mCheckedItemCount++;
+                        mAdapter.notifyItemChanged(i, payload);
+                    }
+                }
+                /*取消选中*/
+                else {
+                    if (checkable.isChecked()) {
+                        checkable.setChecked(false);
+                        mCheckedItemCount--;
+                        mAdapter.notifyItemChanged(i, payload);
+                    }
                 }
             }
         }
     }
-
     /**
      * 全选
      *
@@ -172,7 +187,12 @@ public abstract class CheckingHelper<T> {
     /**
      * 取消全选
      */
-    public final void cancelAll() {
-        mCheckedItemCount = 0;
+    public final void cancelAll(@Nullable Object payload) {
+        cancelRange(0, getDataSize(), payload);
+
+    }
+
+    public final void cancelRange(int start, int itemCount, @Nullable Object payload) {
+        handleRangeInternal(start, itemCount, payload, false);
     }
 }
