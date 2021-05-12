@@ -39,7 +39,7 @@ class MultiItemActivity : AppCompatActivity() {
         /*初始化Adapter*/
         adapter = MultiAdapter<ItemBean>()
         /*将所有ItemType添加到Adapter中*/
-        adapter.addItemType(aItemType)
+        adapter.multiHelper.addItemType(aItemType)
                 .addItemType(bItemType)
                 .addItemType(cItemType)
         /*设置数据*/
