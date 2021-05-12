@@ -16,34 +16,47 @@ import com.tencent.multiadapter.example.bean.ItemBean;
 public class AItemType extends SimpleItemType<ItemBean> {
 
     /**
-     * 返回当前item类型的标识
-     * @return
+     * @return 返回当前item类型的标识
      */
     @Override
     public int getViewType() {
         return ItemBean.TYPE_A;
     }
 
+    /**
+     * @param data 当前position对应的实体对象
+     * @param position
+     * @return true 表示成功匹配到对应的ItemType
+     */
     @Override
     public boolean matchItemType(ItemBean data, int position) {
-        return getViewType() == data.viewType;//这句话的含义是：当前位置item想要呈现的item类型是哪一种，
-        //以A、B、C三类为例，进行遍历，直到返回true为止。（详见MultiHelper getItemViewType方法实现）
+        return getViewType() == data.viewType;//这句话的含义是：当前position 的ItemBean想要表现的item类型是哪一种，
+        //以本例为例，会依次遍历A、B、C三个Item类型，直到返回true为止。（详见MultiHelper getItemViewType方法实现）
     }
 
+    /**
+     * @return 返回当前item类型的布局文件
+     */
     @Override
     public int getItemLayoutRes() {
         return R.layout.item_a;
     }
 
+    /**
+     * 表示ViewHolder已经创建完成。本方法最终是在RecyclerView.Adapter onCreateViewHolder方法中被调用，
+     * 所以所有的与item相关的点击事件监听器都应在这里注册。
+     *
+     * @param holder
+     * @param helper
+     */
     @Override
     public void onViewHolderCreated(@NonNull MultiViewHolder holder, @NonNull MultiHelper<ItemBean> helper) {
-
+        /*注册监听器*/
         registClickItemListener(holder, helper);
-
     }
 
     /**
-     * 绑定数据
+     * 给当前item类型布局视图设置数据，意义基本与RecyclerView.Adapter onBindViewHolder 相同。
      * @param holder
      * @param position
      */

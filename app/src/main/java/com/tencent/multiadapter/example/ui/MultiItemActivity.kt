@@ -21,18 +21,28 @@ class MultiItemActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_multi_item)
+        //初始化ItemType
         val aItemType = AItemType()
         aItemType.setObserver(this)
-                .setRv("rv")
-                .setIt("item_a")
-                .enableClickItem()
-                .regist()
+                .setRv("rv")/*设置RecyclerView标识符*/
+                .setIt("item_a")/*设置ItemType标识符*/
+                .enableClickItem()/*启用item点击事件监听功能*/
+                .regist()/*开始注册*/
         val bItemType = BItemType()
+        bItemType.setObserver(this)
+                .setRv("rv")
+                .setIt("item_b")
+                .enableClickItemChildView()/*启用item子view点击事件监听功能*/
+                .regist()
+
         val cItemType = CItemType()
+        /*初始化Adapter*/
         adapter = MultiAdapter<ItemBean>()
+        /*将所有ItemType添加到Adapter中*/
         adapter.addItemType(aItemType)
                 .addItemType(bItemType)
                 .addItemType(cItemType)
+        /*设置数据*/
         adapter.setData(getData())
         rv_list.adapter = adapter
 
@@ -59,7 +69,6 @@ class MultiItemActivity : AppCompatActivity() {
     @OnClickItem(rv = "rv", it = "item_a")
     private fun onClickItem(view: View, itemBean: ItemBean, position: Int) {
         Toast.makeText(this, "ItemBean:${itemBean.text},position:$position", Toast.LENGTH_SHORT).show()
-        adapter.removeItem(position)
     }
     /**
      * Item 子View点击事件
@@ -68,7 +77,7 @@ class MultiItemActivity : AppCompatActivity() {
      * tags:Item 子View 的tag集合。因为同一种item中可能有多个子view响应同一点击事件。为什么不是View的id？答：因为View的id在子module中是变量。
      *           注解参数不支持变量。
      */
-    @OnClickItemChildView(rv = "rv", it = "item_a",tags = ["tv_a"])
+    @OnClickItemChildView(rv = "rv", it = "item_b",tags = ["btn_b"])
     private fun onClickItemChildView(view: View, itemBean: ItemBean, position: Int) {
         Toast.makeText(this, "ItemBean:${itemBean.text},position:$position", Toast.LENGTH_SHORT).show()
     }

@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import com.tencent.lib.multi.core.Checkable;
+import com.tencent.lib.multi.core.CheckingHelper;
 import com.tencent.lib.multi.core.ItemType;
 import com.tencent.lib.multi.core.MultiHelper;
 import com.tencent.lib.multi.core.MultiViewHolder;
@@ -22,33 +23,41 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> {
     private OnCheckingFinishedCallback<T> onCheckingFinishedCallback;
     protected List<T> mData;
 
-    protected MultiHelper<T> mMultiHelper;
-
-    public MultiAdapter() {
-        mMultiHelper = new MultiHelper<T>(this) {
+    protected MultiHelper<T> mMultiHelper = new MultiHelper<T>(this) {
         @Nullable
         @Override
         public T getItem(int position) {
-           return MultiAdapter.this.getItem(position);
+            return MultiAdapter.this.getItem(position);
         }
 
-            @Override
-            public void finishChecking(OnCheckingFinishedCallback<T> callback) {
-                final int count = this.getCheckedItemCount();
-                if (callback != null && count > 0) {//性能优化的一个点：当前列表没有被选中的Item就没有必要再遍历数据源
-                    final List<T> checked = new ArrayList<>(count);
-                    //筛选出被选中的Item
-                    if (mData != null && !mData.isEmpty()) {
-                        for (T data : mData) {
-                            if (((Checkable) data).isChecked()) {
-                                checked.add(data);
-                            }
+    };
+    private final CheckingHelper<T> mCheckingHelper = new CheckingHelper<T>(this) {
+        @Nullable
+        @Override
+        public T getItem(int position) {
+            return MultiAdapter.this.getItem(position);
+        }
+
+        @Override
+        public void finishChecking(OnCheckingFinishedCallback<T> callback) {
+            final int count = this.getCheckedItemCount();
+            if (callback != null && count > 0) {//性能优化的一个点：当前列表没有被选中的Item就没有必要再遍历数据源
+                final List<T> checked = new ArrayList<>(count);
+                //筛选出被选中的Item
+                if (mData != null && !mData.isEmpty()) {
+                    for (T data : mData) {
+                        if (((Checkable) data).isChecked()) {
+                            checked.add(data);
                         }
                     }
-                    callback.onCheckingFinished(checked);
                 }
+                callback.onCheckingFinished(checked);
             }
+        }
     };
+
+    public MultiAdapter() {
+
     }
 
     public final boolean isInValidPosition(int position) {
@@ -126,7 +135,7 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> {
             if (item instanceof Checkable) {
                 final Checkable checkable = (Checkable) item;
                 if (checkable.isChecked()) {
-                    mMultiHelper.setCheckedItemCount(mMultiHelper.getCheckedItemCount() - 1);
+                    mCheckingHelper.setCheckedItemCount(mCheckingHelper.getCheckedItemCount() - 1);
                 }
             }
             mData.remove(position);
@@ -141,7 +150,7 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> {
      */
     public void cancelAll() {
         /*复选模式下才进行全选*/
-        if (!mMultiHelper.isSingleChecking()) {
+        if (!mCheckingHelper.isSingleChecking()) {
             if (mData != null && !mData.isEmpty()) {
                 for (T data : mData) {
                     ((Checkable) data).setChecked(false);
@@ -156,7 +165,7 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> {
      */
     public void checkAll() {
         /*复选模式下才进行全选*/
-        if (!mMultiHelper.isSingleChecking()) {
+        if (!mCheckingHelper.isSingleChecking()) {
             if (mData != null && !mData.isEmpty()) {
                 for (T data : mData) {
                     ((Checkable) data).setChecked(true);
@@ -167,7 +176,7 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> {
     }
 
     public MultiAdapter<T> setSingleChecking(boolean single) {
-        mMultiHelper.setSingleChecking(single);
+        mCheckingHelper.setSingleChecking(single);
         return this;
     }
 
@@ -187,7 +196,7 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> {
      */
     public void finishChecking() {
         if (onCheckingFinishedCallback != null) {
-            mMultiHelper.finishChecking(onCheckingFinishedCallback);
+            mCheckingHelper.finishChecking(onCheckingFinishedCallback);
         }
     }
 
@@ -195,8 +204,8 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> {
      * 选中某Item
      * @param position
      */
-    public final void checkItem(int position) {
-        mMultiHelper.checkItem(position);
+    public final void checkItem(int position, @Nullable Object payload) {
+        mCheckingHelper.checkItem(position, payload);
     }
 
 }

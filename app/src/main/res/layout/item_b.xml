@@ -4,21 +4,24 @@
     android:layout_width="match_parent"
     android:background="@color/colorAccent"
     android:layout_height="120dp">
+
+    <Button
+            android:id="@+id/btn_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+            android:tag="btn_b"
+            android:text="Button"
+            android:textAllCaps="false"
+            android:textSize="18sp" />
     <TextView
-        android:id="@+id/tv_b"
+            android:id="@+id/tv_b"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:gravity="center"
-            android:tag="tv_b"
-        android:layout_gravity="center|center_vertical"
-        android:text="B 类 Item"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:gravity="center"
-        android:layout_gravity="end"
         android:text="B 类 Item"/>
 
 </LinearLayout>

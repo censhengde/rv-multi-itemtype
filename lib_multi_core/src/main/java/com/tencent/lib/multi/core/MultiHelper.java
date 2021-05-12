@@ -17,9 +17,6 @@ import java.util.List;
 public abstract class MultiHelper<T> {
 
     public static final int DEFAULT_VIEW_TYPE = 0;
-    private static final int SELECTED_NONE = -1;//表示全列表都没有Item被选中
-    private int mSelectedPosition = SELECTED_NONE;
-    private boolean mSingleChecking = false;
     private RecyclerView.Adapter realAdapter;
     private final SparseArray<ItemType<T>> viewType_itemType_map = new SparseArray<>();
     private List<ItemType<T>> mTypes;
@@ -30,17 +27,13 @@ public abstract class MultiHelper<T> {
     private final List<ItemType<T>> mItemTypeRecord = new ArrayList<>();
 
 
-    public void setCheckedItemCount(int checkedItemCount) {
-        mCheckedItemCount = checkedItemCount;
-    }
 
-    private int mCheckedItemCount = 0;//当前列表被已被选中的Item数目
 
     public MultiHelper(Adapter realAdapter) {
         this.realAdapter = realAdapter;
     }
 
-    public int getItemViewType(int position) {
+    public final int getItemViewType(int position) {
         if (mTypes == null || mTypes.isEmpty()) {
             return DEFAULT_VIEW_TYPE;
         }
@@ -169,84 +162,6 @@ public abstract class MultiHelper<T> {
     public void setItemTypes(List<ItemType<T>> types) {
         this.mTypes = types;
     }
-
-
-    /**
-     * 列表选择算法
-     *
-     * @param position
-     * @return
-     */
-    public final void checkItem(int position) {
-
-        final T data = getItem(position);
-        if (data == null) {
-            return;
-        }
-        if (!(data instanceof Checkable)){
-            throw new IllegalStateException(" Item 实体类必须是 Checkable 类型");
-        }
-        final   Checkable checkableData= (Checkable)data;
-        //========单选=================
-        if (mSingleChecking) {
-            //列表中已有被选中Item，且当前被选中的Item==上次被选中的,则将Item重置为未选中状态,此时全列表0个item被选中。
-            if (position == mSelectedPosition) {
-                checkableData.setChecked(false);
-                mSelectedPosition = SELECTED_NONE;
-                mCheckedItemCount--;
-                realAdapter.notifyItemChanged(position);
-            }
-            //列表中已有被选中Item，但当前被选中Item！=上次被选中Item,则将上次的重置为未选中状态,再将当前Item置为被选中状态。
-            else if (mSelectedPosition != SELECTED_NONE) {
-                Checkable selectedData = (Checkable) getItem(mSelectedPosition);
-                if (selectedData == null) {
-                    return;
-                }
-                selectedData.setChecked(false);
-                realAdapter.notifyItemChanged(mSelectedPosition);
-                checkableData.setChecked(true);
-                mSelectedPosition = position;
-                realAdapter.notifyItemChanged(mSelectedPosition);
-            }
-            //列表中尚未有Item被选中,则将当前Item置为被选中状态。
-            else if (mSelectedPosition == SELECTED_NONE) {
-                checkableData.setChecked(true);
-                mSelectedPosition = position;
-                mCheckedItemCount++;
-                realAdapter.notifyItemChanged(position);
-            }
-
-            //==========复选===============
-        } else {
-            //如果当前item已经被选中，则取消被选中。
-            if (checkableData.isChecked()) {
-                checkableData.setChecked(false);
-                mCheckedItemCount--;
-                realAdapter.notifyItemChanged(position);
-            } else {//否则被选中
-                checkableData.setChecked(true);
-                mCheckedItemCount++;
-                realAdapter.notifyItemChanged(position);
-            }
-
-        }
-    }
-
-    public int getCheckedItemCount() {
-        return mCheckedItemCount;
-    }
-
-
-
-    public void setSingleChecking(boolean single) {
-        mSingleChecking = single;
-    }
-
-    public boolean isSingleChecking() {
-        return mSingleChecking;
-    }
-
-    public abstract void finishChecking(OnCheckingFinishedCallback<T> callback);
 
 
 }

@@ -16,7 +16,7 @@ public class ItemBean extends SimpleCheckable<ItemBean> {
 
     //Item类型标识（很关键！）
     public int viewType;
-    private boolean checked;
+
 
     //item具体业务数据字段
     public String text = "";
@@ -26,13 +26,5 @@ public class ItemBean extends SimpleCheckable<ItemBean> {
         this.viewType = viewType;
         this.text = text;
     }
-
-    @Override
-    public String toString() {
-        return "ItemBean{" +
-                "viewType=" + viewType +
-                ", text='" + text + '\'' +
-                '}';
-    }
-
+    
 }
