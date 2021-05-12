@@ -1,8 +1,11 @@
 package com.tencent.lib.multi.core;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.Adapter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Author：岑胜德 on 2021/5/12 11:50
@@ -16,14 +19,15 @@ public abstract class CheckingHelper<T> {
     private static final int SELECTED_NONE = -1;//表示全列表都没有Item被选中
     private int mSelectedPosition = SELECTED_NONE;
     private boolean mSingleChecking = false;
+    private OnCheckingFinishedCallback<T> mOnCheckingFinishedCallback;
 
 
     public void setCheckedItemCount(int checkedItemCount) {
         mCheckedItemCount = checkedItemCount;
     }
 
-    public CheckingHelper(Adapter mAdapter) {
-        this.mAdapter = mAdapter;
+    public CheckingHelper(Adapter adapter) {
+        this.mAdapter = adapter;
     }
 
     /**
@@ -87,6 +91,8 @@ public abstract class CheckingHelper<T> {
     @Nullable
     public abstract T getItem(int position);
 
+    protected abstract int getDataSize();
+
     public int getCheckedItemCount() {
         return mCheckedItemCount;
     }
@@ -101,5 +107,48 @@ public abstract class CheckingHelper<T> {
         return mSingleChecking;
     }
 
-    public abstract void finishChecking(OnCheckingFinishedCallback<T> callback);
+    public void setOnCheckingFinishedCallback(OnCheckingFinishedCallback<T> callback) {
+        mOnCheckingFinishedCallback = callback;
+    }
+
+    public void finishChecking() {
+        final int count = this.getCheckedItemCount();
+        if (count > 0) {//性能优化的一个点：当前列表没有被选中的Item就没有必要再遍历数据源
+            final List<T> checked = new ArrayList<>(count);
+            final int size = getDataSize();
+            //筛选出被选中的Item
+            for (int i = 0; i < size; i++) {
+                final T item = getItem(i);
+                if (item instanceof Checkable) {
+                    if (((Checkable) item).isChecked()) {
+                        checked.add(item);
+                    }
+                }
+            }
+            if (mOnCheckingFinishedCallback != null) {
+                mOnCheckingFinishedCallback.onCheckingFinished(checked);
+            }
+        }
+
+
+    }
+
+    public final void checkRange(int start, int itemCount, @Nullable Object payload) {
+        final int size = getDataSize();
+        final int end = (start + itemCount - 1);
+        if (start < 0 || itemCount <= 0 || end >= size) {
+            return;
+        }
+        for (int i = start; i <= end; i++) {
+            final T item = getItem(i);
+            if (item instanceof Checkable) {
+                ((Checkable) item).setChecked(true);
+                mAdapter.notifyItemChanged(i, payload);
+            }
+        }
+    }
+
+    public final void checkAll(@Nullable Object payload) {
+        checkRange(0, getDataSize(), payload);
+    }
 }
