@@ -5,9 +5,9 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.tencent.lib.multi.MultiAdapter
-import com.tencent.lib.multi.core.OnClickItem
-import com.tencent.lib.multi.core.OnClickItemChildView
-import com.tencent.lib.multi.core.OnLongClickItem
+import com.tencent.lib.multi.core.annotation.OnClickItem
+import com.tencent.lib.multi.core.annotation.OnClickItemChildView
+import com.tencent.lib.multi.core.annotation.OnLongClickItem
 import com.tencent.multiadapter.R
 import com.tencent.multiadapter.example.bean.ItemBean
 import com.tencent.multiadapter.example.itemtype.AItemType

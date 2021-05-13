@@ -17,11 +17,11 @@ import com.tencent.multiadapter.example.bean.CheckableItem
  */
 class CheckableItemType : SimpleItemType<CheckableItem>() {
     override fun getViewType(): Int {
-        return CheckableItem.VIEW_TYPE_ITEM
+        return CheckableItem.VIEW_TYPE_CHECKABLE
     }
 
     override fun getItemLayoutRes(): Int = R.layout.item_checking_checkable
-    override fun matchItemType(data: CheckableItem, position: Int): Boolean = data.viewType == CheckableItem.VIEW_TYPE_ITEM
+    override fun matchItemType(data: CheckableItem, position: Int): Boolean = data.viewType == CheckableItem.VIEW_TYPE_CHECKABLE
     override fun onViewHolderCreated(holder: MultiViewHolder, helper: MultiHelper<CheckableItem>) {
         registClickItemListener(holder, helper)
     }

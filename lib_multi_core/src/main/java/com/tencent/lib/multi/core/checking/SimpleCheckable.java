@@ -1,8 +1,6 @@
-package com.tencent.lib.multi.core;
+package com.tencent.lib.multi.core.checking;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-import com.tencent.lib.multi.core.Checkable;
+import com.tencent.lib.multi.core.checking.Checkable;
 
 /**
  * Author：岑胜德 on 2021/2/22 15:36

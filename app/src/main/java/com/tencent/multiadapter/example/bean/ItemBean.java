@@ -1,6 +1,6 @@
 package com.tencent.multiadapter.example.bean;
 
-import com.tencent.lib.multi.core.SimpleCheckable;
+import com.tencent.lib.multi.core.checking.SimpleCheckable;
 
 /**
  * Author：岑胜德 on 2021/1/6 18:05

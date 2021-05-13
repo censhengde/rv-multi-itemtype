@@ -1,4 +1,4 @@
-package com.tencent.lib.multi.core;
+package com.tencent.lib.multi.core.listener;
 
 import androidx.annotation.NonNull;
 import java.util.List;

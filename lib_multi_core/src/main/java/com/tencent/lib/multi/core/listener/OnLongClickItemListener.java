@@ -1,4 +1,4 @@
-package com.tencent.lib.multi.core;
+package com.tencent.lib.multi.core.listener;
 
 import android.view.View;
 import androidx.annotation.NonNull;
@@ -11,6 +11,6 @@ import androidx.annotation.Nullable;
  */
 public interface OnLongClickItemListener<T> {
 
-    boolean onLongClickItem(@NonNull View v,@Nullable T item, int position);
+    boolean onLongClickItem(@NonNull View v,int type,@Nullable T item, int position);
 
 }

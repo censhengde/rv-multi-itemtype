@@ -1,4 +1,4 @@
-package com.tencent.lib.multi.core;
+package com.tencent.lib.multi.core.listener;
 
 import android.view.View;
 import androidx.annotation.NonNull;
@@ -11,6 +11,6 @@ import androidx.annotation.Nullable;
  */
 public interface OnClickItemListener<T> {
 
-    void onClickItem(@NonNull View v, @Nullable T item, int position);
+    void onClickItem(@NonNull View v,int type, @NonNull T item, int position);
 
 }

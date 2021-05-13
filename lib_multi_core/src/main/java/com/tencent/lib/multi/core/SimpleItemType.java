@@ -5,6 +5,14 @@ import android.util.Log;
 import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.tencent.lib.multi.core.annotation.OnClickItem;
+import com.tencent.lib.multi.core.annotation.OnClickItemChildView;
+import com.tencent.lib.multi.core.annotation.OnLongClickItem;
+import com.tencent.lib.multi.core.annotation.OnLongClickItemChildView;
+import com.tencent.lib.multi.core.listener.OnClickItemChildViewListener;
+import com.tencent.lib.multi.core.listener.OnClickItemListener;
+import com.tencent.lib.multi.core.listener.OnLongClickItemChildViewListener;
+import com.tencent.lib.multi.core.listener.OnLongClickItemListener;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -20,6 +28,8 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
     private static final String TAG = "SimpleItemType";
     private OnClickItemListener<T> mItemListener;
     private OnLongClickItemListener<T> mOnLongClickItemListener;
+    private OnClickItemChildViewListener<T> mOnClickItemChildViewListener;
+    private OnLongClickItemChildViewListener<T> mOnLongClickItemChildViewListener;
 
     private Object mObserver;
     private Method mOnClickItemM;
@@ -142,6 +152,15 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
         mItemListener = itemListener;
     }
 
+    public void setOnClickItemChildViewListener(
+            OnClickItemChildViewListener<T> listener) {
+        this.mOnClickItemChildViewListener = listener;
+    }
+
+    public void setOnLongClickItemChildViewListener(
+            OnLongClickItemChildViewListener<T> listener) {
+        this.mOnLongClickItemChildViewListener = listener;
+    }
     @Override
     public int getViewType() {
         return 0;
@@ -180,8 +199,10 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
                 Log.e(TAG, "item 点击异常:data="+data);
                 return;
             }
+            //优先监听器
             if (mItemListener != null) {
-                mItemListener.onClickItem(v, data, position);
+                mItemListener.onClickItem(v, getViewType(), data, position);
+                return;
             }
             if (mOnClickItemM != null) {
                 mOnClickItemM.setAccessible(true);
@@ -211,7 +232,7 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
                 return consume;
             }
             if (mOnLongClickItemListener != null) {
-                consume = mOnLongClickItemListener.onLongClickItem(v, data, position);
+                return mOnLongClickItemListener.onLongClickItem(v, getViewType(), data, position);
             }
             if (mOnLongClickItemM != null) {
                 mOnLongClickItemM.setAccessible(true);
@@ -239,6 +260,11 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
             T data = helper.getItem(position);
             if (data == null) {
                 Log.e(TAG, "item child view 点击异常:data="+data);
+                return;
+            }
+            //监听器优先
+            if (mOnClickItemChildViewListener != null) {
+                mOnClickItemChildViewListener.onClickItemChildView(v, getViewType(), data, position);
                 return;
             }
 
@@ -285,6 +311,12 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
             if (data == null ) {
                 Log.e(TAG, "item child view 长点击异常:data="+data);
                 return consume;
+            }
+
+            //监听器优先
+            if (mOnLongClickItemChildViewListener != null) {
+                return mOnLongClickItemChildViewListener
+                        .onClickItemChildView(v, getViewType(), data, position);
             }
 
             Object tag = v.getTag();

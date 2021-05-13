@@ -1,4 +1,4 @@
-package com.tencent.lib.multi.core;
+package com.tencent.lib.multi.core.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,8 +1,10 @@
-package com.tencent.lib.multi.core;
+package com.tencent.lib.multi.core.checking;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.Adapter;
+import com.tencent.lib.multi.core.checking.Checkable;
+import com.tencent.lib.multi.core.listener.OnCheckingFinishedCallback;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +18,8 @@ public abstract class CheckingHelper<T> {
     private RecyclerView.Adapter mAdapter;
     private int mCheckedItemCount = 0;//当前列表被已被选中的Item数目
     private static final int SELECTED_NONE = -1;//表示全列表都没有Item被选中
-    private int mSelectedPosition = SELECTED_NONE;
+    private int mCheckedPosition = SELECTED_NONE;
+    private boolean mIsSingleChecking;
     private OnCheckingFinishedCallback<T> mOnCheckingFinishedCallback;
 
 
@@ -49,13 +52,23 @@ public abstract class CheckingHelper<T> {
         final int count = mCheckedItemCount;
         if (count > 0) {//性能优化的一个点：当前列表没有被选中的Item就没有必要再遍历数据源
             final List<T> checked = new ArrayList<>(count);
-            final int size = getDataSize();
-            //筛选出被选中的Item
-            for (int i = 0; i < size; i++) {
-                final T item = getItem(i);
-                if (item instanceof Checkable) {
-                    if (((Checkable) item).isChecked()) {
-                        checked.add(item);
+            /*如果是单选模式*/
+            if (mIsSingleChecking) {
+                final T item = getItem(mCheckedPosition);
+                if (item != null) {
+                    checked.add(item);
+                }
+            }
+            /*多选模式*/
+            else {
+                final int size = getDataSize();
+                //筛选出被选中的Item
+                for (int i = 0; i < size; i++) {
+                    final T item = getItem(i);
+                    if (item instanceof Checkable) {
+                        if (((Checkable) item).isChecked()) {
+                            checked.add(item);
+                        }
                     }
                 }
             }
@@ -72,6 +85,7 @@ public abstract class CheckingHelper<T> {
      * @param payload
      */
     public final void singleCheckItem(int position,@Nullable Object payload) {
+        mIsSingleChecking = true;
         final T data = getItem(position);
         if (data == null) {
             return;
@@ -81,28 +95,28 @@ public abstract class CheckingHelper<T> {
         }
         final   Checkable checkableData= (Checkable)data;
         //列表中已有被选中Item，且当前被选中的Item==上次被选中的,则将Item重置为未选中状态,此时全列表0个item被选中。
-        if (position == mSelectedPosition) {
+        if (position == mCheckedPosition) {
             checkableData.setChecked(false);
-            mSelectedPosition = SELECTED_NONE;
+            mCheckedPosition = SELECTED_NONE;
             mCheckedItemCount--;
             mAdapter.notifyItemChanged(position,payload);
         }
         //列表中已有被选中Item，但当前被选中Item！=上次被选中Item,则将上次的重置为未选中状态,再将当前Item置为被选中状态。
-        else if (mSelectedPosition != SELECTED_NONE) {
-            Checkable selectedData = (Checkable) getItem(mSelectedPosition);
+        else if (mCheckedPosition != SELECTED_NONE) {
+            Checkable selectedData = (Checkable) getItem(mCheckedPosition);
             if (selectedData == null) {
                 return;
             }
             selectedData.setChecked(false);
-            mAdapter.notifyItemChanged(mSelectedPosition,payload);
+            mAdapter.notifyItemChanged(mCheckedPosition, payload);
             checkableData.setChecked(true);
-            mSelectedPosition = position;
-            mAdapter.notifyItemChanged(mSelectedPosition,payload);
+            mCheckedPosition = position;
+            mAdapter.notifyItemChanged(mCheckedPosition, payload);
         }
         //列表中尚未有Item被选中,则将当前Item置为被选中状态。
-        else if (mSelectedPosition == SELECTED_NONE) {
+        else if (mCheckedPosition == SELECTED_NONE) {
             checkableData.setChecked(true);
-            mSelectedPosition = position;
+            mCheckedPosition = position;
             mCheckedItemCount++;
             mAdapter.notifyItemChanged(position,payload);
         }
@@ -114,6 +128,7 @@ public abstract class CheckingHelper<T> {
      * @return
      */
     public final void checkItem(int position,@Nullable Object payload) {
+        mIsSingleChecking = false;
         final T data = getItem(position);
         if (data == null) {
             return;

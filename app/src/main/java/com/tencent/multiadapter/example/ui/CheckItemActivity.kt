@@ -6,8 +6,8 @@ import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.tencent.lib.multi.MultiAdapter
-import com.tencent.lib.multi.core.OnCheckingFinishedCallback
-import com.tencent.lib.multi.core.OnClickItem
+import com.tencent.lib.multi.core.listener.OnCheckingFinishedCallback
+import com.tencent.lib.multi.core.annotation.OnClickItem
 import com.tencent.multiadapter.R
 import com.tencent.multiadapter.example.bean.CheckableItem
 import com.tencent.multiadapter.example.itemtype.checking.CheckableItemType
@@ -41,8 +41,8 @@ class CheckItemActivity : AppCompatActivity(), OnCheckingFinishedCallback<Checka
     private fun getData(): MutableList<CheckableItem> {
         val data = ArrayList<CheckableItem>(dataSize)
         data.add(CheckableItem(CheckableItem.VIEW_TYPE_HEADER, ""))
-        for (i in 1 until dataSize - 2) {
-            data.add(CheckableItem(CheckableItem.VIEW_TYPE_ITEM, "可选的Item position=${i}"))
+        for (i in 1..dataSize - 2) {
+            data.add(CheckableItem(CheckableItem.VIEW_TYPE_CHECKABLE, "可选的Item position=${i}"))
         }
         data.add(CheckableItem(CheckableItem.VIEW_TYPE_FOOTER, ""))
         return data
@@ -57,12 +57,12 @@ class CheckItemActivity : AppCompatActivity(), OnCheckingFinishedCallback<Checka
         when (btn.text) {
             "全选" -> {
                 btn.text = "取消"
-                adapter.checkingHelper.checkRange(1, dataSize - 2, R.id.checkbox)
+                adapter.checkingHelper.checkAll(R.id.checkbox)
 
             }
             "取消" -> {
                 btn.text = "全选"
-                adapter.checkingHelper.cancelRange(1, dataSize - 2, R.id.checkbox)
+                adapter.checkingHelper.cancelAll(R.id.checkbox)
             }
         }
     }
