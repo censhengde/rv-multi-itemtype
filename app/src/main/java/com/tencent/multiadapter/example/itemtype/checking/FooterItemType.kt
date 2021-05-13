@@ -14,11 +14,12 @@ import com.tencent.multiadapter.example.bean.CheckableItem
 
  */
 class FooterItemType:SimpleItemType<CheckableItem>() {
-    override fun getViewType(): Int {
-        return CheckableItem.VIEW_TYPE_FOOTER
-    }
+
+    override fun getViewType(): Int = CheckableItem.VIEW_TYPE_FOOTER
+
     override fun getItemLayoutRes(): Int = R.layout.item_checking_footer
-    override fun matchItemType(data: CheckableItem, position: Int): Boolean =data.viewType==CheckableItem.VIEW_TYPE_FOOTER
+
+    override fun matchItemType(data: CheckableItem, position: Int): Boolean =data.viewType==viewType
 
     override fun onBindViewHolder(holder: MultiViewHolder, helper: MultiHelper<CheckableItem>, position: Int) {
 

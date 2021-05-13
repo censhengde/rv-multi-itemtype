@@ -34,6 +34,7 @@ public class BItemType extends SimpleItemType<ItemBean> {
     public void onViewHolderCreated(@NonNull MultiViewHolder holder, @NonNull MultiHelper<ItemBean> helper) {
         /*注册监听器*/
         registClickItemChildViewListener(R.id.btn_b, holder, helper);
+        registLongClickItemListener(holder, helper);
 
     }
 

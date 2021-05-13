@@ -18,7 +18,9 @@ class HeaderItemType:SimpleItemType<CheckableItem>() {
         return CheckableItem.VIEW_TYPE_HEADER
     }
     override fun getItemLayoutRes(): Int = R.layout.item_checking_header
-    override fun matchItemType(data: CheckableItem, position: Int): Boolean =data.viewType==CheckableItem.VIEW_TYPE_HEADER
+
+    override fun matchItemType(data: CheckableItem, position: Int): Boolean
+            =data.viewType==viewType
 
     override fun onBindViewHolder(holder: MultiViewHolder, helper: MultiHelper<CheckableItem>, position: Int) {
 

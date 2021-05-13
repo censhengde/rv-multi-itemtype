@@ -7,7 +7,7 @@ import com.tencent.lib.multi.core.checking.SimpleCheckable;
  * <p>
  * 说明：
  */
-public class ItemBean extends SimpleCheckable {
+public class ItemBean {
     //所有Item类型都在这里定义
     public static final int TYPE_A = 0;
     public static final int TYPE_B = 1;

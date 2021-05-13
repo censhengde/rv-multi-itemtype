@@ -22,6 +22,7 @@ class CheckItemActivity : AppCompatActivity(), OnCheckingFinishedCallback<Checka
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_check_item)
         val checkableItemType = CheckableItemType()
+        /*注册item点击监听*/
         checkableItemType
                 .setObserver(this)
                 .setRv("rv")
@@ -29,29 +30,39 @@ class CheckItemActivity : AppCompatActivity(), OnCheckingFinishedCallback<Checka
                 .enableClickItem()
                 .regist()
 
+        /*添加ItemType*/
         adapter.multiHelper.addItemType(HeaderItemType())
                 .addItemType(checkableItemType)
                 .addItemType(FooterItemType())
+
+        //设置完成选择的回调
         adapter.checkingHelper.setOnCheckingFinishedCallback(this)
+
         adapter.setData(getData())
         rv_list.adapter = adapter
     }
 
-    /**/
+    /*模拟数据
+    * */
     private fun getData(): MutableList<CheckableItem> {
-        val data = ArrayList<CheckableItem>(dataSize)
+        val data = ArrayList<CheckableItem>(dataSize + 2)
+        /*头布局item 实体对象*/
         data.add(CheckableItem(CheckableItem.VIEW_TYPE_HEADER, ""))
-        for (i in 1..dataSize - 2) {
+        /*中间可选的item实体对象*/
+        for (i in 0 until dataSize) {
             data.add(CheckableItem(CheckableItem.VIEW_TYPE_CHECKABLE, "可选的Item position=${i}"))
         }
+        /*脚布局item实体对象*/
         data.add(CheckableItem(CheckableItem.VIEW_TYPE_FOOTER, ""))
         return data
     }
 
+    /*点击完成*/
     fun onClickFinished(view: View) {
         adapter.checkingHelper.finishChecking()
     }
 
+    /*点击全选、取消*/
     fun onClickCheckAll(view: View) {
         val btn = (view as Button)
         when (btn.text) {
@@ -67,6 +78,7 @@ class CheckItemActivity : AppCompatActivity(), OnCheckingFinishedCallback<Checka
         }
     }
 
+    /*点击可选的item*/
     @OnClickItem(rv = "rv", it = "it")
     private fun onClickItem(view: View, item: CheckableItem, position: Int) {
         if (item.isChecked) {
@@ -74,8 +86,10 @@ class CheckItemActivity : AppCompatActivity(), OnCheckingFinishedCallback<Checka
         } else {
             adapter.checkingHelper.checkItem(position, R.id.checkbox)
         }
+        /*当你想实现列表单选时，请调用adapter.checkingHelper.singleCheckItem(position, R.id.checkbox)*/
     }
 
+    /*点击完成时的数据回调*/
     override fun onCheckingFinished(checked: List<CheckableItem>) {
         checked.forEach {
             Log.e("被选中的item：", it.text)
