@@ -90,7 +90,7 @@ public abstract class MultiHelper<T> {
     }
 
     @Nullable
-    public abstract T getItem(int position);
+    protected abstract T getItem(int position);
 
     public int getItemCount() {
         return realAdapter == null ? 0 : realAdapter.getItemCount();

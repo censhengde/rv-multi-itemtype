@@ -6,8 +6,8 @@ import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.tencent.lib.multi.MultiAdapter
-import com.tencent.lib.multi.core.listener.OnCheckingFinishedCallback
 import com.tencent.lib.multi.core.annotation.OnClickItem
+import com.tencent.lib.multi.core.listener.OnCheckingFinishedCallback
 import com.tencent.multiadapter.R
 import com.tencent.multiadapter.example.bean.CheckableItem
 import com.tencent.multiadapter.example.itemtype.checking.CheckableItemType
@@ -69,7 +69,11 @@ class CheckItemActivity : AppCompatActivity(), OnCheckingFinishedCallback<Checka
 
     @OnClickItem(rv = "rv", it = "it")
     private fun onClickItem(view: View, item: CheckableItem, position: Int) {
-        adapter.checkingHelper.checkItem(position, R.id.checkbox)
+        if (item.isChecked) {
+            adapter.checkingHelper.uncheckItem(position, R.id.checkbox)
+        } else {
+            adapter.checkingHelper.checkItem(position, R.id.checkbox)
+        }
     }
 
     override fun onCheckingFinished(checked: List<CheckableItem>) {

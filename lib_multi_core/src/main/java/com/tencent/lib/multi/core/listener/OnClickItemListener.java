@@ -11,6 +11,12 @@ import androidx.annotation.Nullable;
  */
 public interface OnClickItemListener<T> {
 
+    /**
+     * @param v 点击的那个View
+     * @param type ItemType标识符，与ItemType getViewType对应。
+     * @param item 当前item实体对象
+     * @param position 当前position
+     */
     void onClickItem(@NonNull View v,int type, @NonNull T item, int position);
 
 }

@@ -12,6 +12,6 @@ public interface Checkable  {
       *不要局限于单纯搞个boolean 变量做判断。
      */
     void setChecked(boolean checked);
-    /*是否被选中*/
+    /*判断是否被选中*/
     boolean isChecked();
 }

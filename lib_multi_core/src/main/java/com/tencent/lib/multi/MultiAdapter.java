@@ -22,7 +22,7 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> {
     private final MultiHelper<T> mMultiHelper = new MultiHelper<T>(this) {
         @Nullable
         @Override
-        public T getItem(int position) {
+        protected T getItem(int position) {
             return MultiAdapter.this.getItem(position);
         }
 
@@ -30,7 +30,7 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> {
     private final CheckingHelper<T> mCheckingHelper = new CheckingHelper<T>(this) {
         @Nullable
         @Override
-        public T getItem(int position) {
+        protected T getItem(int position) {
             return MultiAdapter.this.getItem(position);
         }
 

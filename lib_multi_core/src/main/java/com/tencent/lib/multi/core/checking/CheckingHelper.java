@@ -3,7 +3,6 @@ package com.tencent.lib.multi.core.checking;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.Adapter;
-import com.tencent.lib.multi.core.checking.Checkable;
 import com.tencent.lib.multi.core.listener.OnCheckingFinishedCallback;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +32,7 @@ public abstract class CheckingHelper<T> {
 
 
     @Nullable
-    public abstract T getItem(int position);
+    protected abstract T getItem(int position);
 
     protected abstract int getDataSize();
 
@@ -137,21 +136,29 @@ public abstract class CheckingHelper<T> {
             throw new IllegalStateException(" Item 实体类必须是 Checkable 类型");
         }
         final   Checkable checkableData= (Checkable)data;
-        //如果当前item已经被选中，则取消被选中。
-        if (checkableData.isChecked()) {
-            checkableData.setChecked(false);
-            mCheckedItemCount--;
-            mAdapter.notifyItemChanged(position,payload);
-        } else {//否则被选中
             checkableData.setChecked(true);
             mCheckedItemCount++;
             mAdapter.notifyItemChanged(position,payload);
+    }
+
+    public final void uncheckItem(int position, @Nullable Object payload) {
+        mIsSingleChecking = false;
+        final T data = getItem(position);
+        if (data == null) {
+            return;
         }
+        if (!(data instanceof Checkable)) {
+            throw new IllegalStateException(" Item 实体类必须是 Checkable 类型");
+        }
+        final Checkable checkableData = (Checkable) data;
+        //如果当前item已经被选中，则取消被选中。
+        checkableData.setChecked(false);
+        mCheckedItemCount--;
+        mAdapter.notifyItemChanged(position, payload);
     }
 
     /**
-     * 当列表存在头布局或脚布局等情况下，需要进行精确区间筛选。
-     *
+     *选中某区间
      * @param start
      * @param itemCount
      * @param payload
