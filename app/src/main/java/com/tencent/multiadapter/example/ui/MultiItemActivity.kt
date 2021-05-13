@@ -17,7 +17,9 @@ import kotlinx.android.synthetic.main.activity_multi_item.*
 import java.util.*
 
 class MultiItemActivity : AppCompatActivity() {
+
     lateinit var adapter: MultiAdapter<ItemBean>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_multi_item)
@@ -29,12 +31,6 @@ class MultiItemActivity : AppCompatActivity() {
                 .enableClickItem()/*启用item点击事件监听功能*/
                 .regist()/*开始注册*/
         val bItemType = BItemType()
-        bItemType.setObserver(this)
-                .setRv("rv")
-                .setIt("item_b")
-                .enableClickItemChildView()/*启用item子view点击事件监听功能*/
-                .regist()
-
         val cItemType = CItemType()
         /*初始化Adapter*/
         adapter = MultiAdapter<ItemBean>()
@@ -93,6 +89,13 @@ class MultiItemActivity : AppCompatActivity() {
         Toast.makeText(this, "ItemBean:${itemBean.text},position:$position", Toast.LENGTH_SHORT).show()
         return true
     }
+/**/
 
+    /* bItemType.setObserver(this)
+                .setRv("rv")
+                .setIt("item_b")
+                .enableClickItemChildView()/*启用item子view点击事件监听功能*/
+                .regist()
+*/
 
 }
