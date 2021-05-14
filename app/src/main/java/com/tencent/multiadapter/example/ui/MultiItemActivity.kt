@@ -5,9 +5,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.tencent.lib.multi.MultiAdapter
-import com.tencent.lib.multi.core.annotation.OnClickItem
-import com.tencent.lib.multi.core.annotation.OnClickItemChildView
-import com.tencent.lib.multi.core.annotation.OnLongClickItem
 import com.tencent.multiadapter.R
 import com.tencent.multiadapter.example.bean.ItemBean
 import com.tencent.multiadapter.example.itemtype.AItemType
@@ -25,12 +22,9 @@ class MultiItemActivity : AppCompatActivity() {
         setContentView(R.layout.activity_multi_item)
         //初始化ItemType
         val aItemType = AItemType()
-        aItemType.setObserver(this)
-                .setRv("rv")/*设置RecyclerView标识符*/
-                .setIt("item_a")/*设置ItemType标识符*/
-                .enableClickItem()/*启用item点击事件监听功能*/
-                .regist()/*开始注册*/
+        aItemType.bind(this)
         val bItemType = BItemType()
+        bItemType.bind(this)
         val cItemType = CItemType()
         /*初始化Adapter*/
         adapter = MultiAdapter<ItemBean>()
@@ -62,7 +56,6 @@ class MultiItemActivity : AppCompatActivity() {
      * rv:用于标识是哪一个RecyclerView的Item点击事件（因为一个Activity/Fragment可能有多个RecyclerView），可任意字符串。
      * it:ItemType的缩写，用于标识当前RecyclerView控件下哪一类ItemType的点击事件，可任意字符串。
      */
-    @OnClickItem(rv = "rv", it = "item_a")
     private fun onClickItem(view: View, itemBean: ItemBean, position: Int) {
         Toast.makeText(this, "ItemBean:${itemBean.text},position:$position", Toast.LENGTH_SHORT).show()
     }
@@ -73,8 +66,7 @@ class MultiItemActivity : AppCompatActivity() {
      * tags:Item 子View 的tag集合。因为同一种item中可能有多个子view响应同一点击事件。为什么不是View的id？答：因为View的id在子module中是变量。
      *           注解参数不支持变量。
      */
-    @OnClickItemChildView(rv = "rv", it = "item_b",tags = ["btn_b"])
-    private fun onClickItemChildView(view: View, itemBean: ItemBean, position: Int) {
+    private fun onClckBtnB(view: View, itemBean: ItemBean, position: Int) {
         Toast.makeText(this, "ItemBean:${itemBean.text},position:$position", Toast.LENGTH_SHORT).show()
     }
 
@@ -84,7 +76,6 @@ class MultiItemActivity : AppCompatActivity() {
      * it:ItemType的缩写，用于标识当前RecyclerView控件下哪一类ItemType的点击事件，可任意字符串。
      * return:与系统 View.OnLongClickListener  boolean onLongClick(View v)意义相同。
      */
-    @OnLongClickItem(rv = "rv", it = "item_b")
     private fun onLongClickItem(view: View, itemBean: ItemBean, position: Int): Boolean {
         Toast.makeText(this, "ItemBean:${itemBean.text},position:$position", Toast.LENGTH_SHORT).show()
         return true

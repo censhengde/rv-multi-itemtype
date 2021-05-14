@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.tencent.lib.multi.MultiAdapter
-import com.tencent.lib.multi.core.annotation.OnClickItem
 import com.tencent.lib.multi.core.listener.OnCheckingFinishedCallback
 import com.tencent.multiadapter.R
 import com.tencent.multiadapter.example.bean.CheckableItem
@@ -23,12 +22,7 @@ class CheckItemActivity : AppCompatActivity(), OnCheckingFinishedCallback<Checka
         setContentView(R.layout.activity_check_item)
         val checkableItemType = CheckableItemType()
         /*注册item点击监听*/
-        checkableItemType
-                .setObserver(this)
-                .setRv("rv")
-                .setIt("it")
-                .enableClickItem()
-                .regist()
+        checkableItemType.bind(this)
 
         /*添加ItemType*/
         adapter.multiHelper.addItemType(HeaderItemType())
@@ -79,7 +73,6 @@ class CheckItemActivity : AppCompatActivity(), OnCheckingFinishedCallback<Checka
     }
 
     /*点击可选的item*/
-    @OnClickItem(rv = "rv", it = "it")
     private fun onClickItem(view: View, item: CheckableItem, position: Int) {
         if (item.isChecked) {
             adapter.checkingHelper.uncheckItem(position, R.id.checkbox)

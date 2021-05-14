@@ -1,20 +1,18 @@
 package com.tencent.lib.multi.core;
 
+import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.Log;
 import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.tencent.lib.multi.core.annotation.OnClickItem;
-import com.tencent.lib.multi.core.annotation.OnClickItemChildView;
-import com.tencent.lib.multi.core.annotation.OnLongClickItem;
-import com.tencent.lib.multi.core.annotation.OnLongClickItemChildView;
 import com.tencent.lib.multi.core.listener.OnClickItemChildViewListener;
 import com.tencent.lib.multi.core.listener.OnClickItemListener;
 import com.tencent.lib.multi.core.listener.OnLongClickItemChildViewListener;
 import com.tencent.lib.multi.core.listener.OnLongClickItemListener;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
@@ -26,120 +24,14 @@ import java.util.Map;
 public abstract class SimpleItemType<T> implements ItemType<T> {
 
     private static final String TAG = "SimpleItemType";
+    private static Map<String, Method> sMethodMap;
     private OnClickItemListener<T> mItemListener;
     private OnLongClickItemListener<T> mOnLongClickItemListener;
     private OnClickItemChildViewListener<T> mOnClickItemChildViewListener;
     private OnLongClickItemChildViewListener<T> mOnLongClickItemChildViewListener;
 
     private Object mObserver;
-    private Method mOnClickItemM;
-    private Method mOnLongClickItemM;
-    private Map<String, Method> mOnClickItemChildViewMethods;
-    private Map<String, Method> mOnLongClickItemChildViewMethods;
-    private boolean mEnableOnClickItem;
-    private boolean mEnableOnLongClickItem;
-    private boolean mEnableOnClickItemChild;
-    private boolean mEnableOnLongClickItemChild;
-    private String mRv;
-    private String mIt;
-
-    public final SimpleItemType setObserver(@NonNull Object observer) {
-        mObserver = observer;
-        return this;
-    }
-
-    public final SimpleItemType setRv(@NonNull String rv) {
-        mRv = rv;
-        return this;
-    }
-
-    public final SimpleItemType setIt(@NonNull String it) {
-        mIt = it;
-        return this;
-    }
-
-    public final SimpleItemType enableClickItem() {
-        mEnableOnClickItem = true;
-        return this;
-    }
-
-    public final SimpleItemType enableLongClickItem() {
-        mEnableOnLongClickItem = true;
-        return this;
-    }
-
-    public final SimpleItemType enableClickItemChildView() {
-        mEnableOnClickItemChild = true;
-        return this;
-    }
-
-    public final SimpleItemType enableLongClickItemChildView() {
-        mEnableOnLongClickItemChild = true;
-        return this;
-    }
-
-    public final void regist() {
-        regist(mObserver, mRv, mIt, mEnableOnClickItem, mEnableOnClickItemChild, mEnableOnLongClickItem,
-                mEnableOnLongClickItemChild);
-    }
-
-    /*注册观察者*/
-    public final void regist(Object observer, String rv, String it,
-            boolean clickItem,/*true 表示对该点击事件感兴趣*/
-            boolean clickItemChildView,
-            boolean longClickItem,
-            boolean longClickItemChildView) {
-        mObserver = observer;
-        rv = rv == null ? "" : rv;
-        Class<?> clazz = observer.getClass();
-        Method[] methods = clazz.getDeclaredMethods();
-        for (Method method : methods) {
-            if (mOnClickItemM == null && clickItem) {
-                OnClickItem onClickItem = method.getAnnotation(OnClickItem.class);
-                if (onClickItem != null && onClickItem.rv().equals(rv) && onClickItem.it().equals(it)) {
-                    mOnClickItemM = method;
-                    continue;
-                }
-            }
-
-            if (mOnLongClickItemM == null && longClickItem) {
-                OnLongClickItem onLongClickItem = method.getAnnotation(OnLongClickItem.class);
-                if (onLongClickItem != null && onLongClickItem.rv().equals(rv) && onLongClickItem.it().equals(it)) {
-                    mOnLongClickItemM = method;
-                    continue;
-                }
-            }
-            if (clickItemChildView) {
-                OnClickItemChildView onClickItemChildView = method.getAnnotation(OnClickItemChildView.class);
-                if (onClickItemChildView != null && onClickItemChildView.rv().equals(rv) && onClickItemChildView.it()
-                        .equals(it)) {
-                    if (mOnClickItemChildViewMethods == null) {
-                        mOnClickItemChildViewMethods = new ArrayMap<>(onClickItemChildView.tags().length);
-                    }
-                    /*key 不同，但value同*/
-                    for (String tag : onClickItemChildView.tags()) {
-                        mOnClickItemChildViewMethods.put(tag, method);
-                    }
-                    continue;
-                }
-            }
-
-            if (longClickItemChildView) {
-                OnLongClickItemChildView onLongClickItemChildView = method
-                        .getAnnotation(OnLongClickItemChildView.class);
-                if (onLongClickItemChildView != null && onLongClickItemChildView.rv().equals(rv)
-                        && onLongClickItemChildView.it().equals(it)) {
-                    if (mOnLongClickItemChildViewMethods == null) {
-                        mOnLongClickItemChildViewMethods = new ArrayMap<>(onLongClickItemChildView.tags().length);
-                    }
-                    for (String tag : onLongClickItemChildView.tags()) {
-                        mOnLongClickItemChildViewMethods.put(tag, method);
-                    }
-                }
-
-            }
-        }
-    }
+    private Class<?> mTClass;/*泛型参数T的Class*/
 
 
 
@@ -160,6 +52,10 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
     public void setOnLongClickItemChildViewListener(
             OnLongClickItemChildViewListener<T> listener) {
         this.mOnLongClickItemChildViewListener = listener;
+    }
+
+    public void bind(@NonNull Object listener) {
+        mObserver = listener;
     }
     @Override
     public int getViewType() {
@@ -194,6 +90,7 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
                 Log.e(TAG, "item 点击异常: position="+position);
                 return;
             }
+
             T data = helper.getItem(position);
             if (data == null) {
                 Log.e(TAG, "item 点击异常:data="+data);
@@ -204,15 +101,8 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
                 mItemListener.onClickItem(v, getViewType(), data, position);
                 return;
             }
-            if (mOnClickItemM != null) {
-                mOnClickItemM.setAccessible(true);
-                try {
-                    mOnClickItemM.invoke(mObserver, v, data, position);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.e(TAG, "item 点击异常，请检查注解方法声明是否正确："+e);
-                }
-            }
+
+            callTagMethod(v, data, position, "item 点击异常");
 
         });
     }
@@ -231,19 +121,11 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
                 Log.e(TAG, "item 长点击异常:data="+data);
                 return consume;
             }
+            //监听器优先
             if (mOnLongClickItemListener != null) {
                 return mOnLongClickItemListener.onLongClickItem(v, getViewType(), data, position);
             }
-            if (mOnLongClickItemM != null) {
-                mOnLongClickItemM.setAccessible(true);
-                try {
-                    consume = (boolean) mOnLongClickItemM.invoke(mObserver, v, data, position);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.e(TAG, "item 长点击异常，请检查注解方法声明是否正确："+e);
-                }
-            }
-
+            consume = callTagLongClickMethod(v, data, position, "item 长点击异常");
             return consume;
         });
     }
@@ -268,31 +150,8 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
                 return;
             }
 
-            Object tag = v.getTag();
-            if (tag == null) {
-                throw new IllegalArgumentException("tag 不能为null");
-            }
+            callTagMethod(v, data, position, "item child view 点击异常");
 
-            if (!(tag instanceof String)) {
-                throw new IllegalArgumentException(" Item sub view tag 必须为 String 类型");
-            }
-            String tagStr = (String) tag;
-            if (mOnClickItemChildViewMethods == null) {
-                Log.e(TAG, "请检查 regist（）方法是否正确调用：mOnClickItemSubViewMethods == null");
-                return;
-            }
-            Method method = mOnClickItemChildViewMethods.get(tagStr);
-            if (method == null) {
-                Log.e(TAG, "未找到目标方法");
-                return;
-            }
-            method.setAccessible(true);
-            try {
-                method.invoke(mObserver, v, data, position);
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
-                Log.e(TAG, "item child view 点击异常，请检查注解方法声明是否正确："+e);
-            }
         });
     }
 
@@ -318,33 +177,103 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
                 return mOnLongClickItemChildViewListener
                         .onClickItemChildView(v, getViewType(), data, position);
             }
-
-            Object tag = v.getTag();
-            if (tag == null) {
-                throw new IllegalArgumentException("tag 不能为null");
-            }
-
-            if (!(tag instanceof String)) {
-                throw new IllegalArgumentException(" Item sub view tag 必须为 String 类型");
-            }
-            String tagStr = (String) tag;
-            if (mOnLongClickItemChildViewMethods == null) {
-                Log.e(TAG, "请检查 regist（）方法是否正确调用：mOnLongClickItemSubViewMethods == null");
-                return consume;
-            }
-            Method method = mOnLongClickItemChildViewMethods.get(tagStr);
-            if (method == null) {
-                Log.e(TAG, "未找到目标方法");
-                return consume;
-            }
-            method.setAccessible(true);
-            try {
-                consume = (boolean) method.invoke(mObserver, v, data, position);
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
-                Log.e(TAG, "item child view 长点击异常，请检查注解方法声明是否正确："+e);
-            }
+            consume = callTagLongClickMethod(v, data, position, "item child view 长点击异常");
             return consume;
         });
     }
+
+
+    private  void callTagMethod(View v, T data, int position, String errMsg) {
+        try {
+            Method method = resolveMethod(checkTag(v.getTag()));
+            method.setAccessible(true);
+            method.invoke(mObserver, v, data, position);
+        } catch (Exception e) {
+            Log.e(TAG, errMsg + ":" + e.getMessage());
+        }
+    }
+
+    /**
+     * 反射回调长点击方法
+     * @param v
+     * @param data
+     * @param position
+     * @param errMsg
+     * @return
+     */
+    private boolean callTagLongClickMethod(View v, T data, int position, String errMsg) {
+        boolean consume = false;
+        try {
+            Method method = resolveMethod(checkTag(v.getTag()));
+            if (!method.isAccessible()) {
+                method.setAccessible(true);
+            }
+            consume = (boolean) method.invoke(mObserver, v, data, position);
+        } catch (Exception e) {
+            Log.e(TAG, errMsg + ":" + e.getMessage());
+        }
+        return consume;
+    }
+
+    /**
+     * 检查 tag值的合法性
+     *
+     * @param tag
+     * @return
+     */
+    private String checkTag(Object tag) {
+        if (!(tag instanceof String)) {
+            throw new IllegalArgumentException(" Item sub view tag 必须为 String 类型");
+        }
+
+        final String methodName = (String) tag;
+        if (TextUtils.isEmpty(methodName)) {
+            throw new IllegalArgumentException(" Item sub view tag 不能为空格");
+        }
+        return methodName;
+    }
+
+    /**
+     * 根据tag 提供的方法名反射获取目标方法
+     *
+     * @param methodName
+     * @return
+     */
+    private Method resolveMethod(String methodName) {
+        if (mObserver == null) {
+            Log.e(TAG, "");
+            return null;
+        }
+        if (sMethodMap == null) {
+            sMethodMap = new ArrayMap<>();
+        }
+        final Class<?> clazz = mObserver.getClass();
+        final String key = clazz.getCanonicalName() + methodName;
+        Method method = sMethodMap.get(key);
+        if (method == null) {
+            try {
+                if (mTClass == null) {
+                    mTClass = resolveT();
+                }
+                method = clazz.getDeclaredMethod(methodName, View.class, mTClass, int.class);
+                sMethodMap.put(key, method);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+        return method;
+    }
+
+    /**
+     * 解析泛型参数T
+     *
+     * @return
+     */
+    private Class<?> resolveT() {
+        final Type type = this.getClass().getGenericSuperclass();
+        final ParameterizedType p = (ParameterizedType) type;
+        return (Class<?>) p.getActualTypeArguments()[0];
+    }
 }
+

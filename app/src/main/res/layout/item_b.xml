@@ -12,7 +12,7 @@
             android:layout_gravity="center_vertical"
             android:background="@android:color/transparent"
             android:gravity="center"
-            android:tag="btn_b"
+            android:tag="onClckBtnB"
             android:text="Button"
             android:textAllCaps="false"
             android:textSize="18sp" />
