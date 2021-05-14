@@ -26,6 +26,7 @@ class MultiItemActivity : AppCompatActivity() {
         val bItemType = BItemType()
         bItemType.bind(this)
         val cItemType = CItemType()
+        cItemType.bind(this)
         /*初始化Adapter*/
         adapter = MultiAdapter<ItemBean>()
         /*将所有ItemType添加到Adapter中*/
@@ -52,41 +53,31 @@ class MultiItemActivity : AppCompatActivity() {
     }
 
     /**
-     * Item点击事件
-     * rv:用于标识是哪一个RecyclerView的Item点击事件（因为一个Activity/Fragment可能有多个RecyclerView），可任意字符串。
-     * it:ItemType的缩写，用于标识当前RecyclerView控件下哪一类ItemType的点击事件，可任意字符串。
+     *item点击事件
      */
     private fun onClickItem(view: View, itemBean: ItemBean, position: Int) {
         Toast.makeText(this, "ItemBean:${itemBean.text},position:$position", Toast.LENGTH_SHORT).show()
     }
     /**
-     * Item 子View点击事件
-     * rv:用于标识是哪一个RecyclerView的Item点击事件（因为一个Activity/Fragment可能有多个RecyclerView），可任意字符串。
-     * it:ItemType的缩写，用于标识当前RecyclerView控件下哪一类ItemType的点击事件，可任意字符串。
-     * tags:Item 子View 的tag集合。因为同一种item中可能有多个子view响应同一点击事件。为什么不是View的id？答：因为View的id在子module中是变量。
-     *           注解参数不支持变量。
+     * item 子View 点击事件
      */
-    private fun onClckBtnB(view: View, itemBean: ItemBean, position: Int) {
+    private fun onClickItemChildView(view: View, itemBean: ItemBean, position: Int) {
         Toast.makeText(this, "ItemBean:${itemBean.text},position:$position", Toast.LENGTH_SHORT).show()
+    }
+    /**
+     * item 子View 长点击事件
+     */
+    private fun onLongClickItemChildView(view: View, itemBean: ItemBean, position: Int) :Boolean{
+        Toast.makeText(this, "ItemBean:${itemBean.text},position:$position", Toast.LENGTH_SHORT).show()
+        return true
     }
 
     /**
      * Item 长点击事件
-     * rv:用于标识是哪一个RecyclerView的Item点击事件（因为一个Activity/Fragment可能有多个RecyclerView），可任意字符串。
-     * it:ItemType的缩写，用于标识当前RecyclerView控件下哪一类ItemType的点击事件，可任意字符串。
-     * return:与系统 View.OnLongClickListener  boolean onLongClick(View v)意义相同。
      */
     private fun onLongClickItem(view: View, itemBean: ItemBean, position: Int): Boolean {
         Toast.makeText(this, "ItemBean:${itemBean.text},position:$position", Toast.LENGTH_SHORT).show()
         return true
     }
-/**/
-
-    /* bItemType.setObserver(this)
-                .setRv("rv")
-                .setIt("item_b")
-                .enableClickItemChildView()/*启用item子view点击事件监听功能*/
-                .regist()
-*/
 
 }

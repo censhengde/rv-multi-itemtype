@@ -24,7 +24,7 @@ import java.util.Map;
 public abstract class SimpleItemType<T> implements ItemType<T> {
 
     private static final String TAG = "SimpleItemType";
-    private static Map<String, Method> sMethodMap;
+    private static Map<String, Method> sMethodMap;/*缓存反射获取的method对象，减少反射成本*/
     private OnClickItemListener<T> mItemListener;
     private OnLongClickItemListener<T> mOnLongClickItemListener;
     private OnClickItemChildViewListener<T> mOnClickItemChildViewListener;
@@ -84,6 +84,7 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
 
     /*item 点击事件注册*/
     protected final void registClickItemListener(MultiViewHolder holder, MultiHelper<T> helper) {
+        checkTag(holder.itemView.getTag());
         holder.itemView.setOnClickListener(v -> {
             int position = holder.getAdapterPosition();
             if (position==RecyclerView.NO_POSITION){
@@ -109,6 +110,7 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
 
     /*item 长点击事件注册*/
     protected final void registLongClickItemListener(MultiViewHolder holder, MultiHelper<T> helper) {
+        checkTag(holder.itemView.getTag());
         holder.itemView.setOnLongClickListener(v -> {
             boolean consume = false;
             int position = holder.getAdapterPosition();
@@ -132,7 +134,8 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
 
     /*注册item child view 点击事件监听*/
     protected final void registClickItemChildViewListener(int viewId, MultiViewHolder holder, MultiHelper<T> helper) {
-        View view = holder.getView(viewId);
+        final View view = holder.getView(viewId);
+        checkTag(view.getTag());
         view.setOnClickListener(v -> {
             int position = holder.getAdapterPosition();
             if (position==RecyclerView.NO_POSITION){
@@ -158,7 +161,8 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
     /*注册item child view 长按点击事件监听*/
     protected final void registLongClickItemChildViewListener(int viewId, MultiViewHolder holder,
             MultiHelper<T> helper) {
-        View view = holder.getView(viewId);
+        final View view = holder.getView(viewId);
+        checkTag(view.getTag());
         view.setOnLongClickListener(v -> {
             boolean consume = false;
             int position = holder.getAdapterPosition();
@@ -183,9 +187,17 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
     }
 
 
+    /**
+     * 反射回调点击方法
+     *
+     * @param v
+     * @param data
+     * @param position
+     * @param errMsg
+     */
     private  void callTagMethod(View v, T data, int position, String errMsg) {
         try {
-            Method method = resolveMethod(checkTag(v.getTag()));
+            Method method = resolveMethod((String) v.getTag());
             method.setAccessible(true);
             method.invoke(mObserver, v, data, position);
         } catch (Exception e) {
@@ -204,7 +216,7 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
     private boolean callTagLongClickMethod(View v, T data, int position, String errMsg) {
         boolean consume = false;
         try {
-            Method method = resolveMethod(checkTag(v.getTag()));
+            Method method = resolveMethod((String) v.getTag());
             if (!method.isAccessible()) {
                 method.setAccessible(true);
             }
@@ -221,16 +233,16 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
      * @param tag
      * @return
      */
-    private String checkTag(Object tag) {
+    private void checkTag(Object tag) {
         if (!(tag instanceof String)) {
-            throw new IllegalArgumentException(" Item sub view tag 必须为 String 类型");
+            throw new IllegalArgumentException(" Item sub view tag 不能为null、空格，且必须为 String 类型 ");
         }
 
         final String methodName = (String) tag;
         if (TextUtils.isEmpty(methodName)) {
             throw new IllegalArgumentException(" Item sub view tag 不能为空格");
         }
-        return methodName;
+
     }
 
     /**

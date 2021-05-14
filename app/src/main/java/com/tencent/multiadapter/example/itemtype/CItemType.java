@@ -32,6 +32,11 @@ public class CItemType extends SimpleItemType<ItemBean> {
     }
 
     @Override
+    public void onViewHolderCreated(@NonNull MultiViewHolder holder, @NonNull MultiHelper<ItemBean> helper) {
+        registLongClickItemChildViewListener(R.id.iv_c, holder, helper);
+    }
+
+    @Override
     public void onBindViewHolder(@NonNull MultiViewHolder holder, @NonNull MultiHelper<ItemBean> helper, int position) {
         ItemBean bean = helper.getItem(position);
         if (bean == null) {
