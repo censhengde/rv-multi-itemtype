@@ -1,19 +1,21 @@
 # 介绍
+   MultiAdapter是一个轻松优雅实现RecyclerView多样式的强大组件。它将item的行为及表现抽象为一个ItemType，不同类型的item都自己独立的点击事件处理及视图绑定行为，极大地降低了耦合度，简化了item相关点击事件处理过程。其内部封装了若干实用的工具组件以满足RecyclerView日常需求，如列表的单选/多选。
+   正是因为有了上述功能支持，我们在给RecyclerView添加头布局、脚布局、Error布局、Empty布局的时候，就简单的太多了！
 
-MultiAdapter是一个轻松优雅实现RecyclerView多样式Item的组件，支持注解形式实现Item及Item子View点击/长点击事件监听、支持
-RecyclerView
-Item单选/多选功能;其中抽象出来的MultiHelper核心类能够完美帮助您改造任意RecyclerView.Adapter（如Google
-paging2、paging3库的Adapter）以实现RecyclerView多样式；
-MultiViewHolder提供的getView方法能够帮您轻松获取到Item任意子View，且内部实现了View缓存能有效较少findViewById所带来的消耗。
+   附项目GitHub地址：https://github.com/censhengde/MultiAdapter  
+   依赖：
+   由于jcenter已跑路，目前项目已迁至JitPack，依赖方式如下：
 
-# 用法
+   1）在工程根目录build.gradle添加：  
+   allprojects {  
+   repositories {  
+    maven { url 'https://jitpack.io' }  
+    }  
+    }
 
-## 一、轻松实现RecyclerView Item多样式
+2）在module build.gradle 添加：  
+dependencies {  
+implementation 'com.github.censhengde:MultiAdapter:v1.0.1'  
+}
 
-### 先看实现效果，如图：
-
-### 1.编写item布局：
-
-item_a:
-
-item_b、item_c。
+# [详细文档](https://docs.qq.com/doc/DVHB4RHdjUmFzUUpM)

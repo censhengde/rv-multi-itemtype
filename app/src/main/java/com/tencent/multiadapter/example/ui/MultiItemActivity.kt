@@ -22,11 +22,12 @@ class MultiItemActivity : AppCompatActivity() {
         setContentView(R.layout.activity_multi_item)
         //初始化ItemType
         val aItemType = AItemType()
+
         aItemType.bind(this)
+
         val bItemType = BItemType()
-        bItemType.bind(this)
         val cItemType = CItemType()
-        cItemType.bind(this)
+
         /*初始化Adapter*/
         adapter = MultiAdapter<ItemBean>()
         /*将所有ItemType添加到Adapter中*/
@@ -39,6 +40,8 @@ class MultiItemActivity : AppCompatActivity() {
 
     }
 
+    /* bItemType.bind(this)
+        cItemType.bind(this)*/
     /**
      * 模拟数据
      */

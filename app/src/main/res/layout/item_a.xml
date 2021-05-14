@@ -6,14 +6,13 @@
         android:tag="onClickItem"
         android:background="#FF5722"
         android:orientation="vertical">
-    <!-- 声明 android:tag 属性用于实现item 子view点击监听 -->
+
     <TextView
             android:id="@+id/tv_a"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:gravity="center"
-            android:tag="tv_a"
             android:textSize="18sp"
             tools:text="A 类 Item" />
 
