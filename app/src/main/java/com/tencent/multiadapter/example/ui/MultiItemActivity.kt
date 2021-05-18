@@ -27,7 +27,8 @@ class MultiItemActivity : AppCompatActivity() {
 
         val bItemType = BItemType()
         val cItemType = CItemType()
-
+        bItemType.bind(this)
+        cItemType.bind(this)
         /*初始化Adapter*/
         adapter = MultiAdapter<ItemBean>()
         /*将所有ItemType添加到Adapter中*/

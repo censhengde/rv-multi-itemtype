@@ -51,29 +51,31 @@ public abstract class CheckingHelper<T> {
         final int count = mCheckedItemCount;
         if (count > 0) {//性能优化的一个点：当前列表没有被选中的Item就没有必要再遍历数据源
             final List<T> checked = new ArrayList<>(count);
-            /*如果是单选模式*/
-            if (mIsSingleChecking) {
-                final T item = getItem(mCheckedPosition);
-                if (item != null) {
-                    checked.add(item);
-                }
-            }
-            /*多选模式*/
-            else {
-                final int size = getDataSize();
-                //筛选出被选中的Item
-                for (int i = 0; i < size; i++) {
-                    final T item = getItem(i);
+                /*如果是单选模式*/
+                if (mIsSingleChecking) {
+                    final T item = getItem(mCheckedPosition);
                     if (item instanceof Checkable) {
                         if (((Checkable) item).isChecked()) {
                             checked.add(item);
                         }
                     }
                 }
-            }
-            if (mOnCheckingFinishedCallback != null) {
-                mOnCheckingFinishedCallback.onCheckingFinished(checked);
-            }
+                /*多选模式*/
+                else {
+                    final int size = getDataSize();
+                    //筛选出被选中的Item
+                    for (int i = 0; i < size; i++) {
+                        final T item = getItem(i);
+                        if (item instanceof Checkable) {
+                            if (((Checkable) item).isChecked()) {
+                                checked.add(item);
+                            }
+                        }
+                    }
+                }
+                if (mOnCheckingFinishedCallback != null) {
+                    mOnCheckingFinishedCallback.onCheckingFinished(checked);
+                }
         }
     }
 

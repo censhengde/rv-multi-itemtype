@@ -85,6 +85,7 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
     /*item 点击事件注册*/
     protected final void registClickItemListener(MultiViewHolder holder, MultiHelper<T> helper) {
         checkTag(holder.itemView.getTag());
+        holder.itemView.setClickable(true);
         holder.itemView.setOnClickListener(v -> {
             int position = holder.getAdapterPosition();
             if (position==RecyclerView.NO_POSITION){
@@ -111,6 +112,7 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
     /*item 长点击事件注册*/
     protected final void registLongClickItemListener(MultiViewHolder holder, MultiHelper<T> helper) {
         checkTag(holder.itemView.getTag());
+        holder.itemView.setClickable(true);
         holder.itemView.setOnLongClickListener(v -> {
             boolean consume = false;
             int position = holder.getAdapterPosition();
@@ -136,6 +138,7 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
     protected final void registClickItemChildViewListener(int viewId, MultiViewHolder holder, MultiHelper<T> helper) {
         final View view = holder.getView(viewId);
         checkTag(view.getTag());
+        view.setClickable(true);
         view.setOnClickListener(v -> {
             int position = holder.getAdapterPosition();
             if (position==RecyclerView.NO_POSITION){
@@ -163,6 +166,7 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
             MultiHelper<T> helper) {
         final View view = holder.getView(viewId);
         checkTag(view.getTag());
+        view.setClickable(true);
         view.setOnLongClickListener(v -> {
             boolean consume = false;
             int position = holder.getAdapterPosition();

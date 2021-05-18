@@ -36,7 +36,7 @@ class CheckItemActivity : AppCompatActivity(), OnCheckingFinishedCallback<Checka
         rv_list.adapter = adapter
     }
 
-    /*模拟数据
+    /*模拟数据(页面状态的改变可能会导致列表选择状态丢失，建议在ViewModel或其他序列化手段保存数据以便恢复列表选择状态)
     * */
     private fun getData(): MutableList<CheckableItem> {
         val data = ArrayList<CheckableItem>(dataSize + 2)
