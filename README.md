@@ -15,7 +15,7 @@
 
 2）在module build.gradle 添加：  
 dependencies {  
-implementation 'com.github.censhengde:MultiAdapter:v1.0.1'  
+implementation 'com.github.censhengde:MultiAdapter:latest'  
 }
 
  [详细文档](https://docs.qq.com/doc/DVHB4RHdjUmFzUUpM)
