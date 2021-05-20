@@ -29,8 +29,9 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
     private OnLongClickItemListener<T> mOnLongClickItemListener;
     private OnClickItemChildViewListener<T> mOnClickItemChildViewListener;
     private OnLongClickItemChildViewListener<T> mOnLongClickItemChildViewListener;
-
+    private T t;
     private Object mObserver;
+    private String mObserverName;
     private Class<?> mTClass;/*泛型参数T的Class*/
 
 
@@ -202,7 +203,9 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
     private  void callTagMethod(View v, T data, int position, String errMsg) {
         try {
             Method method = resolveMethod((String) v.getTag());
-            method.setAccessible(true);
+            if (!method.isAccessible()) {
+                method.setAccessible(true);
+            }
             method.invoke(mObserver, v, data, position);
         } catch (Exception e) {
             Log.e(TAG, errMsg + ":" + e.getMessage());
@@ -264,7 +267,10 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
             sMethodMap = new ArrayMap<>();
         }
         final Class<?> clazz = mObserver.getClass();
-        final String key = clazz.getCanonicalName() + methodName;
+        if (mObserverName == null) {
+            mObserverName = clazz.getCanonicalName();
+        }
+        final String key = mObserverName + "@" + methodName;
         Method method = sMethodMap.get(key);
         if (method == null) {
             try {
@@ -287,9 +293,16 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
      * @return
      */
     private Class<?> resolveT() {
-        final Type type = this.getClass().getGenericSuperclass();
-        final ParameterizedType p = (ParameterizedType) type;
-        return (Class<?>) p.getActualTypeArguments()[0];
+        final Type type;
+        try {
+            type = this.getClass().getGenericSuperclass();
+            ParameterizedType p = (ParameterizedType) type;
+            Log.e(TAG, "tv[0].getName():" + type);
+            return (Class<?>) p.getActualTypeArguments()[0];
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
 
