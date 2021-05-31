@@ -18,4 +18,4 @@ dependencies {
 implementation 'com.github.censhengde:MultiAdapter:latest'  
 }
 
- [详细文档](https://docs.qq.com/doc/DVHB4RHdjUmFzUUpM)
+ [详细文档](https://www.jianshu.com/p/b6b5f03ff304)
