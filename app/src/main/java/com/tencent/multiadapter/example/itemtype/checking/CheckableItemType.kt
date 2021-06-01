@@ -24,7 +24,7 @@ class CheckableItemType : SimpleItemType<CheckableItem>() {
     override fun matchItemType(data: CheckableItem, position: Int): Boolean = data.viewType == viewType
 
     override fun onViewHolderCreated(holder: MultiViewHolder, helper: MultiHelper<CheckableItem>) {
-        registClickItemListener(holder, helper)
+        registerItemViewClickListener(holder,helper,"onClickItem")
     }
 
 

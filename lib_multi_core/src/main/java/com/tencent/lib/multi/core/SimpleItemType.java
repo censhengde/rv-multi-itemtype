@@ -4,7 +4,9 @@ import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.Log;
 import android.view.View;
+import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import com.tencent.lib.multi.core.listener.OnClickItemChildViewListener;
 import com.tencent.lib.multi.core.listener.OnClickItemListener;
@@ -83,20 +85,54 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
     }
 
 
-    /*item 点击事件注册*/
-    protected final void registClickItemListener(MultiViewHolder holder, MultiHelper<T> helper) {
-        checkTag(holder.itemView.getTag());
-        holder.itemView.setClickable(true);
-        holder.itemView.setOnClickListener(v -> {
-            int position = holder.getAdapterPosition();
-            if (position==RecyclerView.NO_POSITION){
-                Log.e(TAG, "item 点击异常: position="+position);
+    /**
+     * Item view 点击事件注册。（包含item 子view）
+     *
+     * @param holder
+     * @param helper
+     * @param target 目标方法名
+     * @param viewIds view的id 集；因为存在多个view响应同一套点击逻辑的情况。
+     */
+    protected final void registerItemViewClickListener(@NonNull MultiViewHolder holder, @NonNull MultiHelper<T> helper,
+            @Nullable String target,
+            @IdRes int... viewIds) {
+        /*如果不传viewId，则默认是注册item根布局的点击事件监听*/
+        if (viewIds.length == 0) {
+            register(holder, helper, holder.itemView, target);
+            return;
+        }
+
+        for (int id : viewIds) {
+            final View view = holder.getView(id);
+            register(holder, helper, view, target);
+        }
+
+    }
+
+    /**
+     * registerItemViewClickListener重载。倘若不采用反射方式，则调用这个方法注册。
+     * @param holder
+     * @param helper
+     * @param viewIds
+     */
+    protected final void registerItemViewClickListener(@NonNull MultiViewHolder holder, @NonNull MultiHelper<T> helper,
+            @IdRes int... viewIds) {
+        registerItemViewClickListener(holder, helper, null, viewIds);
+
+    }
+
+    private void register(MultiViewHolder holder, MultiHelper<T> helper, View view, @Nullable String target) {
+        view.setClickable(true);
+        view.setOnClickListener(v -> {
+            final int position = holder.getAdapterPosition();
+            if (position == RecyclerView.NO_POSITION) {
+                Log.e(TAG, "item 点击异常: position=" + position);
                 return;
             }
 
-            T data = helper.getItem(position);
+            final T data = helper.getItem(position);
             if (data == null) {
-                Log.e(TAG, "item 点击异常:data="+data);
+                Log.e(TAG, "item 点击异常:data=" + data);
                 return;
             }
             //优先监听器
@@ -104,92 +140,60 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
                 mItemListener.onClickItem(v, getViewType(), data, position);
                 return;
             }
+            /*不传入目标方法名，则表示不采用反射方式回调点击事件*/
+            if (TextUtils.isEmpty(target)) {
+                return;
+            }
 
-            callTagMethod(v, data, position, "item 点击异常");
-
+            callTagMethod(v, target, data, position, "item 点击异常");
         });
+
     }
 
-    /*item 长点击事件注册*/
-    protected final void registLongClickItemListener(MultiViewHolder holder, MultiHelper<T> helper) {
-        checkTag(holder.itemView.getTag());
-        holder.itemView.setClickable(true);
-        holder.itemView.setOnLongClickListener(v -> {
+    protected final void registerItemViewLongClickListener(@NonNull MultiViewHolder holder,
+            @NonNull MultiHelper<T> helper,
+            @Nullable String target,
+            @IdRes int... viewIds) {
+        /*如果不传viewId，则默认是注册item根布局的点击事件监听*/
+        if (viewIds.length == 0) {
+            registerLong(holder, helper, holder.itemView, target);
+            return;
+        }
+        for (int id : viewIds) {
+            final View view = holder.getView(id);
+            registerLong(holder, helper, view, target);
+        }
+
+    }
+
+    private void registerLong(MultiViewHolder holder, MultiHelper<T> helper, View view, String target) {
+        view.setLongClickable(true);
+        view.setOnLongClickListener(v -> {
             boolean consume = false;
-            int position = holder.getAdapterPosition();
-            if (position==RecyclerView.NO_POSITION){
-                Log.e(TAG, "item 长点击异常: position="+position);
+            final int position = holder.getAdapterPosition();
+            if (position == RecyclerView.NO_POSITION) {
+                Log.e(TAG, "item 长点击异常: position=" + position);
                 return consume;
             }
-            T data = helper.getItem(position);
+            final T data = helper.getItem(position);
             if (data == null) {
-                Log.e(TAG, "item 长点击异常:data="+data);
+                Log.e(TAG, "item 长点击异常:data=" + data);
                 return consume;
             }
             //监听器优先
             if (mOnLongClickItemListener != null) {
                 return mOnLongClickItemListener.onLongClickItem(v, getViewType(), data, position);
             }
-            consume = callTagLongClickMethod(v, data, position, "item 长点击异常");
-            return consume;
-        });
-    }
-
-    /*注册item child view 点击事件监听*/
-    protected final void registClickItemChildViewListener(int viewId, MultiViewHolder holder, MultiHelper<T> helper) {
-        final View view = holder.getView(viewId);
-        checkTag(view.getTag());
-        view.setClickable(true);
-        view.setOnClickListener(v -> {
-            int position = holder.getAdapterPosition();
-            if (position==RecyclerView.NO_POSITION){
-                Log.e(TAG, "item child view 点击异常: position="+position);
-                return;
-            }
-            T data = helper.getItem(position);
-            if (data == null) {
-                Log.e(TAG, "item child view 点击异常:data="+data);
-                return;
-            }
-            //监听器优先
-            if (mOnClickItemChildViewListener != null) {
-                mOnClickItemChildViewListener.onClickItemChildView(v, getViewType(), data, position);
-                return;
-            }
-
-            callTagMethod(v, data, position, "item child view 点击异常");
-
-        });
-    }
-
-    /*注册item child view 长按点击事件监听*/
-    protected final void registLongClickItemChildViewListener(int viewId, MultiViewHolder holder,
-            MultiHelper<T> helper) {
-        final View view = holder.getView(viewId);
-        checkTag(view.getTag());
-        view.setClickable(true);
-        view.setOnLongClickListener(v -> {
-            boolean consume = false;
-            int position = holder.getAdapterPosition();
-            if (position==RecyclerView.NO_POSITION){
-                Log.e(TAG, "item child view 长点击异常: position="+position);
+            /*不传入目标方法名，则表示不采用反射方式回调点击事件*/
+            if (TextUtils.isEmpty(target)) {
                 return consume;
             }
-            T data = helper.getItem(position);
-            if (data == null ) {
-                Log.e(TAG, "item child view 长点击异常:data="+data);
-                return consume;
-            }
-
-            //监听器优先
-            if (mOnLongClickItemChildViewListener != null) {
-                return mOnLongClickItemChildViewListener
-                        .onClickItemChildView(v, getViewType(), data, position);
-            }
-            consume = callTagLongClickMethod(v, data, position, "item child view 长点击异常");
+            consume = callTagLongClickMethod(v, target, data, position, "item 长点击异常");
             return consume;
+
         });
     }
+
 
 
     /**
@@ -200,9 +204,9 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
      * @param position
      * @param errMsg
      */
-    private  void callTagMethod(View v, T data, int position, String errMsg) {
+    private void callTagMethod(View v, String target, T data, int position, String errMsg) {
         try {
-            Method method = resolveMethod((String) v.getTag());
+            Method method = resolveMethod(target);
             if (!method.isAccessible()) {
                 method.setAccessible(true);
             }
@@ -212,18 +216,20 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
         }
     }
 
+
     /**
      * 反射回调长点击方法
+     *
      * @param v
      * @param data
      * @param position
      * @param errMsg
      * @return
      */
-    private boolean callTagLongClickMethod(View v, T data, int position, String errMsg) {
+    private boolean callTagLongClickMethod(View v, String target, T data, int position, String errMsg) {
         boolean consume = false;
         try {
-            Method method = resolveMethod((String) v.getTag());
+            Method method = resolveMethod(target);
             if (!method.isAccessible()) {
                 method.setAccessible(true);
             }
@@ -234,26 +240,10 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
         return consume;
     }
 
-    /**
-     * 检查 tag值的合法性
-     *
-     * @param tag
-     * @return
-     */
-    private void checkTag(Object tag) {
-        if (!(tag instanceof String)) {
-            throw new IllegalArgumentException(" Item sub view tag 不能为null、空格，且必须为 String 类型 ");
-        }
 
-        final String methodName = (String) tag;
-        if (TextUtils.isEmpty(methodName)) {
-            throw new IllegalArgumentException(" Item sub view tag 不能为空格");
-        }
-
-    }
 
     /**
-     * 根据tag 提供的方法名反射获取目标方法
+     *  根据方法名反射获取目标方法
      *
      * @param methodName
      * @return
@@ -268,7 +258,7 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
         }
         final Class<?> clazz = mObserver.getClass();
         if (mObserverName == null) {
-            mObserverName = clazz.getCanonicalName();
+            mObserverName = clazz.getName();
         }
         final String key = mObserverName + "@" + methodName;
         Method method = sMethodMap.get(key);

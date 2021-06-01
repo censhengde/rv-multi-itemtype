@@ -32,9 +32,9 @@ public class BItemType extends SimpleItemType<ItemBean> {
 
     @Override
     public void onViewHolderCreated(@NonNull MultiViewHolder holder, @NonNull MultiHelper<ItemBean> helper) {
-        /*注册监听器*/
-        registClickItemChildViewListener(R.id.btn_b, holder, helper);
-        registLongClickItemListener(holder, helper);
+        /*注册监听器，不传viewId则默认是给item根布局注册监听*/
+        registerItemViewLongClickListener(holder,helper,"onLongClickItem");
+        registerItemViewClickListener(holder,helper,"onClickItemChildView",R.id.btn_b,R.id.tv_b);
 
     }
 

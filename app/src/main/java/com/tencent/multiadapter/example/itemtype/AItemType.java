@@ -51,8 +51,8 @@ public class AItemType extends SimpleItemType<ItemBean> {
      */
     @Override
     public void onViewHolderCreated(@NonNull MultiViewHolder holder, @NonNull MultiHelper<ItemBean> helper) {
-        /*注册监听器*/
-        registClickItemListener(holder, helper);
+        /*注册监听器，不传viewId则默认是给item根布局注册监听*/
+        registerItemViewClickListener(holder,helper,"onClickItem");
     }
 
     /**

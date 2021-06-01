@@ -5,6 +5,7 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,7 +35,8 @@ public final class MultiViewHolder extends RecyclerView.ViewHolder {
         this.isInvalid = invalid;
         id_view_map=new SparseArray<>(10);
     }
-    public <T extends View> T getView(int id){
+
+    public <T extends View> T getView(@IdRes int id) {
         T v= (T) id_view_map.get(id);
         if (v==null){
             v=itemView.findViewById(id);

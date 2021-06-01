@@ -3,7 +3,6 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:background="@color/colorAccent"
-        android:tag="onLongClickItem"
     android:layout_height="120dp">
 
     <Button
@@ -13,7 +12,6 @@
             android:layout_gravity="center_vertical"
             android:background="@android:color/transparent"
             android:gravity="center"
-            android:tag="onClickItemChildView"
             android:text="Button"
             android:textAllCaps="false"
             android:textSize="18sp" />
