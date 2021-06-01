@@ -166,6 +166,13 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
 
     }
 
+    protected final void registerItemViewLongClickListener(@NonNull MultiViewHolder holder,
+            @NonNull MultiHelper<T> helper,
+            @IdRes int... viewIds) {
+        registerItemViewLongClickListener(holder, helper, null, viewIds);
+
+    }
+
     private void registerLong(MultiViewHolder holder, MultiHelper<T> helper, View view, String target) {
         view.setLongClickable(true);
         view.setOnLongClickListener(v -> {
