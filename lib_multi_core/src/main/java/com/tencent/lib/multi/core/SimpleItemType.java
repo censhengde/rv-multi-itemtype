@@ -91,11 +91,13 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
      * @param holder
      * @param helper
      * @param target 目标方法名
-     * @param viewIds view的id 集；因为存在多个view响应同一套点击逻辑的情况。
+     * @param viewIds view的id 集合；因为可能存在多个view响应同一套点击逻辑的情况。
      */
-    protected final void registerItemViewClickListener(@NonNull MultiViewHolder holder, @NonNull MultiHelper<T> helper,
+    protected final void registerItemViewClickListener(@NonNull MultiViewHolder holder,
+            @NonNull MultiHelper<T> helper,
             @Nullable String target,
-            @IdRes int... viewIds) {
+            @IdRes int... viewIds)
+    {
         /*如果不传viewId，则默认是注册item根布局的点击事件监听*/
         if (viewIds.length == 0) {
             register(holder, helper, holder.itemView, target);
@@ -115,8 +117,10 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
      * @param helper
      * @param viewIds
      */
-    protected final void registerItemViewClickListener(@NonNull MultiViewHolder holder, @NonNull MultiHelper<T> helper,
-            @IdRes int... viewIds) {
+    protected final void registerItemViewClickListener(@NonNull MultiViewHolder holder,
+            @NonNull MultiHelper<T> helper,
+            @IdRes int... viewIds)
+    {
         registerItemViewClickListener(holder, helper, null, viewIds);
 
     }
@@ -150,6 +154,14 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
 
     }
 
+    /**
+     * Item view 长点击事件注册。（包含item 子view）
+     *
+     * @param holder
+     * @param helper
+     * @param target 目标方法名
+     * @param viewIds view的id 集合；因为可能存在多个view响应同一套点击逻辑的情况。
+     */
     protected final void registerItemViewLongClickListener(@NonNull MultiViewHolder holder,
             @NonNull MultiHelper<T> helper,
             @Nullable String target,

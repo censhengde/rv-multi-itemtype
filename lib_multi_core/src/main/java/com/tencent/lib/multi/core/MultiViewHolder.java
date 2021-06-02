@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public final class MultiViewHolder extends RecyclerView.ViewHolder {
     //由于findViewById频繁调用比较消耗性能，所以要缓存
     private final SparseArray<View> id_view_map;
-    boolean isInvalid = false;
+    private boolean isInvalid;
     public static @NonNull
     MultiViewHolder create(Context context, ViewGroup parent, int layout){
         View itemView;
@@ -28,6 +28,11 @@ public final class MultiViewHolder extends RecyclerView.ViewHolder {
             itemView = LayoutInflater.from(context).inflate(layout, parent, false);
         }
         return new MultiViewHolder(itemView, false);
+    }
+
+    public static @NonNull
+    MultiViewHolder createInvalid(Context context) {
+        return new MultiViewHolder(new View(context), true);
     }
 
     private MultiViewHolder(@NonNull View itemView, boolean invalid) {
