@@ -27,8 +27,6 @@ public abstract class MultiHelper<T> {
     private final List<ItemType<T>> mItemTypeRecord = new ArrayList<>();
 
 
-
-
     public MultiHelper(Adapter realAdapter) {
         this.realAdapter = realAdapter;
     }
@@ -82,14 +80,8 @@ public abstract class MultiHelper<T> {
         return currentType == null ? INVALID_VIEW_TYPE : currentType.getViewType();
     }
 
-    @Nullable
-    public abstract T getItem(int position);
-
-    public int getItemCount() {
-        return realAdapter == null ? 0 : realAdapter.getItemCount();
-    }
     @NonNull
-    public MultiViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public final MultiViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final ItemType<T> type = viewType_itemType_map.get(viewType);
         if (viewType == INVALID_VIEW_TYPE || type == null) {//表示无效
             return MultiViewHolder.createInvalid(parent.getContext());
@@ -101,7 +93,7 @@ public abstract class MultiHelper<T> {
         return holder;
     }
 
-    public void onBindViewHolder(@NonNull MultiViewHolder holder, int position, @NonNull List<Object> payloads) {
+    public final void onBindViewHolder(@NonNull MultiViewHolder holder, int position, @NonNull List<Object> payloads) {
         if (holder.isInvalid()) {
             return;
         }
@@ -121,7 +113,12 @@ public abstract class MultiHelper<T> {
             }
 
     }
+    @Nullable
+    public abstract T getItem(int position);
 
+    public int getItemCount() {
+        return realAdapter == null ? 0 : realAdapter.getItemCount();
+    }
     /**
      * 当涉及item的增、删、改时，数据集元素的增删改必须与ItemTypeRecord增删改同步。
      * 一般来说当我们明确知道某position的ItemType的改变时，应主动调用这个方法进行更新，因为由
@@ -134,7 +131,7 @@ public abstract class MultiHelper<T> {
     }
 
 
-    public MultiHelper addItemType(@NonNull ItemType<T> type) {
+    public final MultiHelper addItemType(@NonNull ItemType<T> type) {
         if (viewType_itemType_map.get(type.getViewType()) != null) {
             throw new IllegalStateException("ItemType getViewType返回不能重复！");
         }

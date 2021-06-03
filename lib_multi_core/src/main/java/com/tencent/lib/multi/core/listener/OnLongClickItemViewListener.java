@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
  *
  * 说明：
  */
-public interface OnLongClickItemListener<T> {
+public interface OnLongClickItemViewListener<T> {
 
     boolean onLongClickItem(@NonNull View v,int type,@NonNull T item, int position);
 

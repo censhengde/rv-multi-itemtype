@@ -8,10 +8,8 @@ import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
-import com.tencent.lib.multi.core.listener.OnClickItemChildViewListener;
-import com.tencent.lib.multi.core.listener.OnClickItemListener;
-import com.tencent.lib.multi.core.listener.OnLongClickItemChildViewListener;
-import com.tencent.lib.multi.core.listener.OnLongClickItemListener;
+import com.tencent.lib.multi.core.listener.OnClickItemViewListener;
+import com.tencent.lib.multi.core.listener.OnLongClickItemViewListener;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -27,35 +25,25 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
 
     private static final String TAG = "SimpleItemType";
     private static Map<String, Method> sMethodMap;/*缓存反射获取的method对象，减少反射成本*/
-    private OnClickItemListener<T> mItemListener;
-    private OnLongClickItemListener<T> mOnLongClickItemListener;
-    private OnClickItemChildViewListener<T> mOnClickItemChildViewListener;
-    private OnLongClickItemChildViewListener<T> mOnLongClickItemChildViewListener;
-    private T t;
+    private OnClickItemViewListener<T> mOnClickItemViewListener;
+    private OnLongClickItemViewListener<T> mOnLongClickItemViewListener;
+
     private Object mObserver;
     private String mObserverName;
     private Class<?> mTClass;/*泛型参数T的Class*/
 
 
 
-    public void setOnLongClickItemListener(OnLongClickItemListener<T> listener) {
-        mOnLongClickItemListener = listener;
+    public void setOnLongClickItemViewListener(OnLongClickItemViewListener<T> listener) {
+        mOnLongClickItemViewListener = listener;
     }
 
 
-    public void setOnClickItemListener(OnClickItemListener<T> itemListener) {
-        mItemListener = itemListener;
+    public void setOnClickItemViewListener(OnClickItemViewListener<T> itemListener) {
+        mOnClickItemViewListener = itemListener;
     }
 
-    public void setOnClickItemChildViewListener(
-            OnClickItemChildViewListener<T> listener) {
-        this.mOnClickItemChildViewListener = listener;
-    }
 
-    public void setOnLongClickItemChildViewListener(
-            OnLongClickItemChildViewListener<T> listener) {
-        this.mOnLongClickItemChildViewListener = listener;
-    }
 
     public void bind(@NonNull Object listener) {
         mObserver = listener;
@@ -140,8 +128,8 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
                 return;
             }
             //优先监听器
-            if (mItemListener != null) {
-                mItemListener.onClickItem(v, getViewType(), data, position);
+            if (mOnClickItemViewListener != null) {
+                mOnClickItemViewListener.onClickItem(v, getViewType(), data, position);
                 return;
             }
             /*不传入目标方法名，则表示不采用反射方式回调点击事件*/
@@ -200,8 +188,8 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
                 return consume;
             }
             //监听器优先
-            if (mOnLongClickItemListener != null) {
-                return mOnLongClickItemListener.onLongClickItem(v, getViewType(), data, position);
+            if (mOnLongClickItemViewListener != null) {
+                return mOnLongClickItemViewListener.onLongClickItem(v, getViewType(), data, position);
             }
             /*不传入目标方法名，则表示不采用反射方式回调点击事件*/
             if (TextUtils.isEmpty(target)) {

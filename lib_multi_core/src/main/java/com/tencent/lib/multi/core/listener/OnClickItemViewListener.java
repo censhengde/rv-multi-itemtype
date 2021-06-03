@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
  *
  * 说明：
  */
-public interface OnClickItemListener<T> {
+public interface OnClickItemViewListener<T> {
 
     /**
      * @param v 点击的那个View
