@@ -129,7 +129,7 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
             }
             //优先监听器
             if (mOnClickItemViewListener != null) {
-                mOnClickItemViewListener.onClickItem(v, getViewType(), data, position);
+                mOnClickItemViewListener.onClickItemView(v, getViewType(), data, position);
                 return;
             }
             /*不传入目标方法名，则表示不采用反射方式回调点击事件*/
@@ -189,7 +189,7 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
             }
             //监听器优先
             if (mOnLongClickItemViewListener != null) {
-                return mOnLongClickItemViewListener.onLongClickItem(v, getViewType(), data, position);
+                return mOnLongClickItemViewListener.onLongClickItemView(v, getViewType(), data, position);
             }
             /*不传入目标方法名，则表示不采用反射方式回调点击事件*/
             if (TextUtils.isEmpty(target)) {

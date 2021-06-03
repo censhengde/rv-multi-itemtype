@@ -17,6 +17,6 @@ public interface OnClickItemViewListener<T> {
      * @param item 当前item实体对象
      * @param position 当前position
      */
-    void onClickItem(@NonNull View v,int type, @NonNull T item, int position);
+    void onClickItemView(@NonNull View v,int type, @NonNull T item, int position);
 
 }
