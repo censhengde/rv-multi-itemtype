@@ -15,7 +15,8 @@ maven { url 'https://jitpack.io' }
 }
 
 2）在module build.gradle 添加：  
-dependencies {  
+dependencies { 
+
 implementation 'com.github.censhengde.MultiAdapter:core:v1.0.6'  //核心模块
 
 //分页模块，提供谷歌paging3 PagingDataAdapter 的改造：MultiPagedAdapter
