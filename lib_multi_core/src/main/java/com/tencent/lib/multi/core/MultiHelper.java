@@ -131,10 +131,20 @@ public abstract class MultiHelper<T> {
     }
 
 
-    public final MultiHelper addItemType(@NonNull ItemType<T> type) {
-        if (viewType_itemType_map.get(type.getViewType()) != null) {
-            throw new IllegalStateException("ItemType getViewType返回不能重复！");
-        }
+    public final MultiHelper addItemType( ItemType<T> type) {
+             if (type==null){
+                 return this;
+             }
+             final  int key=type.getViewType();
+             final ItemType<T> old=viewType_itemType_map.get(key);
+             //如果存在相同的，则忽略。
+             if (type.equals(old)){
+                 return this;
+             }
+             //如果添加多个view type相同的ItemType，则抛异常。
+             if (old!=null&&!type.equals(old)){
+                 throw new IllegalStateException("不能添加多个view type相同的ItemType对象！");
+             }
         viewType_itemType_map.put(type.getViewType(), type);
         return this;
     }
