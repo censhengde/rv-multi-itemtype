@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.tencent.multiadapter"
-        minSdkVersion 21
+        minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -64,7 +64,7 @@ dependencies {
     def room_version = "2.2.6"
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
-    implementation project(path: ':lib_paging')
+    implementation project(path: ':paging')
 }
 repositories {
     maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
