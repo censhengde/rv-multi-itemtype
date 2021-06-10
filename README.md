@@ -16,7 +16,7 @@ maven { url 'https://jitpack.io' }
 
 2）在module build.gradle 添加：  
 dependencies {  
-implementation 'com.github.censhengde:MultiAdapter:v1.0.5'  
+implementation 'com.github.censhengde:MultiAdapter:v1.0.6'  
 }  
 问题反馈 请加群：
 
