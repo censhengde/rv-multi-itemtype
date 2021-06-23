@@ -59,7 +59,7 @@ dependencies {
     implementation 'com.scwang.smart:refresh-header-classics:2.0.3'    //经典加载
     implementation 'com.scwang.smart:refresh-footer-classics:2.0.3'    //经典加载
 
-    implementation(name: 'lib-http-release', ext: 'aar')
+
 
     def room_version = "2.2.6"
     implementation "androidx.room:room-runtime:$room_version"

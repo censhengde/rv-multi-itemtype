@@ -1,7 +1,8 @@
 package com.tencent.lib.multi.core;
 
-import androidx.annotation.LayoutRes;
+import android.view.ViewGroup;
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 /**
@@ -9,7 +10,7 @@ import java.util.List;
  * <p>
  * 说明：某一种Item类型的抽象。
  */
-public interface ItemType<T> {
+public interface ItemType<T,VH extends RecyclerView.ViewHolder> {
 
     /**
      * @return 返回当前ItemType 的viewtype
@@ -25,26 +26,31 @@ public interface ItemType<T> {
      */
     boolean matchItemType(@NonNull T data, int position);
 
+
+
     /**
-     * 返回当前ItemType的布局文件id
+     * 创建当前ItemType的ViewHolder
      * @return
+     * @param parent
      */
-    @LayoutRes
-    int getItemLayoutRes();
+    @NonNull
+    VH onCreateViewHolder(@NonNull ViewGroup parent);
+
+    /**
+     * ViewHolder已经创建完成，在这里可以注册Item及其子View点击事件监听器,但不要做数据的绑定。
+     */
+    void onViewHolderCreated(@NonNull VH holder, @NonNull MultiHelper<T,VH> helper);
 
     /**
      * 意义与Adapter相同
      * @param holder
      * @param position
      */
-    void onBindViewHolder(@NonNull MultiViewHolder holder, @NonNull MultiHelper<T> helper, int position);
+    void onBindViewHolder(@NonNull VH holder, @NonNull MultiHelper<T,VH> helper, int position);
 
-    void onBindViewHolder(@NonNull MultiViewHolder holder, @NonNull MultiHelper<T> helper, int position,
+    void onBindViewHolder(@NonNull VH holder, @NonNull MultiHelper<T,VH> helper, int position,
             @NonNull List<Object> payloads);
 
-    /**
-     * ViewHolder已经创建完成，在这里可以注册Item及其子View点击事件监听器,但不要做数据的绑定。
-     */
-    void onViewHolderCreated(@NonNull MultiViewHolder holder, @NonNull MultiHelper<T> helper);
+
 
 }

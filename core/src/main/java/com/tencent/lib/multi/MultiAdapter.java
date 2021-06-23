@@ -15,11 +15,11 @@ import java.util.List;
  * <p>
  * 说明：未分页的Adapter
  */
-public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> {
+public class MultiAdapter<T,VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
 
     private List<T> mData;
 
-    private final MultiHelper<T> mMultiHelper = new MultiHelper<T>(this) {
+    private final MultiHelper<T,VH> mMultiHelper = new MultiHelper<T,VH>(this) {
         @Nullable
         @Override
         public T getItem(int position) {
@@ -52,17 +52,17 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> {
 
     @NonNull
     @Override
-    public MultiViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return mMultiHelper.onCreateViewHolder(parent, viewType);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MultiViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull VH holder, int position) {
 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MultiViewHolder holder, int position, @NonNull List<Object> payloads) {
+    public void onBindViewHolder(@NonNull VH holder, int position, @NonNull List<Object> payloads) {
         mMultiHelper.onBindViewHolder(holder, position, payloads);
     }
 
@@ -83,7 +83,7 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> {
         return isInValidPosition(position)? null : mData.get(position);
     }
 
-    public MultiAdapter<T> setData(@NonNull List<T> data) {
+    public MultiAdapter<T,VH> setData(@NonNull List<T> data) {
         mMultiHelper.getItemTypeRecord().clear();//确保ItemType记录重新匹配
         if (data == this.mData) {
             notifyDataSetChanged();
@@ -95,11 +95,11 @@ public class MultiAdapter<T> extends RecyclerView.Adapter<MultiViewHolder> {
     }
 
 
-    public CheckingHelper getCheckingHelper() {
+    public CheckingHelper<T> getCheckingHelper() {
         return mCheckingHelper;
     }
 
-    public MultiHelper getMultiHelper() {
+    public MultiHelper<T,VH> getMultiHelper() {
         return mMultiHelper;
     }
 

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import com.tencent.lib.multi.MultiAdapter
+import com.tencent.lib.multi.core.MultiViewHolder
 import com.tencent.lib.multi.core.listener.OnCheckingFinishedCallback
 import com.tencent.multiadapter.R
 import com.tencent.multiadapter.example.bean.CheckableItem
@@ -15,7 +16,7 @@ import kotlinx.android.synthetic.main.activity_check_item.*
 
 class SingleCheckActivity : AppCompatActivity(), OnCheckingFinishedCallback<CheckableItem> {
 
-    val adapter = MultiAdapter<CheckableItem>()
+    val adapter = MultiAdapter<CheckableItem, MultiViewHolder>()
     val dataSize = 30
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

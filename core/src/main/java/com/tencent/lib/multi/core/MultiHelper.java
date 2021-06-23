@@ -14,17 +14,17 @@ import java.util.List;
  *
  * 说明：实现Item多样式的公共逻辑封装。
  */
-public abstract class MultiHelper<T> {
+public abstract class MultiHelper<T,VH extends RecyclerView.ViewHolder> {
 
     public static final int INVALID_VIEW_TYPE = -1;
     private RecyclerView.Adapter realAdapter;
-    private final SparseArray<ItemType<T>> viewType_itemType_map = new SparseArray<>();
+    private final SparseArray<ItemType<T,VH>> viewType_itemType_map = new SparseArray<>();
 
     /**
      * ItemType在Adapter position上的记录，其索引与Adapter position一一对应,表示某position想要表现的ItemType，
      * 注意，并非一定与数据集的index对应。
      */
-    private final List<ItemType<T>> mItemTypeRecord = new ArrayList<>();
+    private final List<ItemType<T,VH>> mItemTypeRecord = new ArrayList<>();
 
 
     public MultiHelper(Adapter realAdapter) {
@@ -32,7 +32,7 @@ public abstract class MultiHelper<T> {
     }
 
     public final int getItemViewType(int position) {
-        ItemType<T> currentType = null;
+        ItemType<T,VH> currentType = null;
         final int typeSize = viewType_itemType_map.size();
         //单样式
         if (typeSize == 1) {
@@ -55,7 +55,7 @@ public abstract class MultiHelper<T> {
                 // 需重新匹配当前data所指定的ItemType
                 if (!currentType.matchItemType(data, position)) {
                     for (int i = 0; i < viewType_itemType_map.size(); i++) {
-                        final ItemType<T> type = viewType_itemType_map.valueAt(i);
+                        final ItemType<T,VH> type = viewType_itemType_map.valueAt(i);
                         if (type.matchItemType(data, position)) {
                             currentType = type;
                             mItemTypeRecord.set(position, type);
@@ -67,7 +67,7 @@ public abstract class MultiHelper<T> {
             } catch (Exception e) {
                 //为当前position的实体对象指定它的ItemType
                 for (int i = 0; i < viewType_itemType_map.size(); i++) {
-                    final ItemType<T> type = viewType_itemType_map.valueAt(i);
+                    final ItemType<T,VH> type = viewType_itemType_map.valueAt(i);
                     if (type.matchItemType(data, position)) {
                         currentType = type;
                         mItemTypeRecord.add(type);
@@ -81,26 +81,21 @@ public abstract class MultiHelper<T> {
     }
 
     @NonNull
-    public final MultiViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        final ItemType<T> type = viewType_itemType_map.get(viewType);
+    public final VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        final ItemType<T,VH> type = viewType_itemType_map.get(viewType);
         if (viewType == INVALID_VIEW_TYPE || type == null) {//表示无效
-            return MultiViewHolder.createInvalid(parent.getContext());
+            return (VH) MultiViewHolder.createInvalid(parent.getContext());
         }
-        final MultiViewHolder holder = MultiViewHolder
-                .create(parent.getContext(), parent, type.getItemLayoutRes());
-
+        final VH holder = type.onCreateViewHolder(parent);
         type.onViewHolderCreated(holder, this);
         return holder;
     }
 
-    public final void onBindViewHolder(@NonNull MultiViewHolder holder, int position, @NonNull List<Object> payloads) {
-        if (holder.isInvalid()) {
-            return;
-        }
+    public final void onBindViewHolder(@NonNull VH holder, int position, @NonNull List<Object> payloads) {
 
         try {
             /*可能有越界风险*/
-            final ItemType<T> type = mItemTypeRecord.get(position);
+            final ItemType<T,VH> type = mItemTypeRecord.get(position);
             if (payloads.isEmpty()) {
                 type.onBindViewHolder(holder, this, position);
             }
@@ -126,17 +121,17 @@ public abstract class MultiHelper<T> {
      * @return ItemType记录
      */
     @NonNull
-    public final List<ItemType<T>> getItemTypeRecord() {
+    public final List<ItemType<T,VH>> getItemTypeRecord() {
         return mItemTypeRecord;
     }
 
 
-    public final MultiHelper addItemType( ItemType<T> type) {
+    public final MultiHelper<T,VH> addItemType( ItemType<T,VH> type) {
              if (type==null){
                  return this;
              }
              final  int key=type.getViewType();
-             final ItemType<T> old=viewType_itemType_map.get(key);
+             final ItemType<T,VH> old=viewType_itemType_map.get(key);
              //如果存在相同的，则忽略。
              if (type.equals(old)){
                  return this;

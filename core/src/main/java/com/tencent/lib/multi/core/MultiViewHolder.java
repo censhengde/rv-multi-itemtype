@@ -35,12 +35,14 @@ public final class MultiViewHolder extends RecyclerView.ViewHolder {
         return new MultiViewHolder(new View(context), true);
     }
 
-    private MultiViewHolder(@NonNull View itemView, boolean invalid) {
+    public MultiViewHolder(@NonNull View itemView, boolean invalid) {
         super(itemView);
         this.isInvalid = invalid;
-        id_view_map=new SparseArray<>(10);
+        id_view_map=new SparseArray<>();
     }
-
+   public MultiViewHolder(View itemView){
+        this(itemView,false);
+   }
     public <T extends View> T getView(@IdRes int id) {
         T v= (T) id_view_map.get(id);
         if (v==null){

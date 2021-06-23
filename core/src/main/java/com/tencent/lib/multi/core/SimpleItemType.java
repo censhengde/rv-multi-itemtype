@@ -3,25 +3,30 @@ package com.tencent.lib.multi.core;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import androidx.annotation.IdRes;
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import com.tencent.lib.multi.core.listener.OnClickItemViewListener;
 import com.tencent.lib.multi.core.listener.OnLongClickItemViewListener;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Author：岑胜德 on 2021/2/22 16:23
  *
  * 说明：简单的 ItemType 实现
  */
-public abstract class SimpleItemType<T> implements ItemType<T> {
+public abstract class SimpleItemType<T,VH extends RecyclerView.ViewHolder> implements ItemType<T,VH> {
 
     private static final String TAG = "SimpleItemType";
     private static Map<String, Method> sMethodMap;/*缓存反射获取的method对象，减少反射成本*/
@@ -32,8 +37,40 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
     private String mObserverName;
     private Class<?> mTClass;/*泛型参数T的Class*/
 
+    /**
+     * 返回当前ItemType的布局文件id
+     * @return
+     */
+    @LayoutRes
+   protected abstract int getItemLayoutRes();
 
+    @NonNull
+    @NotNull
+    @Override
+    public VH onCreateViewHolder(@NonNull ViewGroup parent) {
+        final View itemView= LayoutInflater.from(parent.getContext()).inflate(getItemLayoutRes(),parent,false);
+        return resolveVH(itemView);
+    }
 
+    /**
+     * 反射实例化ViewHolder
+     * @param itemView
+     * @return
+     */
+    private VH resolveVH(View itemView){
+        final VH vh;
+        try {
+          final Type  type=this.getClass().getGenericSuperclass();
+          final   ParameterizedType p = (ParameterizedType) type;
+          final Class<VH> c=(Class<VH>) p.getActualTypeArguments()[1];
+          final   Constructor<VH> constructor= c.getConstructor(View.class);
+          vh= (VH) constructor.newInstance(itemView);//要求所有VH必需开放参数为View的构造函数
+        } catch (Exception e) {
+            e.printStackTrace();
+            return (VH) MultiViewHolder.createInvalid(itemView.getContext());
+        }
+        return vh;
+    }
     public void setOnLongClickItemViewListener(OnLongClickItemViewListener<T> listener) {
         mOnLongClickItemViewListener = listener;
     }
@@ -61,13 +98,13 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
 
 
     @Override
-    public void onViewHolderCreated(@NonNull MultiViewHolder holder, @NonNull MultiHelper<T> helper) {
+    public void onViewHolderCreated(@NonNull VH holder, @NonNull MultiHelper<T,VH> helper) {
 
 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MultiViewHolder holder, @NonNull MultiHelper<T> helper, int position,
+    public void onBindViewHolder(@NonNull VH holder, @NonNull MultiHelper<T,VH> helper, int position,
             @NonNull List<Object> payloads) {
 
     }
@@ -81,8 +118,8 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
      * @param target 目标方法名
      * @param viewIds view的id 集合；因为可能存在多个view响应同一套点击逻辑的情况。
      */
-    protected final void registerItemViewClickListener(@NonNull MultiViewHolder holder,
-            @NonNull MultiHelper<T> helper,
+    protected final void registerItemViewClickListener(@NonNull VH holder,
+            @NonNull MultiHelper<T,VH> helper,
             @Nullable String target,
             @IdRes int... viewIds)
     {
@@ -93,7 +130,7 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
         }
 
         for (int id : viewIds) {
-            final View view = holder.getView(id);
+            final View view = holder.itemView.findViewById(id);
             register(holder, helper, view, target);
         }
 
@@ -105,15 +142,15 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
      * @param helper
      * @param viewIds
      */
-    protected final void registerItemViewClickListener(@NonNull MultiViewHolder holder,
-            @NonNull MultiHelper<T> helper,
+    protected final void registerItemViewClickListener(@NonNull VH holder,
+            @NonNull MultiHelper<T,VH> helper,
             @IdRes int... viewIds)
     {
         registerItemViewClickListener(holder, helper, null, viewIds);
 
     }
 
-    private void register(MultiViewHolder holder, MultiHelper<T> helper, View view, @Nullable String target) {
+    private void register(VH holder, MultiHelper<T,VH> helper, View view, @Nullable String target) {
         view.setClickable(true);
         view.setOnClickListener(v -> {
             final int position = holder.getAdapterPosition();
@@ -150,8 +187,8 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
      * @param target 目标方法名
      * @param viewIds view的id 集合；因为可能存在多个view响应同一套点击逻辑的情况。
      */
-    protected final void registerItemViewLongClickListener(@NonNull MultiViewHolder holder,
-            @NonNull MultiHelper<T> helper,
+    protected final void registerItemViewLongClickListener(@NonNull VH holder,
+            @NonNull MultiHelper<T,VH> helper,
             @Nullable String target,
             @IdRes int... viewIds) {
         /*如果不传viewId，则默认是注册item根布局的点击事件监听*/
@@ -160,20 +197,20 @@ public abstract class SimpleItemType<T> implements ItemType<T> {
             return;
         }
         for (int id : viewIds) {
-            final View view = holder.getView(id);
+            final View view = holder.itemView.findViewById(id);
             registerLong(holder, helper, view, target);
         }
 
     }
 
-    protected final void registerItemViewLongClickListener(@NonNull MultiViewHolder holder,
-            @NonNull MultiHelper<T> helper,
+    protected final void registerItemViewLongClickListener(@NonNull VH holder,
+            @NonNull MultiHelper<T,VH> helper,
             @IdRes int... viewIds) {
         registerItemViewLongClickListener(holder, helper, null, viewIds);
 
     }
 
-    private void registerLong(MultiViewHolder holder, MultiHelper<T> helper, View view, String target) {
+    private void registerLong(VH holder, MultiHelper<T,VH> helper, View view, String target) {
         view.setLongClickable(true);
         view.setOnLongClickListener(v -> {
             boolean consume = false;

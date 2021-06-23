@@ -3,6 +3,7 @@ package com.tenent.lib.multi.paging
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import com.tencent.lib.multi.core.MultiHelper
 import com.tencent.lib.multi.core.MultiViewHolder
 import com.tencent.lib.multi.core.checking.CheckingHelper
@@ -14,10 +15,10 @@ import com.tencent.lib.multi.core.checking.CheckingHelper
  * 说明：
 
  */
-open class MultiPagedAdapter<T : Any>(diffCallback: DiffUtil.ItemCallback<T>)
-    : PagingDataAdapter<T, MultiViewHolder>(diffCallback) {
+open class MultiPagedAdapter<T : Any,VH :RecyclerView.ViewHolder>(diffCallback: DiffUtil.ItemCallback<T>)
+    : PagingDataAdapter<T, VH>(diffCallback) {
 
-    val multiHelper = object : MultiHelper<T>(this) {
+    val multiHelper = object : MultiHelper<T,VH>(this) {
 
         override fun getItem(p0: Int): T? {
             return this@MultiPagedAdapter.getItem(p0)
@@ -34,15 +35,15 @@ open class MultiPagedAdapter<T : Any>(diffCallback: DiffUtil.ItemCallback<T>)
         return multiHelper.getItemViewType(position)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MultiViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         return multiHelper.onCreateViewHolder(parent, viewType)
     }
 
-    override fun onBindViewHolder(holder: MultiViewHolder, position: Int, payloads: List<Any?>) {
+    override fun onBindViewHolder(holder: VH, position: Int, payloads: List<Any?>) {
         multiHelper.onBindViewHolder(holder, position, payloads)
     }
 
-    override fun onBindViewHolder(holder: MultiViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: VH, position: Int) {
 
     }
 

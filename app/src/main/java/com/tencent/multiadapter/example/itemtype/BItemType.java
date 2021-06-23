@@ -13,7 +13,7 @@ import com.tencent.multiadapter.example.bean.ItemBean;
  * <p>
  * 说明：
  */
-public class BItemType extends SimpleItemType<ItemBean> {
+public class BItemType extends SimpleItemType<ItemBean,MultiViewHolder> {
 
     @Override
     public int getViewType() {
@@ -31,7 +31,7 @@ public class BItemType extends SimpleItemType<ItemBean> {
     }
 
     @Override
-    public void onViewHolderCreated(@NonNull MultiViewHolder holder, @NonNull MultiHelper<ItemBean> helper) {
+    public void onViewHolderCreated(@NonNull MultiViewHolder holder, @NonNull MultiHelper<ItemBean,MultiViewHolder> helper) {
         /*注册监听器，不传viewId则默认是给item根布局注册监听*/
         registerItemViewLongClickListener(holder,helper,"onLongClickItem");
         registerItemViewClickListener(holder,helper,"onClickItemChildView",R.id.btn_b,R.id.tv_b);
@@ -40,7 +40,7 @@ public class BItemType extends SimpleItemType<ItemBean> {
 
 
     @Override
-    public void onBindViewHolder(@NonNull MultiViewHolder holder, @NonNull MultiHelper<ItemBean> helper, int position) {
+    public void onBindViewHolder(@NonNull MultiViewHolder holder, @NonNull MultiHelper<ItemBean,MultiViewHolder> helper, int position) {
         ItemBean data = helper.getItem(position);
         if (data != null) {
             TextView tv = holder.getView(R.id.tv_b);

@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.tencent.lib.multi.MultiAdapter
+import com.tencent.lib.multi.core.MultiViewHolder
 import com.tencent.multiadapter.R
 import com.tencent.multiadapter.example.bean.ItemBean
 import com.tencent.multiadapter.example.itemtype.AItemType
@@ -15,7 +16,7 @@ import java.util.*
 
 class MultiItemActivity : AppCompatActivity() {
 
-    lateinit var adapter: MultiAdapter<ItemBean>
+    lateinit var adapter: MultiAdapter<ItemBean,MultiViewHolder>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +31,7 @@ class MultiItemActivity : AppCompatActivity() {
         bItemType.bind(this)
         cItemType.bind(this)
         /*初始化Adapter*/
-        adapter = MultiAdapter<ItemBean>()
+        adapter = MultiAdapter<ItemBean, MultiViewHolder>()
         /*将所有ItemType添加到Adapter中*/
         adapter.multiHelper.addItemType(aItemType)
                 .addItemType(bItemType)

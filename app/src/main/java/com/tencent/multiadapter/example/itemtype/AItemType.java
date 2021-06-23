@@ -13,7 +13,7 @@ import com.tencent.multiadapter.example.bean.ItemBean;
  * <p>
  * 说明：
  */
-public class AItemType extends SimpleItemType<ItemBean> {
+public class AItemType extends SimpleItemType<ItemBean,MultiViewHolder> {
 
     /**
      * @return 返回当前item类型的标识
@@ -50,7 +50,7 @@ public class AItemType extends SimpleItemType<ItemBean> {
      * @param helper
      */
     @Override
-    public void onViewHolderCreated(@NonNull MultiViewHolder holder, @NonNull MultiHelper<ItemBean> helper) {
+    public void onViewHolderCreated(@NonNull MultiViewHolder holder, @NonNull MultiHelper<ItemBean,MultiViewHolder> helper) {
         /*注册监听器，不传viewId则默认是给item根布局注册监听*/
         registerItemViewClickListener(holder,helper,"onClickItem");
     }
@@ -62,7 +62,7 @@ public class AItemType extends SimpleItemType<ItemBean> {
      */
 
     @Override
-    public void onBindViewHolder(@NonNull MultiViewHolder holder, @NonNull MultiHelper<ItemBean> helper, int position) {
+    public void onBindViewHolder(@NonNull MultiViewHolder holder, @NonNull MultiHelper<ItemBean,MultiViewHolder> helper, int position) {
         ItemBean itemBean = helper.getItem(position);
         if (itemBean != null) {
             TextView tv = holder.getView(R.id.tv_a);

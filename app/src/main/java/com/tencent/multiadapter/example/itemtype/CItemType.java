@@ -13,7 +13,7 @@ import com.tencent.multiadapter.example.bean.ItemBean;
  * <p>
  * 说明：
  */
-public class CItemType extends SimpleItemType<ItemBean> {
+public class CItemType extends SimpleItemType<ItemBean,MultiViewHolder> {
 
     @Override
     public int getViewType() {
@@ -32,12 +32,12 @@ public class CItemType extends SimpleItemType<ItemBean> {
     }
 
     @Override
-    public void onViewHolderCreated(@NonNull MultiViewHolder holder, @NonNull MultiHelper<ItemBean> helper) {
+    public void onViewHolderCreated(@NonNull MultiViewHolder holder, @NonNull MultiHelper<ItemBean,MultiViewHolder> helper) {
         registerItemViewLongClickListener(holder, helper, "onLongClickItemChildView", R.id.iv_c);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MultiViewHolder holder, @NonNull MultiHelper<ItemBean> helper, int position) {
+    public void onBindViewHolder(@NonNull MultiViewHolder holder, @NonNull MultiHelper<ItemBean,MultiViewHolder> helper, int position) {
         ItemBean bean = helper.getItem(position);
         if (bean == null) {
             return;
