@@ -35,7 +35,8 @@ public abstract class SimpleItemType<T,VH extends RecyclerView.ViewHolder> imple
 
     private Object mObserver;
     private String mObserverName;
-    private Class<?> mTClass;/*泛型参数T的Class*/
+    private Class<T> mTClass;/*泛型参数T的Class*/
+    private Constructor<VH> mVHConstructor;
 
     /**
      * 返回当前ItemType的布局文件id
@@ -60,11 +61,13 @@ public abstract class SimpleItemType<T,VH extends RecyclerView.ViewHolder> imple
     private VH resolveVH(View itemView){
         final VH vh;
         try {
-          final Type  type=this.getClass().getGenericSuperclass();
-          final   ParameterizedType p = (ParameterizedType) type;
-          final Class<VH> c=(Class<VH>) p.getActualTypeArguments()[1];
-          final   Constructor<VH> constructor= c.getConstructor(View.class);
-          vh= (VH) constructor.newInstance(itemView);//要求所有VH必需开放参数为View的构造函数
+            if (mVHConstructor==null){
+             final Type  type=this.getClass().getGenericSuperclass();
+             final   ParameterizedType p = (ParameterizedType) type;
+             final Class<VH> c=(Class<VH>) p.getActualTypeArguments()[1];
+             mVHConstructor= c.getConstructor(View.class);
+            }
+          vh= (VH) mVHConstructor.newInstance(itemView);//要求所有VH必需开放参数为View的构造函数
         } catch (Exception e) {
             e.printStackTrace();
             return (VH) MultiViewHolder.createInvalid(itemView.getContext());
@@ -326,13 +329,13 @@ public abstract class SimpleItemType<T,VH extends RecyclerView.ViewHolder> imple
      *
      * @return
      */
-    private Class<?> resolveT() {
+    private Class<T> resolveT() {
         final Type type;
         try {
             type = this.getClass().getGenericSuperclass();
             ParameterizedType p = (ParameterizedType) type;
             Log.e(TAG, "tv[0].getName():" + type);
-            return (Class<?>) p.getActualTypeArguments()[0];
+            return (Class<T>) p.getActualTypeArguments()[0];
         } catch (Exception e) {
             e.printStackTrace();
             return null;
