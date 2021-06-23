@@ -3,6 +3,7 @@ package com.tencent.multiadapter.example.itemtype;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import com.tencent.lib.multi.core.MultiHelper;
+import com.tencent.lib.multi.core.MultiItemType;
 import com.tencent.lib.multi.core.MultiViewHolder;
 import com.tencent.lib.multi.core.SimpleItemType;
 import com.tencent.multiadapter.R;
@@ -13,7 +14,7 @@ import com.tencent.multiadapter.example.bean.ItemBean;
  * <p>
  * 说明：
  */
-public class CItemType extends SimpleItemType<ItemBean,MultiViewHolder> {
+public class CItemType extends MultiItemType<ItemBean> {
 
     @Override
     public int getViewType() {
@@ -22,7 +23,6 @@ public class CItemType extends SimpleItemType<ItemBean,MultiViewHolder> {
 
     @Override
     public boolean matchItemType(ItemBean data, int position) {
-
         return getViewType()==data.viewType;
     }
 
