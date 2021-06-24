@@ -1,7 +1,11 @@
 @file:JvmName("Utils")
 package com.tencent.lib.multi.core
 
+import android.content.Context
+import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 import java.lang.IllegalArgumentException
+import java.security.AccessControlContext
 
 /**
 
@@ -14,5 +18,7 @@ fun assertNull(any: Any?,msg:String){
     if (any==null){
         throw IllegalArgumentException(msg)
     }
+
 }
 
+fun createInvalidViewHolder(context: Context): RecyclerView.ViewHolder =object :RecyclerView.ViewHolder(View(context)){}

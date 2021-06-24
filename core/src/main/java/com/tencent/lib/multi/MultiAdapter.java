@@ -4,10 +4,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
+import com.tencent.lib.multi.core.MultiHelper;
 import com.tencent.lib.multi.core.checking.Checkable;
 import com.tencent.lib.multi.core.checking.CheckingHelper;
-import com.tencent.lib.multi.core.MultiHelper;
-import com.tencent.lib.multi.core.MultiViewHolder;
 import java.util.List;
 
 /**
@@ -84,7 +83,7 @@ public class MultiAdapter<T,VH extends RecyclerView.ViewHolder> extends Recycler
     }
 
     public MultiAdapter<T,VH> setData(@NonNull List<T> data) {
-        mMultiHelper.getItemTypeRecord().clear();//确保ItemType记录重新匹配
+
         if (data == this.mData) {
             notifyDataSetChanged();
             return this;
@@ -114,7 +113,9 @@ public class MultiAdapter<T,VH extends RecyclerView.ViewHolder> extends Recycler
                 }
             }
             mData.remove(position);
-            mMultiHelper.getItemTypeRecord().remove(position);
+            if (mMultiHelper.getItemTypeRecord()!=null){
+                mMultiHelper.getItemTypeRecord().remove(position);
+            }
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, mData.size()-position);
         }

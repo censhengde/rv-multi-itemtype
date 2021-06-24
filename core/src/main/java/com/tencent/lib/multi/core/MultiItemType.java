@@ -2,7 +2,6 @@ package com.tencent.lib.multi.core;
 
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Author：岑胜德 on 2021/6/23 19:14

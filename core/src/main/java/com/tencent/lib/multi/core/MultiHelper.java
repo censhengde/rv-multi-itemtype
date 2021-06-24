@@ -24,7 +24,7 @@ public abstract class MultiHelper<T,VH extends RecyclerView.ViewHolder> {
      * ItemType在Adapter position上的记录，其索引与Adapter position一一对应,表示某position想要表现的ItemType，
      * 注意，并非一定与数据集的index对应。
      */
-    private final List<ItemType<T,VH>> mItemTypeRecord = new ArrayList<>();
+    private  List<ItemType<T,VH>> mItemTypeRecord;
 
 
     public MultiHelper(Adapter realAdapter) {
@@ -40,13 +40,7 @@ public abstract class MultiHelper<T,VH extends RecyclerView.ViewHolder> {
         final int typeSize = mItemTypes.size();
         //单样式
         if (typeSize == 1) {
-            if (position>=0&&position<mItemTypeRecord.size()){
-                currentType = mItemTypeRecord.get(position);//第一次进来会越界，说明尚无记录
-            }else {
                 currentType = mItemTypes.valueAt(0);
-                mItemTypeRecord.add(currentType);
-            }
-
         }
         //多样式
         else if (typeSize > 1) {
@@ -54,9 +48,13 @@ public abstract class MultiHelper<T,VH extends RecyclerView.ViewHolder> {
             if (data == null) {
                 return INVALID_VIEW_TYPE;
             }
+
+            if (mItemTypeRecord==null){
+                mItemTypeRecord= new ArrayList<>();
+            }
             if (position>=0&&position<mItemTypeRecord.size()){
-                currentType = mItemTypeRecord.get(position);//第一次进来会越界，说明尚无记录
-                //如果当前position 的ItemType不再与当前的data所指定的ItemType匹配，说明当前data已经被更改，
+                currentType = mItemTypeRecord.get(position);
+                //如果当前 position 对应的ItemType不再与当前的data所指定的ItemType匹配，说明当前data已经被更改，
                 // 需重新匹配当前data所指定的ItemType
                 if (!currentType.matchItemType(data, position)) {
                     for (int i = 0; i < mItemTypes.size(); i++) {
@@ -69,7 +67,9 @@ public abstract class MultiHelper<T,VH extends RecyclerView.ViewHolder> {
                     }
 
                 }
-            }else {
+            }
+            //首次进来 mItemTypeRecord.isEmpty() 为true，会走这里。
+            else {
                 //为当前position的实体对象指定它的ItemType
                 for (int i = 0; i < mItemTypes.size(); i++) {
                     final ItemType<T,VH> type = mItemTypes.valueAt(i);
@@ -88,7 +88,7 @@ public abstract class MultiHelper<T,VH extends RecyclerView.ViewHolder> {
     public final VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final ItemType<T,VH> type = mItemTypes.get(viewType);
         if (viewType == INVALID_VIEW_TYPE || type == null) {//表示无效
-            return (VH) MultiViewHolder.createInvalid(parent.getContext());
+            return (VH) Utils.createInvalidViewHolder(parent.getContext());
         }
         final VH holder = type.onCreateViewHolder(parent);
         type.onViewHolderCreated(holder, this);
@@ -96,10 +96,18 @@ public abstract class MultiHelper<T,VH extends RecyclerView.ViewHolder> {
     }
 
     public final void onBindViewHolder(@NonNull VH holder, int position, @NonNull List<Object> payloads) {
-
+        /*统一捕获由position引发的可能异常*/
         try {
-            /*可能有越界风险*/
-            final ItemType<T,VH> type = mItemTypeRecord.get(position);
+            final int size=mItemTypes.size();
+            ItemType<T,VH> type;
+             if (size==1){/*单样式*/
+                 type= mItemTypes.valueAt(0);
+             }else if (size>1){/*多样式*/
+                 /*可能有越界风险*/
+                 type = mItemTypeRecord.get(position);
+             }else {
+                 return;
+             }
             if (payloads.isEmpty()) {
                 type.onBindViewHolder(holder, this, position);
             }
@@ -124,7 +132,7 @@ public abstract class MultiHelper<T,VH extends RecyclerView.ViewHolder> {
      * {@getItemViewType}自动匹配的话执行过程相对复杂度较高，消耗略大。例子见MultiAdapter removeItem方法。
      * @return ItemType记录
      */
-    @NonNull
+    @Nullable
     public final List<ItemType<T,VH>> getItemTypeRecord() {
         return mItemTypeRecord;
     }
@@ -134,6 +142,7 @@ public abstract class MultiHelper<T,VH extends RecyclerView.ViewHolder> {
              if (type==null){
                  return this;
              }
+
              mItemTypes.put(type.getViewType(), type);
         return this;
     }
