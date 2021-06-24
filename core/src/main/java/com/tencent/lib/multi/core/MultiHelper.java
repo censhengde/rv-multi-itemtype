@@ -18,7 +18,7 @@ public abstract class MultiHelper<T,VH extends RecyclerView.ViewHolder> {
 
     public static final int INVALID_VIEW_TYPE = -1;
     private RecyclerView.Adapter realAdapter;
-    private final SparseArray<ItemType<T,VH>> viewType_itemType_map = new SparseArray<>();
+    private final SparseArray<ItemType<T,VH>> mItemTypes = new SparseArray<>();
 
     /**
      * ItemType在Adapter position上的记录，其索引与Adapter position一一对应,表示某position想要表现的ItemType，
@@ -32,16 +32,21 @@ public abstract class MultiHelper<T,VH extends RecyclerView.ViewHolder> {
     }
 
     public final int getItemViewType(int position) {
+        if (position==RecyclerView.NO_POSITION){
+            return INVALID_VIEW_TYPE;
+        }
+
         ItemType<T,VH> currentType = null;
-        final int typeSize = viewType_itemType_map.size();
+        final int typeSize = mItemTypes.size();
         //单样式
         if (typeSize == 1) {
-            try {
+            if (position>=0&&position<mItemTypeRecord.size()){
                 currentType = mItemTypeRecord.get(position);//第一次进来会越界，说明尚无记录
-            } catch (Exception e) {
-                currentType = viewType_itemType_map.valueAt(0);
+            }else {
+                currentType = mItemTypes.valueAt(0);
                 mItemTypeRecord.add(currentType);
             }
+
         }
         //多样式
         else if (typeSize > 1) {
@@ -49,13 +54,13 @@ public abstract class MultiHelper<T,VH extends RecyclerView.ViewHolder> {
             if (data == null) {
                 return INVALID_VIEW_TYPE;
             }
-            try {
+            if (position>=0&&position<mItemTypeRecord.size()){
                 currentType = mItemTypeRecord.get(position);//第一次进来会越界，说明尚无记录
                 //如果当前position 的ItemType不再与当前的data所指定的ItemType匹配，说明当前data已经被更改，
                 // 需重新匹配当前data所指定的ItemType
                 if (!currentType.matchItemType(data, position)) {
-                    for (int i = 0; i < viewType_itemType_map.size(); i++) {
-                        final ItemType<T,VH> type = viewType_itemType_map.valueAt(i);
+                    for (int i = 0; i < mItemTypes.size(); i++) {
+                        final ItemType<T,VH> type = mItemTypes.valueAt(i);
                         if (type.matchItemType(data, position)) {
                             currentType = type;
                             mItemTypeRecord.set(position, type);
@@ -64,10 +69,10 @@ public abstract class MultiHelper<T,VH extends RecyclerView.ViewHolder> {
                     }
 
                 }
-            } catch (Exception e) {
+            }else {
                 //为当前position的实体对象指定它的ItemType
-                for (int i = 0; i < viewType_itemType_map.size(); i++) {
-                    final ItemType<T,VH> type = viewType_itemType_map.valueAt(i);
+                for (int i = 0; i < mItemTypes.size(); i++) {
+                    final ItemType<T,VH> type = mItemTypes.valueAt(i);
                     if (type.matchItemType(data, position)) {
                         currentType = type;
                         mItemTypeRecord.add(type);
@@ -75,14 +80,13 @@ public abstract class MultiHelper<T,VH extends RecyclerView.ViewHolder> {
                     }
                 }
             }
-
         }
         return currentType == null ? INVALID_VIEW_TYPE : currentType.getViewType();
     }
 
     @NonNull
     public final VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        final ItemType<T,VH> type = viewType_itemType_map.get(viewType);
+        final ItemType<T,VH> type = mItemTypes.get(viewType);
         if (viewType == INVALID_VIEW_TYPE || type == null) {//表示无效
             return (VH) MultiViewHolder.createInvalid(parent.getContext());
         }
@@ -131,7 +135,7 @@ public abstract class MultiHelper<T,VH extends RecyclerView.ViewHolder> {
                  return this;
              }
              final  int key=type.getViewType();
-             final ItemType<T,VH> old=viewType_itemType_map.get(key);
+             final ItemType<T,VH> old= mItemTypes.get(key);
              //如果存在相同的，则忽略。
              if (type.equals(old)){
                  return this;
@@ -140,7 +144,7 @@ public abstract class MultiHelper<T,VH extends RecyclerView.ViewHolder> {
              if (old!=null&&!type.equals(old)){
                  throw new IllegalStateException("不能添加多个view type相同的ItemType对象！");
              }
-        viewType_itemType_map.put(type.getViewType(), type);
+        mItemTypes.put(type.getViewType(), type);
         return this;
     }
 
