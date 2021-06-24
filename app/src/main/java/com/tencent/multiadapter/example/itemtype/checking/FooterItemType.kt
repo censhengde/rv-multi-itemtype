@@ -3,7 +3,6 @@ package com.tencent.multiadapter.example.itemtype.checking
 import com.tencent.lib.multi.core.MultiHelper
 import com.tencent.lib.multi.core.MultiItemType
 import com.tencent.lib.multi.core.MultiViewHolder
-import com.tencent.lib.multi.core.SimpleItemType
 import com.tencent.multiadapter.R
 import com.tencent.multiadapter.example.bean.CheckableItem
 

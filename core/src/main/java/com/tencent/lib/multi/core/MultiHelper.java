@@ -134,17 +134,7 @@ public abstract class MultiHelper<T,VH extends RecyclerView.ViewHolder> {
              if (type==null){
                  return this;
              }
-             final  int key=type.getViewType();
-             final ItemType<T,VH> old= mItemTypes.get(key);
-             //如果存在相同的，则忽略。
-             if (type.equals(old)){
-                 return this;
-             }
-             //如果添加多个view type相同的ItemType，则抛异常。
-             if (old!=null&&!type.equals(old)){
-                 throw new IllegalStateException("不能添加多个view type相同的ItemType对象！");
-             }
-        mItemTypes.put(type.getViewType(), type);
+             mItemTypes.put(type.getViewType(), type);
         return this;
     }
 
