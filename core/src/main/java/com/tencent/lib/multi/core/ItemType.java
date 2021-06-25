@@ -13,16 +13,15 @@ import java.util.List;
 public interface ItemType<T,VH extends RecyclerView.ViewHolder> {
 
     /**
-     * @return 返回当前ItemType 的viewtype
+     * @return 返回ItemType 的唯一标识 id
      */
-    int getViewType();
+    int getId();
 
     /**
-     * 根据当前位置Item匹配它的布局类型
+     * 当前position 是否匹配当前的ItemType
      * @param data 当前position对应的实体对象
-     * @param position
-     * @return true 表示匹配成功，然后以position为key，ItemType为value存进Map，意味着后面
-     *        在Adapter的getViewType方法中可根据position拿到对应的ItemType，进而拿到viewType值。
+     * @param position adapter position
+     * @return true 表示匹配，false：不匹配。
      */
     boolean matchItemType(@NonNull T data, int position);
 
@@ -30,8 +29,8 @@ public interface ItemType<T,VH extends RecyclerView.ViewHolder> {
 
     /**
      * 创建当前ItemType的ViewHolder
-     * @return
-     * @param parent
+     * @return ViewHolder
+     * @param parent parent
      */
     @NonNull
     VH onCreateViewHolder(@NonNull ViewGroup parent);
@@ -42,15 +41,14 @@ public interface ItemType<T,VH extends RecyclerView.ViewHolder> {
     void onViewHolderCreated(@NonNull VH holder, @NonNull MultiHelper<T,VH> helper);
 
     /**
-     * 意义与Adapter相同
+     * 意义与Adapter onBindViewHolder 基本相同，表示当前ItemType的数据绑定过程。
      * @param holder
      * @param position
      */
-    void onBindViewHolder(@NonNull VH holder, @NonNull MultiHelper<T,VH> helper, int position);
-
     void onBindViewHolder(@NonNull VH holder, @NonNull MultiHelper<T,VH> helper, int position,
             @NonNull List<Object> payloads);
 
 
+    void onBindViewHolder(@NonNull VH holder, @NonNull MultiHelper<T,VH> helper, int position);
 
 }

@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
  *
  * 说明：
  */
-public abstract class MultiItemType<T> extends ItemTypeImpl<T,MultiViewHolder> {
+public abstract class MultiItemType<T> extends AbstractItemType<T,MultiViewHolder> {
 
     /**
      * 这里需要重写onCreateViewHolder方法，否则 MultiItemType 的子类无法隔代反射到 VH 参数

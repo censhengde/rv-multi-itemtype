@@ -14,11 +14,11 @@ import java.util.List;
  * <p>
  * 说明：未分页的Adapter
  */
-public class MultiAdapter<T,VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
+public class MultiAdapter<T, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
 
     private List<T> mData;
 
-    private final MultiHelper<T,VH> mMultiHelper = new MultiHelper<T,VH>(this) {
+    private final MultiHelper<T, VH> mMultiHelper = new MultiHelper<T, VH>(this) {
         @Nullable
         @Override
         public T getItem(int position) {
@@ -46,7 +46,7 @@ public class MultiAdapter<T,VH extends RecyclerView.ViewHolder> extends Recycler
     }
 
     public final boolean isInValidPosition(int position) {
-        return  position<0|| mData ==null||position>= mData.size();
+        return position < 0 || mData == null || position >= mData.size();
     }
 
     @NonNull
@@ -66,7 +66,6 @@ public class MultiAdapter<T,VH extends RecyclerView.ViewHolder> extends Recycler
     }
 
 
-
     @Override
     public int getItemViewType(int position) {
         return mMultiHelper.getItemViewType(position);
@@ -79,10 +78,10 @@ public class MultiAdapter<T,VH extends RecyclerView.ViewHolder> extends Recycler
 
     @Nullable
     public T getItem(int position) {
-        return isInValidPosition(position)? null : mData.get(position);
+        return isInValidPosition(position) ? null : mData.get(position);
     }
 
-    public MultiAdapter<T,VH> setData(@NonNull List<T> data) {
+    public MultiAdapter<T, VH> setData(@NonNull List<T> data) {
 
         if (data == this.mData) {
             notifyDataSetChanged();
@@ -98,12 +97,12 @@ public class MultiAdapter<T,VH extends RecyclerView.ViewHolder> extends Recycler
         return mCheckingHelper;
     }
 
-    public MultiHelper<T,VH> getMultiHelper() {
+    public MultiHelper<T, VH> getMultiHelper() {
         return mMultiHelper;
     }
 
     public final void removeItem(int position) {
-        if (!isInValidPosition(position)){
+        if (!isInValidPosition(position)) {
             /*如果删除的Item是被选中的Item，则数量要减一*/
             final T item = mData.get(position);
             if (item instanceof Checkable) {
@@ -113,11 +112,11 @@ public class MultiAdapter<T,VH extends RecyclerView.ViewHolder> extends Recycler
                 }
             }
             mData.remove(position);
-            if (mMultiHelper.getItemTypeRecord()!=null){
+            if (mMultiHelper.getItemTypeRecord() != null) {
                 mMultiHelper.getItemTypeRecord().remove(position);
             }
             notifyItemRemoved(position);
-            notifyItemRangeChanged(position, mData.size()-position);
+            notifyItemRangeChanged(position, mData.size() - position);
         }
     }
 

@@ -19,7 +19,7 @@ public class AItemType extends MultiItemType<ItemBean> {
      * @return 返回当前item类型的标识
      */
     @Override
-    public int getViewType() {
+    public int getId() {
         return ItemBean.TYPE_A;
     }
 
@@ -30,7 +30,7 @@ public class AItemType extends MultiItemType<ItemBean> {
      */
     @Override
     public boolean matchItemType(ItemBean data, int position) {
-        return getViewType() == data.viewType;//这句话的含义是：当前position 的ItemBean想要表现的item类型是哪一种，
+        return getId() == data.viewType;//这句话的含义是：当前position 的ItemBean想要表现的item类型是哪一种，
         //以本例为例，会依次遍历A、B、C三个Item类型，直到返回true为止。（详见MultiHelper getItemViewType方法实现）
     }
 
