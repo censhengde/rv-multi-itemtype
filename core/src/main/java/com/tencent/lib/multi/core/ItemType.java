@@ -2,6 +2,7 @@ package com.tencent.lib.multi.core;
 
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
@@ -10,27 +11,28 @@ import java.util.List;
  * <p>
  * 说明：某一种Item类型的抽象。
  */
-public interface ItemType<T,VH extends RecyclerView.ViewHolder> {
+public interface ItemType<T, VH extends RecyclerView.ViewHolder> {
 
     /**
-     * @return 返回ItemType 的唯一标识 id
+     * @return 返回当前Item类型的ViewType
      */
-    int getId();
+    int getViewType();
 
     /**
      * 当前position 是否匹配当前的ItemType
-     * @param data 当前position对应的实体对象
+     *
+     * @param data 当前position对应的实体对象,当是依赖paging3 getItem()方法返回时，有可能为null。
      * @param position adapter position
      * @return true 表示匹配，false：不匹配。
      */
-    boolean matchItemType(@NonNull T data, int position);
-
+    boolean matchItemType(@Nullable T data, int position);
 
 
     /**
      * 创建当前ItemType的ViewHolder
-     * @return ViewHolder
+     *
      * @param parent parent
+     * @return ViewHolder
      */
     @NonNull
     VH onCreateViewHolder(@NonNull ViewGroup parent);
@@ -38,17 +40,18 @@ public interface ItemType<T,VH extends RecyclerView.ViewHolder> {
     /**
      * ViewHolder已经创建完成，在这里可以注册Item及其子View点击事件监听器,但不要做数据的绑定。
      */
-    void onViewHolderCreated(@NonNull VH holder, @NonNull MultiHelper<T,VH> helper);
+    void onViewHolderCreated(@NonNull VH holder, @NonNull MultiHelper<T, VH> helper);
 
     /**
      * 意义与Adapter onBindViewHolder 基本相同，表示当前ItemType的数据绑定过程。
+     *
      * @param holder
      * @param position
      */
-    void onBindViewHolder(@NonNull VH holder, @NonNull MultiHelper<T,VH> helper, int position,
-            @NonNull List<Object> payloads);
+    void onBindViewHolder(@NonNull VH holder, @NonNull MultiHelper<T, VH> helper, int position,
+            @NonNull List<Object> payloads) throws Exception;
 
 
-    void onBindViewHolder(@NonNull VH holder, @NonNull MultiHelper<T,VH> helper, int position);
+    void onBindViewHolder(@NonNull VH holder, @NonNull MultiHelper<T, VH> helper, int position) throws Exception;
 
 }

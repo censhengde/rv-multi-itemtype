@@ -41,6 +41,10 @@ public class MultiAdapter<T, VH extends RecyclerView.ViewHolder> extends Recycle
 
     };
 
+    @Nullable
+    public List<T> getDataList(){
+        return mData;
+    }
     public MultiAdapter() {
 
     }

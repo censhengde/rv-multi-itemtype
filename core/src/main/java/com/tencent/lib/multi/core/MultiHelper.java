@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.Adapter;
 import java.util.ArrayList;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Author：岑胜德 on 2021/1/27 16:33
@@ -41,12 +42,10 @@ public abstract class MultiHelper<T, VH extends RecyclerView.ViewHolder> {
     }
 
 
-
     public final int getItemViewType(int position) {
         if (position == RecyclerView.NO_POSITION) {
             return INVALID_VIEW_TYPE;
         }
-
         ItemType<T, VH> currentType = null;
         final int typeSize = mItemTypes.size();
         //单样式
@@ -56,9 +55,7 @@ public abstract class MultiHelper<T, VH extends RecyclerView.ViewHolder> {
         //多样式
         else if (typeSize > 1) {
             final T data = getItem(position);
-            if (data == null) {
-                return INVALID_VIEW_TYPE;
-            }
+
             //mItemTypeRecord 初始化在这里进行
             if (mItemTypeRecord == null) {
                 mItemTypeRecord = new ArrayList<>();
@@ -69,37 +66,52 @@ public abstract class MultiHelper<T, VH extends RecyclerView.ViewHolder> {
                 // 说明当前 position 对应的ItemType已经被更改，在RecyclerView列表进行增、删、改操作
                 // 时候可能会出现这种情况，这时候就需重新匹配当前position所对应的ItemType
                 if (!currentType.matchItemType(data, position)) {
-                    for (int i = 0; i < mItemTypes.size(); i++) {
-                        final ItemType<T, VH> type = mItemTypes.valueAt(i);
-                        if (type.matchItemType(data, position)) {
-                            currentType = type;
-                            mItemTypeRecord.set(position, type);
-                            break;
-                        }
+
+                    final ItemType<T, VH> newType = findCurrentType(data, position);
+                    if (newType != null) {
+                        currentType = newType;
+                        mItemTypeRecord.set(position, newType);
                     }
+
                 }
             }
             //首次进来 mItemTypeRecord.isEmpty() 为true，会走这里。
             else {
-                //为当前position 匹配它的ItemType
-                for (int i = 0; i < mItemTypes.size(); i++) {
-                    final ItemType<T, VH> type = mItemTypes.valueAt(i);
-                    if (type.matchItemType(data, position)) {
-                        currentType = type;
-                        mItemTypeRecord.add(type);
-                        break;
-                    }
+                currentType = findCurrentType(data, position);
+                if (currentType != null) {
+                    mItemTypeRecord.add(currentType);
                 }
+
             }
         }
-        return currentType == null ? INVALID_VIEW_TYPE : currentType.getId();
+
+        return currentType == null ? INVALID_VIEW_TYPE : currentType.getViewType();
     }
 
-    @NonNull
+    /**
+     * 遍历查找当前position对应的ItemType。
+     *
+     * @param data
+     * @param position
+     * @return
+     */
+    @Nullable
+    private ItemType<T, VH> findCurrentType(T data, int position) {
+        //为当前position 匹配它的ItemType
+        for (int i = 0; i < mItemTypes.size(); i++) {
+            final ItemType<T, VH> type = mItemTypes.valueAt(i);
+            if (type.matchItemType(data, position)) {
+                return type;
+            }
+        }
+        return null;
+    }
+
+    @NotNull
     public final VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final ItemType<T, VH> type = mItemTypes.get(viewType);
         if (viewType == INVALID_VIEW_TYPE || type == null) {//表示无效
-            return (VH) Utils.createInvalidViewHolder(parent.getContext());
+            throw new IllegalStateException("ItemType 不合法：viewType==" + viewType + " ItemType==" + type);
         }
         final VH holder = type.onCreateViewHolder(parent);
         type.onViewHolderCreated(holder, this);
@@ -136,7 +148,6 @@ public abstract class MultiHelper<T, VH extends RecyclerView.ViewHolder> {
     public abstract T getItem(int position);
 
 
-
     /**
      * 当涉及item的增、删、改时，数据集元素的增删改必须与ItemTypeRecord增删改同步。
      * 一般来说当我们明确知道某position的ItemType的改变时，应主动调用这个方法进行更新，因为由
@@ -155,7 +166,7 @@ public abstract class MultiHelper<T, VH extends RecyclerView.ViewHolder> {
             return this;
         }
 
-        mItemTypes.put(type.getId(), type);
+        mItemTypes.put(type.getViewType(), type);
         return this;
     }
 

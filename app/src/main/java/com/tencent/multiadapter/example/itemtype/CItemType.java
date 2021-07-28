@@ -16,13 +16,13 @@ import com.tencent.multiadapter.example.bean.ItemBean;
 public class CItemType extends MultiItemType<ItemBean> {
 
     @Override
-    public int getId() {
+    public int getViewType() {
         return ItemBean.TYPE_C;
     }
 
     @Override
     public boolean matchItemType(ItemBean data, int position) {
-        return getId()==data.viewType;
+        return getViewType()==data.viewType;
     }
 
     @Override
