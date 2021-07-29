@@ -37,6 +37,11 @@ public abstract class AbstractItemType<T, VH extends RecyclerView.ViewHolder> im
     private Class<T> mTClass;/*泛型参数T的Class*/
     private Constructor<VH> mVHConstructor;
 
+    @Override
+    public int getViewType() {
+        return 0;
+    }
+
     /**
      * @return 返回当前ItemType的布局文件id
      */
@@ -68,7 +73,7 @@ public abstract class AbstractItemType<T, VH extends RecyclerView.ViewHolder> im
             vh = (VH) mVHConstructor.newInstance(itemView);//要求所有VH必需开放参数为View的构造函数
         } catch (Exception e) {
             e.printStackTrace();
-            return (VH) MultiViewHolder.createInvalid(itemView.getContext());
+            throw new IllegalStateException("反射创建 ViewHolder 异常："+e.getMessage());
         }
         return vh;
     }
