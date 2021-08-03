@@ -34,7 +34,7 @@ public abstract class AbstractItemType<T, VH extends RecyclerView.ViewHolder> im
 
     private Object mObserver;
     private String mObserverName;
-    private Class<T> mTClass;/*泛型参数T的Class*/
+    private Class<?> mEntityClass;/*泛型参数T的Class*/
     private Constructor<VH> mVHConstructor;
 
     @Override
@@ -73,7 +73,7 @@ public abstract class AbstractItemType<T, VH extends RecyclerView.ViewHolder> im
             vh = (VH) mVHConstructor.newInstance(itemView);//要求所有VH必需开放参数为View的构造函数
         } catch (Exception e) {
             e.printStackTrace();
-            throw new IllegalStateException("反射创建 ViewHolder 异常："+e.getMessage());
+            throw new IllegalStateException("反射创建 ViewHolder 异常：" + e.getMessage());
         }
         return vh;
     }
@@ -129,13 +129,13 @@ public abstract class AbstractItemType<T, VH extends RecyclerView.ViewHolder> im
             @IdRes int... viewIds) {
         /*如果不传viewId，则默认是注册item根布局的点击事件监听*/
         if (viewIds.length == 0) {
-            register(holder, helper, holder.itemView, target);
+            registerInternal(holder, helper, holder.itemView, target);
             return;
         }
 
         for (int id : viewIds) {
             final View view = holder.itemView.findViewById(id);
-            register(holder, helper, view, target);
+            registerInternal(holder, helper, view, target);
         }
 
     }
@@ -154,7 +154,7 @@ public abstract class AbstractItemType<T, VH extends RecyclerView.ViewHolder> im
 
     }
 
-    private void register(VH holder, MultiHelper<T, VH> helper, View view, @Nullable String target) {
+    private void registerInternal(VH holder, MultiHelper<T, VH> helper, View view, @Nullable String target) {
         view.setClickable(true);
         view.setOnClickListener(v -> {
             final int position = holder.getAdapterPosition();
@@ -197,12 +197,12 @@ public abstract class AbstractItemType<T, VH extends RecyclerView.ViewHolder> im
             @IdRes int... viewIds) {
         /*如果不传viewId，则默认是注册item根布局的点击事件监听*/
         if (viewIds.length == 0) {
-            registerLong(holder, helper, holder.itemView, target);
+            registerLongInternal(holder, helper, holder.itemView, target);
             return;
         }
         for (int id : viewIds) {
             final View view = holder.itemView.findViewById(id);
-            registerLong(holder, helper, view, target);
+            registerLongInternal(holder, helper, view, target);
         }
 
     }
@@ -214,7 +214,7 @@ public abstract class AbstractItemType<T, VH extends RecyclerView.ViewHolder> im
 
     }
 
-    private void registerLong(VH holder, MultiHelper<T, VH> helper, View view, String target) {
+    private void registerLongInternal(VH holder, MultiHelper<T, VH> helper, View view, String target) {
         view.setLongClickable(true);
         view.setOnLongClickListener(v -> {
             boolean consume = false;
@@ -310,10 +310,10 @@ public abstract class AbstractItemType<T, VH extends RecyclerView.ViewHolder> im
         Method method = sMethodMap.get(key);
         if (method == null) {
             try {
-                if (mTClass == null) {
-                    mTClass = resolveT();
+                if (mEntityClass == null) {
+                    mEntityClass = getEntityClass();
                 }
-                method = clazz.getDeclaredMethod(methodName, View.class, mTClass, int.class);
+                method = clazz.getDeclaredMethod(methodName, View.class, mEntityClass, int.class);
                 sMethodMap.put(key, method);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -321,6 +321,14 @@ public abstract class AbstractItemType<T, VH extends RecyclerView.ViewHolder> im
             }
         }
         return method;
+    }
+
+    /**
+     * 针对某些无法解析泛型参数 T 的情况，给子类提供重写方法。
+     * @return
+     */
+    protected Class<?> getEntityClass() {
+        return resolveT();
     }
 
     /**

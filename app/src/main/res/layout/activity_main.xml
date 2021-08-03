@@ -6,35 +6,39 @@
         android:gravity="center_horizontal"
         android:orientation="vertical"
         tools:context=".example.ui.MainActivity">
-   <Button
-           android:id="@+id/btn_to_multi"
-           android:layout_width="wrap_content"
-       android:layout_height="60dp"
-       android:onClick="onClickBtn"
-       android:layout_marginTop="40dp"
-           android:text="列表多样式示例" />
 
-   <Button
-           android:id="@+id/btn_to_check"
-           android:layout_width="wrap_content"
-       android:layout_height="60dp"
-       android:layout_marginTop="40dp"
-       android:onClick="onClickBtn"
-           android:text="列表多选示例" />
-   <Button
-           android:id="@+id/btn_to_check_single"
-           android:layout_width="wrap_content"
-       android:layout_height="60dp"
-       android:layout_marginTop="40dp"
-       android:onClick="onClickBtn"
-           android:text="列表单选示例" />
-   <Button
-           android:layout_width="wrap_content"
-       android:layout_height="60dp"
-       android:layout_marginTop="40dp"
-       android:onClick="onClickBtn"
-           android:text=" " />
+    <Button
+            android:id="@+id/btn_to_multi"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_marginTop="40dp"
+            android:onClick="onClickBtn"
+            android:text="列表多样式示例" />
 
+    <Button
+            android:id="@+id/btn_to_check"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_marginTop="40dp"
+            android:onClick="onClickBtn"
+            android:text="列表多选示例" />
+
+    <Button
+            android:id="@+id/btn_to_check_single"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_marginTop="40dp"
+            android:onClick="onClickBtn"
+            android:text="列表单选示例" />
+
+    <Button
+            android:id="@+id/btn_to_diff_demo"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_marginTop="40dp"
+            android:onClick="onClickBtn"
+            android:text="DiffDemo"
+            android:textAllCaps="false" />
 
 
 </LinearLayout>

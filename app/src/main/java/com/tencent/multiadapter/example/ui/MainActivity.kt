@@ -27,6 +27,9 @@ class MainActivity : AppCompatActivity() {
             R.id.btn_to_check_single -> {
                 goTo(SingleCheckActivity::class.java)
             }
+            R.id.btn_to_diff_demo -> {
+                goTo(DiffUtilDemoActivity::class.java)
+            }
             else -> {
             }
         }

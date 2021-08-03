@@ -1,5 +1,7 @@
 package com.tencent.multiadapter.example.itemtype;
 
+import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import com.tencent.lib.multi.core.MultiHelper;
@@ -7,6 +9,8 @@ import com.tencent.lib.multi.core.MultiItemType;
 import com.tencent.lib.multi.core.MultiViewHolder;
 import com.tencent.multiadapter.R;
 import com.tencent.multiadapter.example.bean.ItemBean;
+import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Author：岑胜德 on 2021/1/6 18:04
@@ -22,7 +26,7 @@ public class CItemType extends MultiItemType<ItemBean> {
 
     @Override
     public boolean matchItemType(ItemBean data, int position) {
-        return getViewType()==data.viewType;
+        return getViewType() == data.viewType;
     }
 
     @Override
@@ -31,12 +35,30 @@ public class CItemType extends MultiItemType<ItemBean> {
     }
 
     @Override
-    public void onViewHolderCreated(@NonNull MultiViewHolder holder, @NonNull MultiHelper<ItemBean,MultiViewHolder> helper) {
+    public void onViewHolderCreated(@NonNull MultiViewHolder holder,
+            @NonNull MultiHelper<ItemBean, MultiViewHolder> helper) {
         registerItemViewLongClickListener(holder, helper, "onLongClickItemChildView", R.id.iv_c);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MultiViewHolder holder, @NonNull MultiHelper<ItemBean,MultiViewHolder> helper, int position) {
+    public void onBindViewHolder(@NonNull @NotNull MultiViewHolder holder,
+            @NonNull @NotNull MultiHelper<ItemBean, MultiViewHolder> helper, int position,
+            @NonNull @NotNull List<Object> payloads) {
+        Log.e("===>", " C 类Item 局部刷新：" + position);
+        for (Object payload : payloads) {
+            if (payload instanceof Bundle) {
+                Bundle bundle = (Bundle) payload;
+                TextView tv = holder.getView(R.id.tv_c);
+                tv.setText(bundle.getString("content"));
+            }
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull MultiViewHolder holder,
+            @NonNull MultiHelper<ItemBean, MultiViewHolder> helper, int position) {
+
+        Log.e("===>", " C类 Item 级别刷新：" + position);
         ItemBean bean = helper.getItem(position);
         if (bean == null) {
             return;

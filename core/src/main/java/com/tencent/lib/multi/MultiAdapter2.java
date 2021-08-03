@@ -1,5 +1,6 @@
 package com.tencent.lib.multi;
 
+import androidx.recyclerview.widget.DiffUtil.ItemCallback;
 import com.tencent.lib.multi.core.MultiViewHolder;
 
 /**
@@ -9,4 +10,10 @@ import com.tencent.lib.multi.core.MultiViewHolder;
  */
 public class MultiAdapter2<T> extends MultiAdapter<T, MultiViewHolder> {
 
+    public MultiAdapter2(ItemCallback<T> callback) {
+        super(callback);
+    }
+
+    public MultiAdapter2() {
+    }
 }

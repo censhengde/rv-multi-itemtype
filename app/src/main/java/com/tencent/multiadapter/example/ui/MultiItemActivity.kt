@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.tencent.lib.multi.MultiAdapter
 import com.tencent.lib.multi.core.MultiViewHolder
 import com.tencent.multiadapter.R
@@ -16,7 +18,7 @@ import java.util.*
 
 class MultiItemActivity : AppCompatActivity() {
 
-    lateinit var adapter: MultiAdapter<ItemBean,MultiViewHolder>
+    lateinit var adapter: MultiAdapter<ItemBean, MultiViewHolder>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +41,7 @@ class MultiItemActivity : AppCompatActivity() {
         /*设置数据*/
         adapter.setData(getData())
         rv_list.adapter = adapter
+
 
     }
 
@@ -63,16 +66,18 @@ class MultiItemActivity : AppCompatActivity() {
     private fun onClickItem(view: View, itemBean: ItemBean, position: Int) {
         Toast.makeText(this, "ItemBean:${itemBean.text},position:$position", Toast.LENGTH_SHORT).show()
     }
+
     /**
      * item 子View 点击事件
      */
     private fun onClickItemChildView(view: View, itemBean: ItemBean, position: Int) {
         Toast.makeText(this, "ItemBean:${itemBean.text},position:$position", Toast.LENGTH_SHORT).show()
     }
+
     /**
      * item 子View 长点击事件
      */
-    private fun onLongClickItemChildView(view: View, itemBean: ItemBean, position: Int) :Boolean{
+    private fun onLongClickItemChildView(view: View, itemBean: ItemBean, position: Int): Boolean {
         Toast.makeText(this, "ItemBean:${itemBean.text},position:$position", Toast.LENGTH_SHORT).show()
         return true
     }

@@ -3,11 +3,17 @@ package com.tencent.lib.multi;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.AsyncListDiffer;
+import androidx.recyclerview.widget.AsyncListDiffer.ListListener;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.DiffUtil.Callback;
+import androidx.recyclerview.widget.DiffUtil.DiffResult;
 import androidx.recyclerview.widget.RecyclerView;
 import com.tencent.lib.multi.core.MultiHelper;
 import com.tencent.lib.multi.core.checking.Checkable;
 import com.tencent.lib.multi.core.checking.CheckingHelper;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Author：岑胜德 on 2021/1/6 14:57
@@ -17,7 +23,7 @@ import java.util.List;
 public class MultiAdapter<T, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
 
     private List<T> mData;
-
+    private AsyncListDiffer<T> mAsyncListDiffer;
     private final MultiHelper<T, VH> mMultiHelper = new MultiHelper<T, VH>(this) {
         @Nullable
         @Override
@@ -41,16 +47,24 @@ public class MultiAdapter<T, VH extends RecyclerView.ViewHolder> extends Recycle
 
     };
 
-    @Nullable
-    public List<T> getDataList(){
-        return mData;
+    public MultiAdapter(DiffUtil.ItemCallback<T> callback) {
+        mAsyncListDiffer = new AsyncListDiffer<>(this, callback);
     }
+
+
     public MultiAdapter() {
 
     }
 
-    public final boolean isInValidPosition(int position) {
-        return position < 0 || mData == null || position >= mData.size();
+    @Nullable
+    public List<T> getDataList() {
+        return mAsyncListDiffer == null ?
+                mData : mAsyncListDiffer.getCurrentList();
+    }
+
+
+    public final boolean isInValidPosition(int position, List<T> data) {
+        return position < 0 || data == null || position >= data.size();
     }
 
     @NonNull
@@ -77,15 +91,26 @@ public class MultiAdapter<T, VH extends RecyclerView.ViewHolder> extends Recycle
 
     @Override
     public int getItemCount() {
-        return mData == null ? 0 : mData.size();
+
+        final List<T> currentList = mAsyncListDiffer == null ?
+                mData : mAsyncListDiffer.getCurrentList();
+        return currentList == null ? 0 : currentList.size();
     }
 
     @Nullable
     public T getItem(int position) {
-        return isInValidPosition(position) ? null : mData.get(position);
+
+        final List<T> currentList = mAsyncListDiffer == null ?
+                mData : mAsyncListDiffer.getCurrentList();
+
+        return isInValidPosition(position, currentList) ? null : currentList.get(position);
     }
 
     public MultiAdapter<T, VH> setData(@NonNull List<T> data) {
+        if (mAsyncListDiffer != null) {
+            mAsyncListDiffer.submitList(data);
+            return this;
+        }
 
         if (data == this.mData) {
             notifyDataSetChanged();
@@ -106,21 +131,23 @@ public class MultiAdapter<T, VH extends RecyclerView.ViewHolder> extends Recycle
     }
 
     public final void removeItem(int position) {
-        if (!isInValidPosition(position)) {
+        final List<T> currentList = mAsyncListDiffer == null ?
+                mData : mAsyncListDiffer.getCurrentList();
+        if (!isInValidPosition(position, currentList)) {
             /*如果删除的Item是被选中的Item，则数量要减一*/
-            final T item = mData.get(position);
+            final T item = currentList.get(position);
             if (item instanceof Checkable) {
                 final Checkable checkable = (Checkable) item;
                 if (checkable.isChecked()) {
                     mCheckingHelper.setCheckedItemCount(mCheckingHelper.getCheckedItemCount() - 1);
                 }
             }
-            mData.remove(position);
+            currentList.remove(position);
             if (mMultiHelper.getItemTypeRecord() != null) {
                 mMultiHelper.getItemTypeRecord().remove(position);
             }
             notifyItemRemoved(position);
-            notifyItemRangeChanged(position, mData.size() - position);
+            notifyItemRangeChanged(position, currentList.size() - position);
         }
     }
 
