@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.tencent.lib.multi.MultiAdapter
 import com.tencent.lib.multi.core.MultiViewHolder
 import com.tencent.multiadapter.R
@@ -26,12 +24,12 @@ class MultiItemActivity : AppCompatActivity() {
         //初始化ItemType
         val aItemType = AItemType()
 
-        aItemType.bind(this)
+        aItemType.inject(this)
 
         val bItemType = BItemType()
         val cItemType = CItemType()
-        bItemType.bind(this)
-        cItemType.bind(this)
+        bItemType.inject(this)
+        cItemType.inject(this)
         /*初始化Adapter*/
         adapter = MultiAdapter<ItemBean, MultiViewHolder>()
         /*将所有ItemType添加到Adapter中*/

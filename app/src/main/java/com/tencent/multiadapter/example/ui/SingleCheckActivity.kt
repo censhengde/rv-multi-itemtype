@@ -23,7 +23,7 @@ class SingleCheckActivity : AppCompatActivity(), OnCheckingFinishedCallback<Chec
         setContentView(R.layout.activity_single_check)
         val checkableItemType = CheckableItemType()
         /*注册item点击监听*/
-        checkableItemType.bind(this)
+        checkableItemType.inject(this)
 
         /*添加ItemType*/
         adapter.multiHelper.addItemType(HeaderItemType())

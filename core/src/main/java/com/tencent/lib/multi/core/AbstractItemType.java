@@ -70,7 +70,7 @@ public abstract class AbstractItemType<T, VH extends RecyclerView.ViewHolder> im
                 final Class<VH> c = (Class<VH>) p.getActualTypeArguments()[1];
                 mVHConstructor = c.getConstructor(View.class);
             }
-            vh = (VH) mVHConstructor.newInstance(itemView);//要求所有VH必需开放参数为View的构造函数
+            vh = mVHConstructor.newInstance(itemView);//要求所有VH必需开放参数为View的构造函数
         } catch (Exception e) {
             e.printStackTrace();
             throw new IllegalStateException("反射创建 ViewHolder 异常：" + e.getMessage());
@@ -88,7 +88,12 @@ public abstract class AbstractItemType<T, VH extends RecyclerView.ViewHolder> im
     }
 
 
-    public void bind(@NonNull Object observer) {
+    /**
+     * 注入观察者对象
+     *
+     * @param observer
+     */
+    public void inject(@NonNull Object observer) {
         mObserver = observer;
     }
 
@@ -325,6 +330,7 @@ public abstract class AbstractItemType<T, VH extends RecyclerView.ViewHolder> im
 
     /**
      * 针对某些无法解析泛型参数 T 的情况，给子类提供重写方法。
+     *
      * @return
      */
     protected Class<?> getEntityClass() {
