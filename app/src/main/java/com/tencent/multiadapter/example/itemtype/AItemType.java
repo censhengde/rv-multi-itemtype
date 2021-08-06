@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.tencent.lib.multi.core.MultiHelper;
 import com.tencent.lib.multi.core.MultiItemType;
 import com.tencent.lib.multi.core.MultiViewHolder;
@@ -34,7 +35,7 @@ public class AItemType extends MultiItemType<ItemBean> {
      * @return true 表示成功匹配到对应的ItemType
      */
     @Override
-    public boolean matchItemType(ItemBean data, int position) {
+    public boolean matchItemType(@Nullable ItemBean data, int position) {
         return data == null || getViewType() == data.viewType;//这句话的含义是：当前position 的ItemBean想要表现的item类型是哪一种，
         //以本例为例，会依次遍历A、B、C三个Item类型，直到返回true为止。（详见MultiHelper getItemViewType方法实现）
     }
@@ -63,7 +64,8 @@ public class AItemType extends MultiItemType<ItemBean> {
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull MultiViewHolder holder,
-            @NonNull @NotNull MultiHelper<ItemBean, MultiViewHolder> helper, int position,
+            @NonNull @NotNull MultiHelper<ItemBean, MultiViewHolder> helper,
+            int position,
             @NonNull @NotNull List<Object> payloads) {
         Log.e("===>", " A 类Item 局部刷新：" + position);
         for (Object payload : payloads) {

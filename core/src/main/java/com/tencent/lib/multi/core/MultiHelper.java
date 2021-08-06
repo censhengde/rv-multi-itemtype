@@ -118,7 +118,9 @@ public abstract class MultiHelper<T, VH extends RecyclerView.ViewHolder> {
         return holder;
     }
 
-    public final void onBindViewHolder(@NonNull VH holder, int position, @NonNull List<Object> payloads) {
+    public final void onBindViewHolder(@NonNull VH holder,
+            int position,
+            @NonNull List<Object> payloads) {
         /*统一捕获由position引发的可能异常*/
         try {
             final int size = mItemTypes.size();
@@ -149,11 +151,9 @@ public abstract class MultiHelper<T, VH extends RecyclerView.ViewHolder> {
 
 
     /**
-     * 当涉及item的增、删、改时，数据集元素的增删改必须与ItemTypeRecord增删改同步。
-     * 一般来说当我们明确知道某position的ItemType的改变时，应主动调用这个方法进行更新，因为由
-     * {@getItemViewType}自动匹配的话执行过程相对复杂度较高，消耗略大。例子见MultiAdapter removeItem方法。
-     *
-     * @return ItemType记录。当是单样式的时候返回null。
+     * 绝大多数情况下，用户不需要主动维护ItemTypeRecord集合，
+     * 即便当对item进行增、删、改（伴随数据集元素的增删改）。但用户应当拥有主动维护这个集合的权力。
+     * @return ItemType记录。当RecyclerView是单样式item的时候返回null。
      */
     @Nullable
     public final List<ItemType<T, VH>> getItemTypeRecord() {
@@ -161,11 +161,15 @@ public abstract class MultiHelper<T, VH extends RecyclerView.ViewHolder> {
     }
 
 
+    /**
+     * 注册ItemType
+     * @param type
+     * @return
+     */
     public final MultiHelper<T, VH> addItemType(ItemType<T, VH> type) {
         if (type == null) {
             return this;
         }
-
         mItemTypes.put(type.getViewType(), type);
         return this;
     }

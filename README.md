@@ -6,25 +6,31 @@
 正是因为有了上述功能支持，我们在给RecyclerView添加头布局、脚布局、Error布局、Empty布局的时候，就简单的太多了！
 
 
-依赖： 由于jcenter已跑路，目前项目已迁至JitPack，依赖方式如下：
+# 依赖
+ 由于jcenter已跑路，目前项目已迁至JitPack，依赖方式如下：
 
-1）在工程根目录build.gradle添加：  
-allprojects {  
-repositories {  
-maven { url 'https://jitpack.io' }  
-}  
-}
+1）在工程根目录build.gradle添加：
+```
+allprojects {
+    repositories {  
+    
+    maven { url 'https://jitpack.io' }  
+    
+      }  
+    }
+```
 
-2）在module build.gradle 添加：  
-dependencies { 
+2）在module build.gradle 添加：
+```
+dependencies {
 
 implementation 'com.github.censhengde.MultiAdapter:core:v1.1.0'  //核心模块(必选）
 
 //分页模块（可选），提供谷歌paging3 PagingDataAdapter 的改造：MultiPagedAdapter
-
 implementation 'com.github.censhengde.MultiAdapter:paging:v1.1.0'
 
 }
+```
 
 # 版本更新说明
 1.1.2版本新增DiffUtil支持。

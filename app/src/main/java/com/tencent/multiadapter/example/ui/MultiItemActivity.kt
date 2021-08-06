@@ -3,6 +3,7 @@ package com.tencent.multiadapter.example.ui
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.Keep
 import androidx.appcompat.app.AppCompatActivity
 import com.tencent.lib.multi.MultiAdapter
 import com.tencent.lib.multi.core.MultiViewHolder
@@ -61,6 +62,7 @@ class MultiItemActivity : AppCompatActivity() {
     /**
      *item点击事件
      */
+    @Keep
     private fun onClickItem(view: View, itemBean: ItemBean, position: Int) {
         Toast.makeText(this, "ItemBean:${itemBean.text},position:$position", Toast.LENGTH_SHORT).show()
     }
