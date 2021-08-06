@@ -34,4 +34,4 @@ implementation 'com.github.censhengde.MultiAdapter:paging:v1.1.0'
 
 ![MultiAdapter问题反馈群群聊二维码.png](image/MultiAdapter问题反馈群群聊二维码.png)
 
-[详细文档](https://www.jianshu.com/p/b6b5f03ff304)
+[详细文档](https://www.jianshu.com/p/5bc618cb1c1d)
