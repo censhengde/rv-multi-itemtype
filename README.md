@@ -24,10 +24,10 @@ allprojects {
 ```
 dependencies {
 
-implementation 'com.github.censhengde.MultiAdapter:core:v1.1.0'  //核心模块(必选）
+implementation 'com.github.censhengde.MultiAdapter:core:1.1.2'  //核心模块(必选）
 
 //分页模块（可选），提供谷歌paging3 PagingDataAdapter 的改造：MultiPagedAdapter
-implementation 'com.github.censhengde.MultiAdapter:paging:v1.1.0'
+implementation 'com.github.censhengde.MultiAdapter:paging:1.1.2'
 
 }
 ```
