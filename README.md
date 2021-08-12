@@ -34,6 +34,7 @@ implementation 'com.github.censhengde.MultiAdapter:paging:1.1.3'
 
 # 版本更新说明
 1.1.2版本新增DiffUtil支持。
+
 1.1.3版本移除ItemType getViewType方法。
 
 # 问题反馈
