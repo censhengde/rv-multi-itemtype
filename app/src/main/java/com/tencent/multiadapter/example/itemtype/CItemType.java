@@ -20,13 +20,8 @@ import org.jetbrains.annotations.NotNull;
 public class CItemType extends MultiItemType<ItemBean> {
 
     @Override
-    public int getViewType() {
-        return ItemBean.TYPE_C;
-    }
-
-    @Override
     public boolean matchItemType(ItemBean data, int position) {
-        return getViewType() == data.viewType;
+        return ItemBean.TYPE_C == data.viewType;
     }
 
     @Override

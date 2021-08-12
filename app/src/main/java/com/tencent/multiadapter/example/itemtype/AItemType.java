@@ -20,14 +20,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public class AItemType extends MultiItemType<ItemBean> {
 
-    /**
-     * @return 返回当前item类型的标识
-     */
-    @Override
-    public int getViewType() {
-        return ItemBean.TYPE_A;
-    }
-
 
     /**
      * @param data 当前position对应的实体对象
@@ -36,7 +28,7 @@ public class AItemType extends MultiItemType<ItemBean> {
      */
     @Override
     public boolean matchItemType(@Nullable ItemBean data, int position) {
-        return data == null || getViewType() == data.viewType;//这句话的含义是：当前position 的ItemBean想要表现的item类型是哪一种，
+        return data == null || ItemBean.TYPE_A == data.viewType;//这句话的含义是：当前position 的ItemBean想要表现的item类型是哪一种，
         //以本例为例，会依次遍历A、B、C三个Item类型，直到返回true为止。（详见MultiHelper getItemViewType方法实现）
     }
 

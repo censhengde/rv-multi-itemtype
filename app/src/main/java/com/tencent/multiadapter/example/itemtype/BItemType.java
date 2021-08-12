@@ -19,14 +19,10 @@ import org.jetbrains.annotations.NotNull;
  */
 public class BItemType extends MultiItemType<ItemBean> {
 
-    @Override
-    public int getViewType() {
-        return ItemBean.TYPE_B;
-    }
 
     @Override
     public boolean matchItemType(ItemBean data, int position) {
-        return getViewType()==data.viewType;
+        return ItemBean.TYPE_B==data.viewType;
     }
 
     @Override

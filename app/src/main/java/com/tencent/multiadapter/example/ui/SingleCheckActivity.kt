@@ -26,7 +26,7 @@ class SingleCheckActivity : AppCompatActivity(), OnCheckingFinishedCallback<Chec
         checkableItemType.inject(this)
 
         /*添加ItemType*/
-        adapter.multiHelper.addItemType(HeaderItemType())
+        adapter.addItemType(HeaderItemType())
                 .addItemType(checkableItemType)
                 .addItemType(FooterItemType())
 

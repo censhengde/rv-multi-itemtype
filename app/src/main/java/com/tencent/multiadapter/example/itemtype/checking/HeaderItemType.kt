@@ -14,13 +14,11 @@ import com.tencent.multiadapter.example.bean.CheckableItem
 
  */
 class HeaderItemType:MultiItemType<CheckableItem>() {
-    override fun getViewType(): Int {
-        return CheckableItem.VIEW_TYPE_HEADER
-    }
+
     override fun getItemLayoutRes(): Int = R.layout.item_checking_header
 
     override fun matchItemType(data: CheckableItem, position: Int): Boolean
-            =data.viewType== viewType
+            =data.viewType== CheckableItem.VIEW_TYPE_HEADER
 
     override fun onBindViewHolder(holder: MultiViewHolder, helper: MultiHelper<CheckableItem,MultiViewHolder>, position: Int) {
 

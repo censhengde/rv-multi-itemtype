@@ -37,10 +37,7 @@ public abstract class AbstractItemType<T, VH extends RecyclerView.ViewHolder> im
     private Class<?> mEntityClass;/*泛型参数T的Class*/
     private Constructor<VH> mVHConstructor;
 
-    @Override
-    public int getViewType() {
-        return 0;
-    }
+
 
     /**
      * @return 返回当前ItemType的布局文件id
@@ -175,7 +172,7 @@ public abstract class AbstractItemType<T, VH extends RecyclerView.ViewHolder> im
             }
             //优先监听器
             if (mOnClickItemViewListener != null) {
-                mOnClickItemViewListener.onClickItemView(v, getViewType(), data, position);
+                mOnClickItemViewListener.onClickItemView(v, this.getClass().hashCode(), data, position);
                 return;
             }
             /*不传入目标方法名，则表示不采用反射方式回调点击事件*/
@@ -235,7 +232,7 @@ public abstract class AbstractItemType<T, VH extends RecyclerView.ViewHolder> im
             }
             //监听器优先
             if (mOnLongClickItemViewListener != null) {
-                return mOnLongClickItemViewListener.onLongClickItemView(v, getViewType(), data, position);
+                return mOnLongClickItemViewListener.onLongClickItemView(v, this.getClass().hashCode(), data, position);
             }
             /*不传入目标方法名，则表示不采用反射方式回调点击事件*/
             if (TextUtils.isEmpty(target)) {

@@ -47,8 +47,7 @@ class DiffUtilDemoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_diff_util_demo)
         val adapter = MultiAdapter2<ItemBean>(callback)
-        adapter.multiHelper
-                .addItemType(AItemType())
+        adapter.addItemType(AItemType())
                 .addItemType(BItemType())
                 .addItemType(CItemType())
         rv_list.adapter = adapter

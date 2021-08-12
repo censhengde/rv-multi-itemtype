@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.DiffUtil.Callback;
 import androidx.recyclerview.widget.DiffUtil.DiffResult;
 import androidx.recyclerview.widget.RecyclerView;
+import com.tencent.lib.multi.core.ItemType;
 import com.tencent.lib.multi.core.MultiHelper;
 import com.tencent.lib.multi.core.checking.Checkable;
 import com.tencent.lib.multi.core.checking.CheckingHelper;
@@ -126,9 +127,6 @@ public class MultiAdapter<T, VH extends RecyclerView.ViewHolder> extends Recycle
         return mCheckingHelper;
     }
 
-    public MultiHelper<T, VH> getMultiHelper() {
-        return mMultiHelper;
-    }
 
     public final void removeItem(int position) {
         final List<T> currentList = mAsyncListDiffer == null ?
@@ -151,4 +149,12 @@ public class MultiAdapter<T, VH extends RecyclerView.ViewHolder> extends Recycle
         }
     }
 
+    public MultiAdapter<T, VH> addItemType(ItemType<T, VH> type) {
+        mMultiHelper.addItemType(type);
+        return this;
+    }
+
+    public List<ItemType<T, VH>> getItemTypeRecord() {
+        return mMultiHelper.getItemTypeRecord();
+    }
 }

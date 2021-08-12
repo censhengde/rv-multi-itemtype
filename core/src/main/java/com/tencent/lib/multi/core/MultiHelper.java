@@ -85,7 +85,7 @@ public abstract class MultiHelper<T, VH extends RecyclerView.ViewHolder> {
             }
         }
 
-        return currentType == null ? INVALID_VIEW_TYPE : currentType.getViewType();
+        return currentType == null ? INVALID_VIEW_TYPE : currentType.getClass().hashCode();
     }
 
     /**
@@ -170,7 +170,8 @@ public abstract class MultiHelper<T, VH extends RecyclerView.ViewHolder> {
         if (type == null) {
             return this;
         }
-        mItemTypes.put(type.getViewType(), type);
+        //getClass().hashCode():确保一种item类型只有一个对应的ItemType实例。
+        mItemTypes.put(type.getClass().hashCode(), type);
         return this;
     }
 

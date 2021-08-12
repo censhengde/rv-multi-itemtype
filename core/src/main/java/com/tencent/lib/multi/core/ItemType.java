@@ -14,11 +14,6 @@ import java.util.List;
 public interface ItemType<T, VH extends RecyclerView.ViewHolder> {
 
     /**
-     * @return 返回当前Item类型的ViewType
-     */
-    int getViewType();
-
-    /**
      * 当前position 是否匹配当前的ItemType
      *
      * @param data 当前position对应的实体对象,当是依赖paging3 getItem()方法返回时，有可能为null。
