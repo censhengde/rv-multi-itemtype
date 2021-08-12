@@ -26,7 +26,7 @@ dependencies {
 
 implementation 'com.github.censhengde.MultiAdapter:core:1.1.3'  //核心模块(必选）
 
-//分页模块（可选），提供谷歌paging3 PagingDataAdapter 的改造：MultiPagedAdapter
+//分页模块（可选），提供谷歌paging3 PagingDataAdapter 的改造：MultiPagingDataAdapter
 implementation 'com.github.censhengde.MultiAdapter:paging:1.1.3'
 
 }
