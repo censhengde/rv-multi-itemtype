@@ -16,11 +16,11 @@ public interface ItemType<T, VH extends RecyclerView.ViewHolder> {
     /**
      * 当前position 是否匹配当前的ItemType
      *
-     * @param data 当前position对应的实体对象,当是依赖paging3 getItem()方法返回时，有可能为null。
+     * @param bean 当前position对应的实体对象,当是依赖paging3 getItem()方法返回时，有可能为null。
      * @param position adapter position
      * @return true 表示匹配，false：不匹配。
      */
-    boolean matchItemType(@Nullable T data, int position);
+    boolean matchItemType(@Nullable T bean, int position);
 
 
     /**
@@ -43,10 +43,10 @@ public interface ItemType<T, VH extends RecyclerView.ViewHolder> {
      * @param holder
      * @param position
      */
-    void onBindViewHolder(@NonNull VH holder, @NonNull MultiHelper<T, VH> helper, int position,
+    void onBindViewHolder(@NonNull VH holder, @NonNull T bean, int position,
             @NonNull List<Object> payloads) throws Exception;
 
 
-    void onBindViewHolder(@NonNull VH holder, @NonNull MultiHelper<T, VH> helper, int position) throws Exception;
+    void onBindViewHolder(@NonNull VH holder, @NonNull T bean, int position) throws Exception;
 
 }

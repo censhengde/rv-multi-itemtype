@@ -18,9 +18,9 @@ class FooterItemType : MultiItemType<CheckableItem>() {
 
     override fun getItemLayoutRes(): Int = R.layout.item_checking_footer
 
-    override fun matchItemType(data: CheckableItem, position: Int): Boolean = data.viewType == CheckableItem.VIEW_TYPE_FOOTER
+    override fun matchItemType(bean: CheckableItem, position: Int): Boolean = bean.viewType == CheckableItem.VIEW_TYPE_FOOTER
 
-    override fun onBindViewHolder(holder: MultiViewHolder, helper: MultiHelper<CheckableItem, MultiViewHolder>, position: Int) {
+    override fun onBindViewHolder(holder: MultiViewHolder, bean: CheckableItem, position: Int) {
 
     }
 }

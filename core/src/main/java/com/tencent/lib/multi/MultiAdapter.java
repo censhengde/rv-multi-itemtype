@@ -141,9 +141,6 @@ public class MultiAdapter<T, VH extends RecyclerView.ViewHolder> extends Recycle
                 }
             }
             currentList.remove(position);
-            if (mMultiHelper.getItemTypeRecord() != null) {
-                mMultiHelper.getItemTypeRecord().remove(position);
-            }
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, currentList.size() - position);
         }
@@ -154,7 +151,4 @@ public class MultiAdapter<T, VH extends RecyclerView.ViewHolder> extends Recycle
         return this;
     }
 
-    public List<ItemType<T, VH>> getItemTypeRecord() {
-        return mMultiHelper.getItemTypeRecord();
-    }
 }

@@ -22,13 +22,13 @@ public class AItemType extends MultiItemType<ItemBean> {
 
 
     /**
-     * @param data 当前position对应的实体对象
+     * @param bean 当前position对应的实体对象
      * @param position
      * @return true 表示成功匹配到对应的ItemType
      */
     @Override
-    public boolean matchItemType(@Nullable ItemBean data, int position) {
-        return data == null || ItemBean.TYPE_A == data.viewType;//这句话的含义是：当前position 的ItemBean想要表现的item类型是哪一种，
+    public boolean matchItemType(@Nullable ItemBean bean, int position) {
+        return bean == null || ItemBean.TYPE_A == bean.viewType;//这句话的含义是：当前position 的ItemBean想要表现的item类型是哪一种，
         //以本例为例，会依次遍历A、B、C三个Item类型，直到返回true为止。（详见MultiHelper getItemViewType方法实现）
     }
 
@@ -56,13 +56,13 @@ public class AItemType extends MultiItemType<ItemBean> {
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull MultiViewHolder holder,
-            @NonNull @NotNull MultiHelper<ItemBean, MultiViewHolder> helper,
+            @NonNull @NotNull ItemBean bean,
             int position,
             @NonNull @NotNull List<Object> payloads) {
         Log.e("===>", " A 类Item 局部刷新：" + position);
         for (Object payload : payloads) {
-            if (payload instanceof Bundle){
-                Bundle bundle= (Bundle) payload;
+            if (payload instanceof Bundle) {
+                Bundle bundle = (Bundle) payload;
                 TextView tv = holder.getView(R.id.tv_a);
                 tv.setText(bundle.getString("content"));
             }
@@ -79,14 +79,11 @@ public class AItemType extends MultiItemType<ItemBean> {
 
     @Override
     public void onBindViewHolder(@NonNull MultiViewHolder holder,
-            @NonNull MultiHelper<ItemBean, MultiViewHolder> helper,
+            @NotNull ItemBean itemBean,
             int position) {
         Log.e("===>", " A 类Item 级别刷新：" + position);
-        ItemBean itemBean = helper.getItem(position);
-        if (itemBean != null) {
-            TextView tv = holder.getView(R.id.tv_a);
-            tv.setText(itemBean.text);
-        }
+        TextView tv = holder.getView(R.id.tv_a);
+        tv.setText(itemBean.text);
     }
 
 }

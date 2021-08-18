@@ -17,10 +17,10 @@ class HeaderItemType:MultiItemType<CheckableItem>() {
 
     override fun getItemLayoutRes(): Int = R.layout.item_checking_header
 
-    override fun matchItemType(data: CheckableItem, position: Int): Boolean
-            =data.viewType== CheckableItem.VIEW_TYPE_HEADER
+    override fun matchItemType(bean: CheckableItem, position: Int): Boolean
+            =bean.viewType== CheckableItem.VIEW_TYPE_HEADER
 
-    override fun onBindViewHolder(holder: MultiViewHolder, helper: MultiHelper<CheckableItem,MultiViewHolder>, position: Int) {
+    override fun onBindViewHolder(holder: MultiViewHolder, bean: CheckableItem, position: Int) {
 
     }
 }

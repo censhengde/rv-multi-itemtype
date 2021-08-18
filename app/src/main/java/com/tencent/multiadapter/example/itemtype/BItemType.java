@@ -21,8 +21,8 @@ public class BItemType extends MultiItemType<ItemBean> {
 
 
     @Override
-    public boolean matchItemType(ItemBean data, int position) {
-        return ItemBean.TYPE_B==data.viewType;
+    public boolean matchItemType(ItemBean bean, int position) {
+        return ItemBean.TYPE_B== bean.viewType;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class BItemType extends MultiItemType<ItemBean> {
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull MultiViewHolder holder,
-            @NonNull @NotNull MultiHelper<ItemBean, MultiViewHolder> helper, int position,
+            @NonNull @NotNull  ItemBean bean, int position,
             @NonNull @NotNull List<Object> payloads) {
         Log.e("===>", " B 类Item 局部刷新：" + position);
         for (Object payload : payloads) {
@@ -53,13 +53,11 @@ public class BItemType extends MultiItemType<ItemBean> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MultiViewHolder holder, @NonNull MultiHelper<ItemBean,MultiViewHolder> helper, int position) {
+    public void onBindViewHolder(@NonNull MultiViewHolder holder, @NonNull ItemBean data, int position) {
         Log.e("===>", " B类 Item 级别刷新：" + position);
-        ItemBean data = helper.getItem(position);
-        if (data != null) {
             TextView tv = holder.getView(R.id.tv_b);
             tv.setText(data.text);
-        }
+
     }
 
 

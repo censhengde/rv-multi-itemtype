@@ -20,8 +20,8 @@ import org.jetbrains.annotations.NotNull;
 public class CItemType extends MultiItemType<ItemBean> {
 
     @Override
-    public boolean matchItemType(ItemBean data, int position) {
-        return ItemBean.TYPE_C == data.viewType;
+    public boolean matchItemType(ItemBean bean, int position) {
+        return ItemBean.TYPE_C == bean.viewType;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class CItemType extends MultiItemType<ItemBean> {
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull MultiViewHolder holder,
-            @NonNull @NotNull MultiHelper<ItemBean, MultiViewHolder> helper, int position,
+            @NonNull ItemBean bean, int position,
             @NonNull @NotNull List<Object> payloads) {
         Log.e("===>", " C 类Item 局部刷新：" + position);
         for (Object payload : payloads) {
@@ -51,13 +51,10 @@ public class CItemType extends MultiItemType<ItemBean> {
 
     @Override
     public void onBindViewHolder(@NonNull MultiViewHolder holder,
-            @NonNull MultiHelper<ItemBean, MultiViewHolder> helper, int position) {
+            @NonNull ItemBean bean, int position) {
 
         Log.e("===>", " C类 Item 级别刷新：" + position);
-        ItemBean bean = helper.getItem(position);
-        if (bean == null) {
-            return;
-        }
+
         TextView tvC = holder.getView(R.id.tv_c);
         tvC.setText(bean.text);
     }

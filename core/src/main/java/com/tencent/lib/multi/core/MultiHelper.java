@@ -32,18 +32,14 @@ public abstract class MultiHelper<T, VH extends RecyclerView.ViewHolder> {
         this.realAdapter = realAdapter;
     }
 
-    public int getItemCount() {
-        return realAdapter == null ? 0 : realAdapter.getItemCount();
-    }
-
 
     public final int getItemViewType(int position) {
         if (position == RecyclerView.NO_POSITION) {
             return INVALID_VIEW_TYPE;
         }
 
-        final T data = getItem(position);
-        final ItemType<T, VH> currentType = findCurrentType(data, position);
+        final T bean = getItem(position);
+        final ItemType<T, VH> currentType = findCurrentType(bean, position);
         return currentType == null ? INVALID_VIEW_TYPE : currentType.getClass().hashCode();
     }
 
@@ -82,17 +78,17 @@ public abstract class MultiHelper<T, VH extends RecyclerView.ViewHolder> {
             @NonNull List<Object> payloads) {
         /*统一捕获由position引发的可能异常*/
         try {
-            final T data = getItem(position);
-            final ItemType<T, VH> currentType = findCurrentType(data, position);
+            final T bean = getItem(position);
+            final ItemType<T, VH> currentType = findCurrentType(bean, position);
             if (currentType == null) {
                 return;
             }
             if (payloads.isEmpty()) {
-                currentType.onBindViewHolder(holder, this, position);
+                currentType.onBindViewHolder(holder, bean, position);
             }
             /*局部刷新*/
             else {
-                currentType.onBindViewHolder(holder, this, position, payloads);
+                currentType.onBindViewHolder(holder, bean, position, payloads);
             }
         } catch (Exception e) {
             e.printStackTrace();

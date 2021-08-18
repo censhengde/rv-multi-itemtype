@@ -20,37 +20,34 @@ class CheckableItemType : MultiItemType<CheckableItem>() {
 
     override fun getItemLayoutRes(): Int = R.layout.item_checking_checkable
 
-    override fun matchItemType(data: CheckableItem, position: Int): Boolean = data.viewType == CheckableItem.VIEW_TYPE_CHECKABLE
+    override fun matchItemType(bean: CheckableItem, position: Int): Boolean = bean.viewType == CheckableItem.VIEW_TYPE_CHECKABLE
 
-    override fun onViewHolderCreated(holder: MultiViewHolder, helper: MultiHelper<CheckableItem,MultiViewHolder>) {
-        registerItemViewClickListener(holder,helper,"onClickItem")
+    override fun onViewHolderCreated(holder: MultiViewHolder, helper: MultiHelper<CheckableItem, MultiViewHolder>) {
+        registerItemViewClickListener(holder, helper, "onClickItem")
     }
-
 
 
     /**
      * 只有局部刷新才会回调到这里，RecyclerView上下滑动则不会，有区别于RecyclerView.Adapter中的实现.
      */
-    override fun onBindViewHolder(holder: MultiViewHolder, helper: MultiHelper<CheckableItem,MultiViewHolder>, position: Int,
+    override fun onBindViewHolder(holder: MultiViewHolder, bean: CheckableItem, position: Int,
                                   payloads: MutableList<Any>) {
         payloads.forEach {
             if (it is Int)
                 if (it == R.id.checkbox) {
-                    val item = helper.getItem(position) ?: return
                     val checkbox = holder.getView<CheckBox>(R.id.checkbox)
-                    checkbox.isChecked = item.isChecked
+                    checkbox.isChecked = bean.isChecked
                 }
         }
     }
 
-    override fun onBindViewHolder(holder: MultiViewHolder, helper: MultiHelper<CheckableItem,MultiViewHolder>, position: Int) {
-        val item = helper.getItem(position) ?: return
+    override fun onBindViewHolder(holder: MultiViewHolder, bean: CheckableItem, position: Int) {
 
         val tv = holder.getView<TextView>(R.id.tv)
-        tv.text = item.text
+        tv.text = bean.text
         //CheckBox
         val checkbox = holder.getView<CheckBox>(R.id.checkbox)
-        checkbox.isChecked = item.isChecked
+        checkbox.isChecked = bean.isChecked
 
     }
 }

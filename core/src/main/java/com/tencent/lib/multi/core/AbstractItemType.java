@@ -100,7 +100,7 @@ public abstract class AbstractItemType<T, VH extends RecyclerView.ViewHolder> im
     }
 
     @Override
-    public boolean matchItemType(@NonNull T data, int position) {
+    public boolean matchItemType(@NonNull T bean, int position) {
         return false;
     }
 
@@ -111,7 +111,7 @@ public abstract class AbstractItemType<T, VH extends RecyclerView.ViewHolder> im
     }
 
     @Override
-    public void onBindViewHolder(@NonNull VH holder, @NonNull MultiHelper<T, VH> helper, int position,
+    public void onBindViewHolder(@NonNull VH holder, @NonNull T bean, int position,
             @NonNull List<Object> payloads) {
 
     }
