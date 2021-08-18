@@ -27,7 +27,6 @@ public abstract class MultiHelper<T, VH extends RecyclerView.ViewHolder> {
     private final SparseArray<ItemType<T, VH>> mItemTypes = new SparseArray<>();
 
 
-
     public MultiHelper(Adapter realAdapter) {
         this.realAdapter = realAdapter;
     }
@@ -79,6 +78,9 @@ public abstract class MultiHelper<T, VH extends RecyclerView.ViewHolder> {
         /*统一捕获由position引发的可能异常*/
         try {
             final T bean = getItem(position);
+            if (bean == null) {
+                return;
+            }
             final ItemType<T, VH> currentType = findCurrentType(bean, position);
             if (currentType == null) {
                 return;
