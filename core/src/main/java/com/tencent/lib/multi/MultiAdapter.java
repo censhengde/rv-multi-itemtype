@@ -141,6 +141,10 @@ public class MultiAdapter<T, VH extends RecyclerView.ViewHolder> extends Recycle
                 }
             }
             currentList.remove(position);
+            //同步ItemType记录
+            if (mMultiHelper.getItemTypeRecord() != null) {
+                mMultiHelper.getItemTypeRecord().remove(position);
+            }
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, currentList.size() - position);
         }
