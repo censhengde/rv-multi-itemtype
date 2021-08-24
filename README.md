@@ -5,6 +5,12 @@
 其内部封装了若干实用的工具组件以满足RecyclerView日常需求，如列表的单选/多选。
 正是因为有了上述功能支持，我们在给RecyclerView添加头布局、脚布局以及复杂多样式item布局、RecyclerView嵌套布局的时候，就简单的太多了！
 
+#核心优势
+1.相比于BaseQuickAdapter，MultiAdapter对RecyclerView 多样式item实现更优雅、更简单！
+2.相比于MultiType，MultiAdapter 对item view 相关点击事件处理过程也简单太多了！
+3.相比于其他任意RecyclerView辅助组件，MultiAdapter库提供的核心组件MultiHelper可低成本任意改造其他RecyclerView Adapter，达到无缝兼容类似于jetpack Paging2、3系列组件！
+4.MultiAdapter大量应用泛型+反射技术以减少模板代码创建，大大提高开发效率。
+
 
 # 依赖
  由于jcenter已跑路，目前项目已迁至JitPack，依赖方式如下：
