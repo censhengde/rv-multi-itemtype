@@ -35,7 +35,7 @@ implementation 'com.github.censhengde.MultiAdapter:paging:1.1.3'
 # 版本更新说明
 1.1.2版本新增DiffUtil支持。
 
-1.1.3版本移除ItemType getViewType方法，ItemType onBindViewHolder方法 MultiHelper helper参数替换为 T bean；MultiHelper 废除 mItemTypeRecord字段。
+1.1.3版本移除ItemType getViewType方法；ItemType onBindViewHolder方法的 MultiHelper helper参数替换为 T bean。
 
 # 问题反馈
  1 请加群：
