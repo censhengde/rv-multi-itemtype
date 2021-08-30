@@ -8,56 +8,40 @@ import android.view.ViewGroup;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewbinding.ViewBinding;
 
 /**
  * Author：岑胜德 on 2021/1/6 14:58
  * <p>
  * 说明：
  */
-public final class MultiViewHolder extends RecyclerView.ViewHolder {
+public class MultiViewHolder extends RecyclerView.ViewHolder {
+
     //由于findViewById频繁调用比较消耗性能，所以要缓存
     private final SparseArray<View> mCacheViews;
-    private boolean isInvalid;
-    public static @NonNull
-    MultiViewHolder create(Context context, ViewGroup parent, int layout){
-        View itemView;
-        if (layout == 0) {
-            itemView = new View(context);
-            return new MultiViewHolder(itemView, true);
-        } else {
-            itemView = LayoutInflater.from(context).inflate(layout, parent, false);
-        }
-        return new MultiViewHolder(itemView, false);
+
+    ViewBinding vb;
+
+    public MultiViewHolder(ViewBinding vb) {
+        this(vb.getRoot());
+        this.vb = vb;
     }
 
-    public static @NonNull
-    MultiViewHolder createInvalid(Context context) {
-        return new MultiViewHolder(new View(context), true);
-    }
-
-    public MultiViewHolder(@NonNull View itemView, boolean invalid) {
+    public MultiViewHolder(View itemView) {
         super(itemView);
-        this.isInvalid = invalid;
-        mCacheViews =new SparseArray<>();
+        mCacheViews = new SparseArray<>();
     }
-   public MultiViewHolder(View itemView){
-        this(itemView,false);
-   }
+
     public <T extends View> T getView(@IdRes int id) {
-        T v= (T) mCacheViews.get(id);
-        if (v==null){
-            v=itemView.findViewById(id);
-            if (v==null){
+        T v = (T) mCacheViews.get(id);
+        if (v == null) {
+            v = itemView.findViewById(id);
+            if (v == null) {
                 throw new IllegalStateException("未找到View");
             }
-            mCacheViews.put(id,v);
+            mCacheViews.put(id, v);
         }
         return v;
     }
-    public boolean isInvalid(){
-        return isInvalid;
-    }
-
-
 
 }

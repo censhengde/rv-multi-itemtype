@@ -5,7 +5,9 @@ apply plugin: 'kotlin-android'
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
-
+    viewBinding {
+        enabled true
+    }
     defaultConfig {
         applicationId "com.tencent.multiadapter"
         minSdkVersion 19

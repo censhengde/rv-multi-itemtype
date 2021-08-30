@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Author：岑胜德 on 2021/1/6 14:41
@@ -29,13 +30,13 @@ public interface ItemType<T, VH extends RecyclerView.ViewHolder> {
      * @param parent parent
      * @return ViewHolder
      */
-    @NonNull
-    VH onCreateViewHolder(@NonNull ViewGroup parent);
+    @NotNull
+    VH onCreateViewHolder(@NotNull ViewGroup parent);
 
     /**
      * ViewHolder已经创建完成，在这里可以注册Item及其子View点击事件监听器,但不要做数据的绑定。
      */
-    void onViewHolderCreated(@NonNull VH holder, @NonNull MultiHelper<T, VH> helper);
+    void onViewHolderCreated(@NotNull VH holder, @NotNull MultiHelper<T, VH> helper);
 
     /**
      * 意义与Adapter onBindViewHolder 基本相同，表示当前ItemType的数据绑定过程。
@@ -43,10 +44,10 @@ public interface ItemType<T, VH extends RecyclerView.ViewHolder> {
      * @param holder
      * @param position
      */
-    void onBindViewHolder(@NonNull VH holder, @NonNull T bean, int position,
-            @NonNull List<Object> payloads) throws Exception;
+    void onBindViewHolder(@NotNull VH holder, @NotNull T bean, int position,
+            @NotNull List<Object> payloads);
 
 
-    void onBindViewHolder(@NonNull VH holder, @NonNull T bean, int position) throws Exception;
+    void onBindViewHolder(@NotNull VH holder, @NotNull T bean, int position);
 
 }

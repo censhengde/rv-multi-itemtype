@@ -6,7 +6,9 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
-
+    viewBinding {
+        enabled true
+    }
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 30

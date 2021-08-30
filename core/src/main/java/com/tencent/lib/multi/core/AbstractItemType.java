@@ -64,6 +64,9 @@ public abstract class AbstractItemType<T, VH extends RecyclerView.ViewHolder> im
             if (mVHConstructor == null) {
                 final Type type = this.getClass().getGenericSuperclass();
                 final ParameterizedType p = (ParameterizedType) type;
+                /*AbstractItemType 的孙类以下如果不透传 VH 泛型参数到其父类则获取其Class对象失败，
+                 *此时解决方案是全盘重写 onCreateViewHolder(@NonNull ViewGroup parent)方法，手动创建 ViewHolder
+                 */
                 final Class<VH> c = (Class<VH>) p.getActualTypeArguments()[1];
                 mVHConstructor = c.getConstructor(View.class);
             }
@@ -87,15 +90,14 @@ public abstract class AbstractItemType<T, VH extends RecyclerView.ViewHolder> im
 
     /**
      * 注入观察者对象
-     *
      * @param observer
      */
-    public void inject(@NonNull Object observer) {
+    public final void inject(@NonNull Object observer) {
         mObserver = observer;
     }
 
 
-    protected Object getObserver() {
+    protected final Object getObserver() {
         return mObserver;
     }
 

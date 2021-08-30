@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:background="#9C27B0"
-    android:layout_height="150dp">
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:background="#9C27B0"
+        android:orientation="vertical">
+
     <TextView
-        android:id="@+id/tv_c"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:gravity="center"
-        android:layout_gravity="center|center_vertical"
-        android:text="C 类 Item"/>
-<ImageView
-        android:id="@+id/iv_c"
-    android:layout_width="72dp"
-    android:layout_height="72dp"
-    android:layout_gravity="center_horizontal"
-        android:layout_marginTop="5dp"
-    android:src="@mipmap/ic_launcher"/>
+            android:id="@+id/tv_c"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|center_vertical"
+            android:gravity="center"
+            android:text="C 类 Item"
+            android:textSize="18sp" />
+
+    <ImageView
+            android:id="@+id/iv_c"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:src="@mipmap/ic_launcher" />
 </LinearLayout>

@@ -30,6 +30,10 @@ class MainActivity : AppCompatActivity() {
             R.id.btn_to_diff_demo -> {
                 goTo(DiffUtilDemoActivity::class.java)
             }
+
+            R.id.btn_to_viewbinding_demo->{
+                goTo(ViewBindingActivity::class.java)
+            }
             else -> {
             }
         }
