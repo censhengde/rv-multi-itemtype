@@ -55,6 +55,7 @@ class DiffUtilDemoActivity : AppCompatActivity() {
 
         /*下拉刷新*/
         refresh_layout.setOnRefreshListener {
+
             adapter.setData(getData(3, "下拉刷新内容"))
             it.finishRefresh(1000)
         }

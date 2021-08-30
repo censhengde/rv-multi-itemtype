@@ -4,15 +4,13 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.AsyncListDiffer;
-import androidx.recyclerview.widget.AsyncListDiffer.ListListener;
 import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.DiffUtil.Callback;
-import androidx.recyclerview.widget.DiffUtil.DiffResult;
 import androidx.recyclerview.widget.RecyclerView;
 import com.tencent.lib.multi.core.ItemType;
 import com.tencent.lib.multi.core.MultiHelper;
 import com.tencent.lib.multi.core.checking.Checkable;
 import com.tencent.lib.multi.core.checking.CheckingHelper;
+import java.util.Collections;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +23,7 @@ public class MultiAdapter<T, VH extends RecyclerView.ViewHolder> extends Recycle
 
     private List<T> mData;
     private AsyncListDiffer<T> mAsyncListDiffer;
-    private final MultiHelper<T, VH> mMultiHelper = new MultiHelper<T, VH>(this) {
+    private final MultiHelper<T, VH> mMultiHelper = new MultiHelper<T, VH>() {
         @Nullable
         @Override
         public T getItem(int position) {
@@ -57,12 +55,6 @@ public class MultiAdapter<T, VH extends RecyclerView.ViewHolder> extends Recycle
 
     }
 
-    @Nullable
-    public List<T> getDataList() {
-        return mAsyncListDiffer == null ?
-                mData : mAsyncListDiffer.getCurrentList();
-    }
-
 
     public final boolean isInValidPosition(int position, List<T> data) {
         return position < 0 || data == null || position >= data.size();
@@ -92,18 +84,12 @@ public class MultiAdapter<T, VH extends RecyclerView.ViewHolder> extends Recycle
 
     @Override
     public int getItemCount() {
-
-        final List<T> currentList = mAsyncListDiffer == null ?
-                mData : mAsyncListDiffer.getCurrentList();
-        return currentList == null ? 0 : currentList.size();
+        return getDataList().size();
     }
 
     @Nullable
     public T getItem(int position) {
-
-        final List<T> currentList = mAsyncListDiffer == null ?
-                mData : mAsyncListDiffer.getCurrentList();
-
+        final List<T> currentList = getDataList();
         return isInValidPosition(position, currentList) ? null : currentList.get(position);
     }
 
@@ -129,8 +115,7 @@ public class MultiAdapter<T, VH extends RecyclerView.ViewHolder> extends Recycle
 
 
     public final void removeItem(int position) {
-        final List<T> currentList = mAsyncListDiffer == null ?
-                mData : mAsyncListDiffer.getCurrentList();
+        final List<T> currentList = getDataList();
         if (!isInValidPosition(position, currentList)) {
             /*如果删除的Item是被选中的Item，则数量要减一*/
             final T item = currentList.get(position);
@@ -141,10 +126,6 @@ public class MultiAdapter<T, VH extends RecyclerView.ViewHolder> extends Recycle
                 }
             }
             currentList.remove(position);
-            //同步ItemType记录
-            if (mMultiHelper.getItemTypeRecord() != null) {
-                mMultiHelper.getItemTypeRecord().remove(position);
-            }
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, currentList.size() - position);
         }
@@ -155,4 +136,14 @@ public class MultiAdapter<T, VH extends RecyclerView.ViewHolder> extends Recycle
         return this;
     }
 
+    public final MultiHelper<T, VH> getMultiHelper() {
+        return mMultiHelper;
+    }
+
+    @NotNull
+    public final List<T> getDataList() {
+        final List<T> currentList = mAsyncListDiffer == null ?
+                mData : mAsyncListDiffer.getCurrentList();
+        return currentList == null ? Collections.emptyList() : currentList;
+    }
 }
