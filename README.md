@@ -1,4 +1,4 @@
-# 最新版本：1.1.3
+# 最新版本：1.1.4
 # 介绍
 
    MultiAdapter是一个轻松优雅实现RecyclerView多样式的强大组件。它将item的行为及表现抽象为一个ItemType，不同类型的item都自己独立的点击事件处理及视图绑定行为，极大地降低了耦合度，极大简化了item相关点击事件处理过程。
@@ -33,10 +33,10 @@ allprojects {
 ```
 dependencies {
 
-implementation 'com.github.censhengde.MultiAdapter:core:1.1.3'  //核心模块(必选）
+implementation 'com.github.censhengde.MultiAdapter:core:1.1.4'  //核心模块(必选）
 
 //分页模块（可选），提供谷歌paging3 PagingDataAdapter 的改造：MultiPagingDataAdapter
-implementation 'com.github.censhengde.MultiAdapter:paging:1.1.3'
+implementation 'com.github.censhengde.MultiAdapter:paging:1.1.4'
 
 }
 ```
