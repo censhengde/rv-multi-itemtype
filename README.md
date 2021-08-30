@@ -46,6 +46,8 @@ implementation 'com.github.censhengde.MultiAdapter:paging:1.1.3'
 
 1.1.3版本移除ItemType getViewType方法；ItemType onBindViewHolder方法的 MultiHelper helper参数替换为 T bean。
 
+1.1.4版本新增ViewBinding支持。
+
 # 问题反馈
  1 请加群：
 
