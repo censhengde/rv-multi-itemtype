@@ -8,7 +8,7 @@
 # 核心优势
 **1.相比于BaseQuickAdapter，MultiAdapter对RecyclerView 多样式item实现更优雅、更简单！**
 
-**2.相比于MultiType，MultiAdapter 对item view 相关点击事件处理过程也简单太多了！**
+**2.相比于MultiType，MultiAdapter 对item view 相关点击事件处理过程也简单太多了！甚至在嵌套RecyclerView的场景下也能轻松简单将内层RecyclerView点击事件带到任意环境！**
 
 **3.相比于其他任意RecyclerView辅助组件，MultiAdapter库提供的核心组件MultiHelper可低成本任意改造其他RecyclerView Adapter，达到无缝兼容类似于jetpack Paging2、3系列组件！**
 
