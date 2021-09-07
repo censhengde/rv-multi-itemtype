@@ -8,15 +8,15 @@ import com.tencent.lib.multi.MultiAdapter
 import com.tencent.lib.multi.core.MultiViewHolder
 import com.tencent.lib.multi.core.listener.OnCheckingFinishedCallback
 import com.tencent.multiadapter.R
-import com.tencent.multiadapter.example.bean.CheckableItem
+import com.tencent.multiadapter.example.bean.CheckableBean
 import com.tencent.multiadapter.example.itemtype.checking.CheckableItemType
 import com.tencent.multiadapter.example.itemtype.checking.FooterItemType
 import com.tencent.multiadapter.example.itemtype.checking.HeaderItemType
 import kotlinx.android.synthetic.main.activity_check_item.*
 
-class SingleCheckActivity : AppCompatActivity(), OnCheckingFinishedCallback<CheckableItem> {
+class SingleCheckActivity : AppCompatActivity(), OnCheckingFinishedCallback<CheckableBean> {
 
-    val adapter = MultiAdapter<CheckableItem, MultiViewHolder>()
+    val adapter = MultiAdapter<CheckableBean, MultiViewHolder>()
     val dataSize = 30
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,16 +38,16 @@ class SingleCheckActivity : AppCompatActivity(), OnCheckingFinishedCallback<Chec
     }
     /*模拟数据(页面状态的改变可能会导致列表选择状态丢失，建议在ViewModel或其他序列化手段保存数据以便恢复列表选择状态)
    * */
-    private fun getData(): MutableList<CheckableItem> {
-        val data = ArrayList<CheckableItem>(dataSize + 2)
+    private fun getData(): MutableList<CheckableBean> {
+        val data = ArrayList<CheckableBean>(dataSize + 2)
         /*头布局item 实体对象*/
-        data.add(CheckableItem(CheckableItem.VIEW_TYPE_HEADER, ""))
+        data.add(CheckableBean(CheckableBean.VIEW_TYPE_HEADER, ""))
         /*中间可选的item实体对象*/
         for (i in 0 until dataSize) {
-            data.add(CheckableItem(CheckableItem.VIEW_TYPE_CHECKABLE, "可选的Item position=${i}"))
+            data.add(CheckableBean(CheckableBean.VIEW_TYPE_CHECKABLE, "可选的Item position=${i}"))
         }
         /*脚布局item实体对象*/
-        data.add(CheckableItem(CheckableItem.VIEW_TYPE_FOOTER, ""))
+        data.add(CheckableBean(CheckableBean.VIEW_TYPE_FOOTER, ""))
         return data
     }
 
@@ -57,13 +57,13 @@ class SingleCheckActivity : AppCompatActivity(), OnCheckingFinishedCallback<Chec
     }
 
     /*点击可选的item*/
-    private fun onClickItem(view: View, item: CheckableItem, position: Int) {
+    private fun onClickItem(view: View, bean: CheckableBean, position: Int) {
 
       adapter.checkingHelper.singleCheckItem(position,R.id.checkbox)
 
     }
     /*点击完成时的数据回调*/
-    override fun onCheckingFinished(checked: List<CheckableItem>) {
+    override fun onCheckingFinished(checked: List<CheckableBean>) {
         checked.forEach {
             Log.e("被选中的item：", it.text)
         }

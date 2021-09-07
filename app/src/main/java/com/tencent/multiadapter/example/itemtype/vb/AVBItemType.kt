@@ -16,8 +16,8 @@ import com.tencent.multiadapter.example.bean.ItemBean
  */
 class AVBItemType : MultiVBItemType<ItemBean, ItemABinding>(){
 
-    override fun matchItemType(bean: ItemBean?, position: Int): Boolean {
-        return bean!!.viewType==ItemBean.TYPE_A
+    override fun matchItemType(bean: Any?, position: Int): Boolean {
+        return (bean as ItemBean).viewType==ItemBean.TYPE_A
     }
 
 

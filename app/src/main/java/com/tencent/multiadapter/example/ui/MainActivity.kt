@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onClickBtn(view: View) {
-        val btn=(view as Button)
+        val btn = (view as Button)
         when (btn.id) {
             R.id.btn_to_multi -> {
                 goTo(MultiItemActivity::class.java)
@@ -31,8 +31,11 @@ class MainActivity : AppCompatActivity() {
                 goTo(DiffUtilDemoActivity::class.java)
             }
 
-            R.id.btn_to_viewbinding_demo->{
+            R.id.btn_to_viewbinding_demo -> {
                 goTo(ViewBindingActivity::class.java)
+            }
+            R.id.btn_to_multi_data_type_demo -> {
+                goTo(MultiDataTypeDemoActivity::class.java)
             }
             else -> {
             }

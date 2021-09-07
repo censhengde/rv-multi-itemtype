@@ -14,8 +14,8 @@ import com.tencent.multiadapter.example.bean.ItemBean
  */
 class CVBItemType : MultiVBItemType<ItemBean, ItemCBinding>() {
 
-    override fun matchItemType(bean: ItemBean?, position: Int): Boolean {
-        return bean!!.viewType == ItemBean.TYPE_C
+    override fun matchItemType(bean: Any?, position: Int): Boolean {
+        return (bean as ItemBean)!!.viewType == ItemBean.TYPE_C
     }
 
     override fun onBindViewHolder(vb: ItemCBinding, bean: ItemBean, position: Int) {

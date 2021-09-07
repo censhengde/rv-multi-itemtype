@@ -47,6 +47,10 @@ open class MultiPagingDataAdapter<T : Any, VH : RecyclerView.ViewHolder>(diffCal
 
     }
 
+    override fun onViewRecycled(holder: VH) {
+        mMultiHelper.onViewRecycled(holder)
+    }
+
     fun addItemType(type: ItemType<T, VH>): MultiPagingDataAdapter<T, VH> {
         mMultiHelper.addItemType(type)
         return this

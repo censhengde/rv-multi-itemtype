@@ -9,7 +9,8 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".example.ui.ViewBindingActivity"></activity>
+        <activity android:name=".example.ui.MultiDataTypeDemoActivity"></activity>
+        <activity android:name=".example.ui.ViewBindingActivity" />
         <activity android:name=".example.ui.DiffUtilDemoActivity" />
         <activity android:name=".example.ui.SingleCheckActivity" />
         <activity android:name=".example.ui.CheckItemActivity" />

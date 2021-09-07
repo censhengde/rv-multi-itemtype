@@ -23,7 +23,7 @@ public class MultiAdapter<T, VH extends RecyclerView.ViewHolder> extends Recycle
 
     private List<T> mData;
     private AsyncListDiffer<T> mAsyncListDiffer;
-    private final MultiHelper<T, VH> mMultiHelper = new MultiHelper<T, VH>() {
+    private final MultiHelper<T, VH> mDelegate = new MultiHelper<T, VH>() {
         @Nullable
         @Override
         public T getItem(int position) {
@@ -63,7 +63,7 @@ public class MultiAdapter<T, VH extends RecyclerView.ViewHolder> extends Recycle
     @NonNull
     @Override
     public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return mMultiHelper.onCreateViewHolder(parent, viewType);
+        return mDelegate.onCreateViewHolder(parent, viewType);
     }
 
     @Override
@@ -73,15 +73,45 @@ public class MultiAdapter<T, VH extends RecyclerView.ViewHolder> extends Recycle
 
     @Override
     public void onBindViewHolder(@NonNull VH holder, int position, @NonNull List<Object> payloads) {
-        mMultiHelper.onBindViewHolder(holder, position, payloads);
+        mDelegate.onBindViewHolder(holder, position, payloads);
     }
 
+    @Override
+    public void onViewRecycled(@NonNull @NotNull VH holder) {
+        mDelegate.onViewRecycled(holder);
+    }
 
     @Override
     public int getItemViewType(int position) {
-        return mMultiHelper.getItemViewType(position);
+        return mDelegate.getItemViewType(position);
     }
 
+    @Override
+    public long getItemId(int position) {
+        return mDelegate.getItemId(position);
+    }
+
+    public boolean onFailedToRecycleView(@NonNull VH holder) {
+        return mDelegate.onFailedToRecycleView(holder);
+    }
+
+
+    public void onViewAttachedToWindow(@NonNull VH holder) {
+        mDelegate.onViewAttachedToWindow(holder);
+    }
+
+    public void onViewDetachedFromWindow(@NonNull VH holder) {
+        mDelegate.onViewAttachedToWindow(holder);
+    }
+
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+
+
+    }
+
+
+    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+    }
     @Override
     public int getItemCount() {
         return getDataList().size();
@@ -131,13 +161,13 @@ public class MultiAdapter<T, VH extends RecyclerView.ViewHolder> extends Recycle
         }
     }
 
-    public MultiAdapter<T, VH> addItemType(ItemType<T, VH> type) {
-        mMultiHelper.addItemType(type);
+    public MultiAdapter<T, VH> addItemType(ItemType type) {
+        mDelegate.addItemType(type);
         return this;
     }
 
     public final MultiHelper<T, VH> getMultiHelper() {
-        return mMultiHelper;
+        return mDelegate;
     }
 
     @NotNull

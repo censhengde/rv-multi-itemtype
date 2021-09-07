@@ -47,6 +47,14 @@
             android:onClick="onClickBtn"
             android:text="ViewBindingDemo"
             android:textAllCaps="false" />
+    <Button
+            android:id="@+id/btn_to_multi_data_type_demo"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_marginTop="40dp"
+            android:onClick="onClickBtn"
+            android:text="Multi data type"
+            android:textAllCaps="false" />
 
 
 </LinearLayout>

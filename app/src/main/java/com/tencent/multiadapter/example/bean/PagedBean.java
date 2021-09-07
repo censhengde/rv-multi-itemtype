@@ -7,4 +7,9 @@ package com.tencent.multiadapter.example.bean;
  */
 public class PagedBean {
 
+    public String text;
+
+    public PagedBean(String text) {
+        this.text = text;
+    }
 }

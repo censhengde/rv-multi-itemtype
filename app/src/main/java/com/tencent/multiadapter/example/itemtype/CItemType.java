@@ -1,5 +1,6 @@
 package com.tencent.multiadapter.example.itemtype;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
@@ -20,8 +21,8 @@ import org.jetbrains.annotations.NotNull;
 public class CItemType extends MultiItemType<ItemBean> {
 
     @Override
-    public boolean matchItemType(ItemBean bean, int position) {
-        return ItemBean.TYPE_C == bean.viewType;
+    public boolean matchItemType(Object bean, int position) {
+        return ItemBean.TYPE_C == ((ItemBean)bean).viewType;
     }
 
     @Override
@@ -59,5 +60,10 @@ public class CItemType extends MultiItemType<ItemBean> {
         tvC.setText(bean.text);
     }
 
+    @SuppressLint("LongLogTag")
+    @Override
+    public void onViewRecycled(MultiViewHolder holder) {
+        Log.e("===> CItemType onViewRecycled",""+holder.getItemViewType());
+    }
 
 }

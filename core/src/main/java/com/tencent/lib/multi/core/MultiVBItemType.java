@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * 说明：ViewBinding 专用 ItemType。
  */
-public abstract class MultiVBItemType<T, VB extends ViewBinding> extends AbstractItemType<T, MultiViewHolder> {
+public abstract class MultiVBItemType<T, VB extends ViewBinding> extends ItemType<T, MultiViewHolder> {
 
 
     private Method mBindMethod;

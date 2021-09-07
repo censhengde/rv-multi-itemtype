@@ -1,5 +1,6 @@
 package com.tencent.multiadapter.example.itemtype;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
@@ -27,8 +28,9 @@ public class AItemType extends MultiItemType<ItemBean> {
      * @return true 表示成功匹配到对应的ItemType
      */
     @Override
-    public boolean matchItemType(@Nullable ItemBean bean, int position) {
-        return bean == null || ItemBean.TYPE_A == bean.viewType;//这句话的含义是：当前position 的ItemBean想要表现的item类型是哪一种，
+    public boolean matchItemType(@Nullable Object bean, int position) {
+
+        return bean == null  || ItemBean.TYPE_A == ((ItemBean)bean).viewType;//这句话的含义是：当前position 的ItemBean想要表现的item类型是哪一种，
         //以本例为例，会依次遍历A、B、C三个Item类型，直到返回true为止。（详见MultiHelper getItemViewType方法实现）
     }
 
@@ -86,4 +88,9 @@ public class AItemType extends MultiItemType<ItemBean> {
         tv.setText(itemBean.text);
     }
 
+    @SuppressLint("LongLogTag")
+    @Override
+    public void onViewRecycled(MultiViewHolder holder) {
+        Log.e("===> AItemType onViewRecycled",""+holder.getItemViewType());
+    }
 }

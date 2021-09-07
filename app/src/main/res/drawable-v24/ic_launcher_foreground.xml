@@ -12,10 +12,10 @@
                 android:startX="42.9492"
                 android:startY="49.59793"
                 android:type="linear">
-                <item
+                <bean
                     android:color="#44000000"
                     android:offset="0.0" />
-                <item
+                <bean
                     android:color="#00000000"
                     android:offset="1.0" />
             </gradient>

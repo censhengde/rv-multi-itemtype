@@ -13,8 +13,8 @@ import com.tencent.multiadapter.example.bean.ItemBean
 
  */
 class BVBItemType : MultiVBItemType<ItemBean, ItemBBinding>() {
-    override fun matchItemType(bean: ItemBean?, position: Int): Boolean {
-        return bean!!.viewType == ItemBean.TYPE_B
+    override fun matchItemType(bean: Any?, position: Int): Boolean {
+        return (bean as ItemBean).viewType == ItemBean.TYPE_B
     }
 
     override fun onBindViewHolder(vb: ItemBBinding, bean: ItemBean, position: Int) {
