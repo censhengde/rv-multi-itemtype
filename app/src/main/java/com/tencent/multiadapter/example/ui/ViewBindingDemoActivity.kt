@@ -11,7 +11,7 @@ import com.tencent.multiadapter.example.itemtype.vb.BVBItemType
 import com.tencent.multiadapter.example.itemtype.vb.CVBItemType
 import kotlinx.android.synthetic.main.activity_view_binding.*
 
-class ViewBindingActivity : AppCompatActivity() {
+class ViewBindingDemoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_binding)

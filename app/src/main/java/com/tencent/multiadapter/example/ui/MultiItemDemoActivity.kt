@@ -15,7 +15,7 @@ import com.tencent.multiadapter.example.itemtype.CItemType
 import kotlinx.android.synthetic.main.activity_multi_item.*
 import java.util.*
 
-class MultiItemActivity : AppCompatActivity() {
+class MultiItemDemoActivity : AppCompatActivity() {
 
     lateinit var adapter: MultiAdapter<ItemBean, MultiViewHolder>
 

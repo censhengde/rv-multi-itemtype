@@ -105,12 +105,13 @@ public class MultiAdapter<T, VH extends RecyclerView.ViewHolder> extends Recycle
     }
 
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
-
+      mDelegate.onAttachedToRecyclerView(recyclerView);
 
     }
 
 
     public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+        mDelegate.onDetachedFromRecyclerView(recyclerView);
     }
     @Override
     public int getItemCount() {

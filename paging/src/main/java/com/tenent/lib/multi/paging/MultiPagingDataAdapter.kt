@@ -18,7 +18,7 @@ import com.tencent.lib.multi.core.checking.CheckingHelper
 open class MultiPagingDataAdapter<T : Any, VH : RecyclerView.ViewHolder>(diffCallback: DiffUtil.ItemCallback<T>)
     : PagingDataAdapter<T, VH>(diffCallback) {
 
-    private val mMultiHelper = object : MultiHelper<T, VH>() {
+    private val mDelegate = object : MultiHelper<T, VH>() {
 
         override fun getItem(p0: Int): T? {
             return this@MultiPagingDataAdapter.getItem(p0)
@@ -31,16 +31,17 @@ open class MultiPagingDataAdapter<T : Any, VH : RecyclerView.ViewHolder>(diffCal
 
     }
 
+
     override fun getItemViewType(position: Int): Int {
-        return mMultiHelper.getItemViewType(position)
+        return mDelegate.getItemViewType(position)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-        return mMultiHelper.onCreateViewHolder(parent, viewType)
+        return mDelegate.onCreateViewHolder(parent, viewType)
     }
 
     override fun onBindViewHolder(holder: VH, position: Int, payloads: List<Any?>) {
-        mMultiHelper.onBindViewHolder(holder, position, payloads)
+        mDelegate.onBindViewHolder(holder, position, payloads)
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {
@@ -48,11 +49,31 @@ open class MultiPagingDataAdapter<T : Any, VH : RecyclerView.ViewHolder>(diffCal
     }
 
     override fun onViewRecycled(holder: VH) {
-        mMultiHelper.onViewRecycled(holder)
+        mDelegate.onViewRecycled(holder)
     }
 
-    fun addItemType(type: ItemType<T, VH>): MultiPagingDataAdapter<T, VH> {
-        mMultiHelper.addItemType(type)
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        mDelegate.onAttachedToRecyclerView(recyclerView)
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        mDelegate.onDetachedFromRecyclerView(recyclerView)
+    }
+
+    override fun onViewAttachedToWindow(holder: VH) {
+        mDelegate.onViewAttachedToWindow(holder)
+    }
+
+    override fun onViewDetachedFromWindow(holder: VH) {
+        mDelegate.onViewDetachedFromWindow(holder)
+    }
+
+    override fun onFailedToRecycleView(holder: VH): Boolean {
+        return mDelegate.onFailedToRecycleView(holder)
+    }
+
+    fun addItemType(type: ItemType<*, *>): MultiPagingDataAdapter<T, VH> {
+        mDelegate.addItemType(type)
         return this
     }
 

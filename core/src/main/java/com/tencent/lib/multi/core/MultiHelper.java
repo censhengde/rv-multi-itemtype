@@ -50,7 +50,7 @@ public abstract class MultiHelper<T, VH extends RecyclerView.ViewHolder>  {
     private ItemType findCurrentItemType(T data, int position) {
         //为当前position 匹配它的ItemType
         for (int i = 0; i < mItemTypePool.size(); i++) {
-            final ItemType<?, ? extends RecyclerView.ViewHolder> type = mItemTypePool.valueAt(i);
+            final ItemType type = mItemTypePool.valueAt(i);
             if (type.matchItemType(data, position)) {
                 return type;
             }

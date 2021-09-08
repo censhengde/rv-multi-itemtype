@@ -8,5 +8,5 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:orientation="vertical"
 
-        tools:context=".example.ui.ViewBindingActivity"/>
+        tools:context=".example.ui.ViewBindingDemoActivity"/>
 

@@ -19,20 +19,20 @@ class MainActivity : AppCompatActivity() {
         val btn = (view as Button)
         when (btn.id) {
             R.id.btn_to_multi -> {
-                goTo(MultiItemActivity::class.java)
+                goTo(MultiItemDemoActivity::class.java)
             }
             R.id.btn_to_check -> {
-                goTo(CheckItemActivity::class.java)
+                goTo(CheckingDemoActivity::class.java)
             }
             R.id.btn_to_check_single -> {
-                goTo(SingleCheckActivity::class.java)
+                goTo(SingleCheckingDemoActivity::class.java)
             }
             R.id.btn_to_diff_demo -> {
                 goTo(DiffUtilDemoActivity::class.java)
             }
 
             R.id.btn_to_viewbinding_demo -> {
-                goTo(ViewBindingActivity::class.java)
+                goTo(ViewBindingDemoActivity::class.java)
             }
             R.id.btn_to_multi_data_type_demo -> {
                 goTo(MultiDataTypeDemoActivity::class.java)
