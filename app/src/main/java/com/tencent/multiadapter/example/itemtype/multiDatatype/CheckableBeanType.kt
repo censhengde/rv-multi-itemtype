@@ -14,8 +14,11 @@ import com.tencent.multiadapter.example.bean.CheckableBean
  * 说明：
 
  */
-class CheckableBeanType:MultiVBItemType<CheckableBean,ItemCheckingCheckableBinding>() {
+class CheckableBeanType(observer:Any):MultiVBItemType<CheckableBean,ItemCheckingCheckableBinding>() {
 
+    init {
+        inject(observer)
+    }
 
     override fun matchItemType(bean: Any?, position: Int): Boolean {
         return bean is CheckableBean

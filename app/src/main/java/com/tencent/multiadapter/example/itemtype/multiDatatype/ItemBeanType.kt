@@ -15,18 +15,21 @@ import com.tencent.multiadapter.example.bean.ItemBean
  * 说明：
 
  */
-class ItemBeanType:MultiVBItemType<ItemBean,ItemBBinding>() {
-
+class ItemBeanType(observer: Any) : MultiVBItemType<ItemBean, ItemBBinding>() {
+    init {
+        inject(observer)
+    }
 
     override fun matchItemType(bean: Any?, position: Int): Boolean {
         return bean is ItemBean
     }
 
     override fun onViewHolderCreated(holder: MultiViewHolder, helper: MultiHelper<ItemBean, MultiViewHolder>) {
-        registerItemViewClickListener(holder,helper,"onClickItemBean")
+        registerItemViewClickListener(holder, helper, "onClickItemBean")
     }
+
     override fun onBindViewHolder(vb: ItemBBinding, bean: ItemBean, position: Int) {
-        vb.tvB.text=bean.text
+        vb.tvB.text = bean.text
     }
 
     override fun getItemLayoutRes(): Int {

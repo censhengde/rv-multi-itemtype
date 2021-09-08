@@ -24,17 +24,19 @@ class MultiDataTypeDemoActivity : AppCompatActivity() {
         setContentView(R.layout.activity_multi_data_type_demo)
         /*必须传Any类型才能兼容不同bean类型*/
         val adapter=MultiAdapter2<Any>()
-
-        adapter.addItemType(CheckableBeanType())
-        adapter.addItemType(PagedBeanType())
-        adapter.addItemType(ItemBeanType())
+        /*添加 ItemType。*/
+        adapter.addItemType(CheckableBeanType(this))
+        adapter.addItemType(PagedBeanType(this))
+        adapter.addItemType(ItemBeanType(this))
 
         adapter.setData(getData())
         rv_list.adapter=adapter
 
     }
 
-
+    /**
+     * 模拟数据
+     */
     fun getData():MutableList<Any>{
         val data=ArrayList<Any>()
 
@@ -50,14 +52,24 @@ class MultiDataTypeDemoActivity : AppCompatActivity() {
         data.add(PagedBean("我是PagedBean"))
         return data
     }
+
+    /**
+     * 点击 item
+     */
     private fun onClickCheckableItem(view:View,bean: CheckableBean,position:Int){
-        Toast.makeText(this,bean.text,Toast.LENGTH_SHORT).show()
+        Toast.makeText(this,"${bean.text} $position",Toast.LENGTH_SHORT).show()
     }
+    /**
+     * 点击 item
+     */
     private fun onClickItemBean(view:View,bean: ItemBean,position:Int){
-        Toast.makeText(this,bean.text,Toast.LENGTH_SHORT).show()
+        Toast.makeText(this,"${bean.text} $position",Toast.LENGTH_SHORT).show()
     }
+    /**
+     * 点击 item
+     */
     private fun onClickPagedItem(view:View,bean: PagedBean,position:Int){
-        Toast.makeText(this,bean.text,Toast.LENGTH_SHORT).show()
+        Toast.makeText(this,"${bean.text} $position",Toast.LENGTH_SHORT).show()
     }
 
 }
