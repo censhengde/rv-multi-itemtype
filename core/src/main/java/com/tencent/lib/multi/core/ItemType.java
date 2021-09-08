@@ -364,7 +364,7 @@ public abstract class ItemType<T, VH extends RecyclerView.ViewHolder> {
      */
     private Method resolveMethod(String methodName) {
         if (mObserver == null) {
-            Log.e(TAG, "");
+            Log.e(TAG, "===> mObserver = null， 请先调用ItemType inject 方法注入 Observer！");
             return null;
         }
         if (sMethodMap == null) {
