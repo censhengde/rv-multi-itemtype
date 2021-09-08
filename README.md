@@ -1,4 +1,4 @@
-# 最新版本：1.1.4
+# 最新版本：1.1.5
 # 介绍
 
    MultiAdapter是一个轻松优雅实现RecyclerView多样式的强大组件。它将item的行为及表现抽象为一个ItemType，不同类型的item都自己独立的点击事件处理及视图绑定行为，极大地降低了耦合度，极大简化了item相关点击事件处理过程。
@@ -8,7 +8,7 @@
 # 核心优势
 **1.相比于BaseQuickAdapter，MultiAdapter对RecyclerView 多样式item实现更优雅、更简单！**
 
-**2.相比于MultiType，MultiAdapter 对item view 相关点击事件处理过程也简单太多了！甚至在嵌套RecyclerView的场景下也能轻松简单将内层RecyclerView点击事件带到任意环境！**
+**2.支持不同类型Item之间实体类类型隔离（类似于MultiType），但相比于MultiType，MultiAdapter 对item view 相关点击事件处理过程简单得太多了！甚至在嵌套RecyclerView的场景下也能轻松简单将内层RecyclerView点击事件带到任意环境！**
 
 **3.相比于其他任意RecyclerView辅助组件，MultiAdapter库提供的核心组件MultiHelper可低成本任意改造其他RecyclerView Adapter，达到无缝兼容类似于jetpack Paging2、3系列组件！**
 
@@ -37,10 +37,10 @@ allprojects {
 ```
 dependencies {
 
-implementation 'com.github.censhengde.MultiAdapter:core:1.1.4'  //核心模块(必选）
+implementation 'com.github.censhengde.MultiAdapter:core:1.1.5'  //核心模块(必选）
 
 //分页模块（可选），提供谷歌paging3 PagingDataAdapter 的改造：MultiPagingDataAdapter
-implementation 'com.github.censhengde.MultiAdapter:paging:1.1.4'
+implementation 'com.github.censhengde.MultiAdapter:paging:1.1.5'
 
 }
 ```
@@ -51,6 +51,8 @@ implementation 'com.github.censhengde.MultiAdapter:paging:1.1.4'
 1.1.3版本移除ItemType getViewType方法；ItemType onBindViewHolder方法的 MultiHelper helper参数替换为 T bean。
 
 1.1.4版本新增ViewBinding支持。
+
+1.1.5版本新增不同item 之间 实体类类型隔离。
 
 # 问题反馈
  1 请加群：
