@@ -52,9 +52,14 @@ public abstract class ItemType<T, VH extends RecyclerView.ViewHolder> {
         return NO_ID;
     }
 
+    final int getItemType() {
+        return this.getClass().hashCode();
+    }
+
     /**
      * 当前 ItemType 是否匹配当前 position。这个方法是实现多样式 item 的关键！
      * 如若此方法实现错误，那将导致某position上匹配不到ItemType，进而引发程序崩溃！
+     *
      * @param bean 当前 position 对应的 实体对象
      * @param position 当前 position
      * @return true 表示匹配；否则不匹配。
@@ -238,7 +243,7 @@ public abstract class ItemType<T, VH extends RecyclerView.ViewHolder> {
             }
             //优先监听器
             if (mOnClickItemViewListener != null) {
-                mOnClickItemViewListener.onClickItemView(v, this.getClass().hashCode(), data, position);
+                mOnClickItemViewListener.onClickItemView(v, this.getItemType(), data, position);
                 return;
             }
             /*不传入目标方法名，则表示不采用反射方式回调点击事件*/
@@ -298,7 +303,7 @@ public abstract class ItemType<T, VH extends RecyclerView.ViewHolder> {
             }
             //监听器优先
             if (mOnLongClickItemViewListener != null) {
-                return mOnLongClickItemViewListener.onLongClickItemView(v, this.getClass().hashCode(), data, position);
+                return mOnLongClickItemViewListener.onLongClickItemView(v, this.getItemType(), data, position);
             }
             /*不传入目标方法名，则表示不采用反射方式回调点击事件*/
             if (TextUtils.isEmpty(target)) {
@@ -410,10 +415,9 @@ public abstract class ItemType<T, VH extends RecyclerView.ViewHolder> {
         try {
             type = this.getClass().getGenericSuperclass();
             ParameterizedType p = (ParameterizedType) type;
-            Log.e(TAG, "tv[0].getName():" + type);
             return (Class<T>) p.getActualTypeArguments()[0];
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
             return null;
         }
     }

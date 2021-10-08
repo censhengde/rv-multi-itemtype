@@ -35,7 +35,7 @@ public abstract class MultiHelper<T, VH extends RecyclerView.ViewHolder>  {
         }
         final T data = getItem(position);
         final ItemType currentType = findCurrentItemType(data, position);
-        return currentType == null ? RecyclerView.INVALID_TYPE : currentType.getClass().hashCode();
+        return currentType == null ? RecyclerView.INVALID_TYPE : currentType.getItemType();
     }
 
 
@@ -155,7 +155,7 @@ public abstract class MultiHelper<T, VH extends RecyclerView.ViewHolder>  {
             return;
         }
         //getClass().hashCode():确保一种item类型只有一个对应的ItemType实例。
-        mItemTypePool.put(type.getClass().hashCode(), type);
+        mItemTypePool.put(type.getItemType(), type);
     }
 
 
