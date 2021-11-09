@@ -18,7 +18,7 @@ import androidx.viewbinding.ViewBinding;
 public class MultiViewHolder extends RecyclerView.ViewHolder {
 
     //由于findViewById频繁调用比较消耗性能，所以要缓存
-    private final SparseArray<View> mCacheViews;
+    private  SparseArray<View> mCacheViews;
 
     ViewBinding vb;
 
@@ -29,10 +29,12 @@ public class MultiViewHolder extends RecyclerView.ViewHolder {
 
     public MultiViewHolder(View itemView) {
         super(itemView);
-        mCacheViews = new SparseArray<>();
     }
 
     public <T extends View> T getView(@IdRes int id) {
+        if (mCacheViews==null){
+            mCacheViews = new SparseArray<>();
+        }
         T v = (T) mCacheViews.get(id);
         if (v == null) {
             v = itemView.findViewById(id);

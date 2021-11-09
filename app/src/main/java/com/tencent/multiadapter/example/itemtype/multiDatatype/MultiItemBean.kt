@@ -1,11 +1,10 @@
 package com.tencent.multiadapter.example.itemtype.multiDatatype
 
 import com.tencent.lib.multi.core.MultiHelper
-import com.tencent.lib.multi.core.MultiVBItemType
+import com.tencent.lib.multi.core.BindingMultiItem
 import com.tencent.lib.multi.core.MultiViewHolder
 import com.tencent.multiadapter.R
 import com.tencent.multiadapter.databinding.ItemBBinding
-import com.tencent.multiadapter.databinding.ItemCBinding
 import com.tencent.multiadapter.example.bean.ItemBean
 
 /**
@@ -15,12 +14,12 @@ import com.tencent.multiadapter.example.bean.ItemBean
  * 说明：
 
  */
-class ItemBeanType(observer: Any) : MultiVBItemType<ItemBean, ItemBBinding>() {
+class MultiItemBean(observer: Any) : BindingMultiItem<ItemBean, ItemBBinding>() {
     init {
         inject(observer)
     }
 
-    override fun matchItemType(bean: Any?, position: Int): Boolean {
+    override fun isMatchForMe(bean: Any?, position: Int): Boolean {
         return bean is ItemBean
     }
 

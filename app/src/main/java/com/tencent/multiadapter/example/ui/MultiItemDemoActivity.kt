@@ -9,9 +9,9 @@ import com.tencent.lib.multi.MultiAdapter
 import com.tencent.lib.multi.core.MultiViewHolder
 import com.tencent.multiadapter.R
 import com.tencent.multiadapter.example.bean.ItemBean
-import com.tencent.multiadapter.example.itemtype.AItemType
-import com.tencent.multiadapter.example.itemtype.BItemType
-import com.tencent.multiadapter.example.itemtype.CItemType
+import com.tencent.multiadapter.example.itemtype.AMultiItem
+import com.tencent.multiadapter.example.itemtype.BMultiItem
+import com.tencent.multiadapter.example.itemtype.CMultiItem
 import kotlinx.android.synthetic.main.activity_multi_item.*
 import java.util.*
 
@@ -23,12 +23,12 @@ class MultiItemDemoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_multi_item)
         //初始化ItemType
-        val aItemType = AItemType()
+        val aItemType = AMultiItem()
 
         aItemType.inject(this)
 
-        val bItemType = BItemType()
-        val cItemType = CItemType()
+        val bItemType = BMultiItem()
+        val cItemType = CMultiItem()
         bItemType.inject(this)
         cItemType.inject(this)
         /*初始化Adapter*/

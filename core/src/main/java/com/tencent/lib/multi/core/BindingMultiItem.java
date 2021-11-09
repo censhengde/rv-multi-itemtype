@@ -14,9 +14,9 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Author：岑胜德 on 2021/8/30 10:58
  *
- * 说明：ViewBinding 专用 ItemType。
+ * 说明：支持 ViewBinding用法的  MultiItem。
  */
-public abstract class MultiVBItemType<T, VB extends ViewBinding> extends ItemType<T, MultiViewHolder> {
+public abstract class BindingMultiItem<T, VB extends ViewBinding> extends SimpleMultiItem<T> {
 
 
     private Method mBindMethod;
@@ -24,7 +24,6 @@ public abstract class MultiVBItemType<T, VB extends ViewBinding> extends ItemTyp
     @NotNull
     protected VB onCreateViewBinding(ViewGroup parent) {
         final View itemView = LayoutInflater.from(parent.getContext()).inflate(getItemLayoutRes(), parent, false);
-
         VB vb = null;
         try {
             if (mBindMethod == null) {
@@ -51,6 +50,7 @@ public abstract class MultiVBItemType<T, VB extends ViewBinding> extends ItemTyp
 
     /**
      * 这里调用 ViewHolder 的构造方法不一样，所以需要重写此方法手动创建 ViewHolder。
+     *
      * @param parent
      * @return
      */
@@ -62,6 +62,7 @@ public abstract class MultiVBItemType<T, VB extends ViewBinding> extends ItemTyp
 
     /**
      * 加 final修饰 让子类无法重写此方法。
+     *
      * @param holder
      * @param bean
      * @param position

@@ -53,7 +53,7 @@
             android:layout_height="60dp"
             android:layout_marginTop="40dp"
             android:onClick="onClickBtn"
-            android:text="Multi data type"
+            android:text="Multi data multi"
             android:textAllCaps="false" />
 
 

@@ -6,7 +6,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.AsyncListDiffer;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
-import com.tencent.lib.multi.core.ItemType;
+import com.tencent.lib.multi.core.MultiItem;
 import com.tencent.lib.multi.core.MultiHelper;
 import com.tencent.lib.multi.core.checking.Checkable;
 import com.tencent.lib.multi.core.checking.CheckingHelper;
@@ -162,8 +162,8 @@ public class MultiAdapter<T, VH extends RecyclerView.ViewHolder> extends Recycle
         }
     }
 
-    public MultiAdapter<T, VH> addItemType(ItemType type) {
-        mDelegate.addItemType(type);
+    public MultiAdapter<T, VH> addItemType(MultiItem type) {
+        mDelegate.addMultiItem(type);
         return this;
     }
 

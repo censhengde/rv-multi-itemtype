@@ -6,7 +6,7 @@ import android.util.Log;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import com.tencent.lib.multi.core.MultiHelper;
-import com.tencent.lib.multi.core.MultiItemType;
+import com.tencent.lib.multi.core.SimpleMultiItem;
 import com.tencent.lib.multi.core.MultiViewHolder;
 import com.tencent.multiadapter.R;
 import com.tencent.multiadapter.example.bean.ItemBean;
@@ -18,11 +18,11 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * 说明：
  */
-public class BItemType extends MultiItemType<ItemBean> {
+public class BMultiItem extends SimpleMultiItem<ItemBean> {
 
 
     @Override
-    public boolean matchItemType(Object bean, int position) {
+    public boolean isMatchForMe(Object bean, int position) {
         return ItemBean.TYPE_B== ((ItemBean)bean).viewType;
     }
 

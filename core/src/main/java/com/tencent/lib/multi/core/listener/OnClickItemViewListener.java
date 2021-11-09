@@ -13,10 +13,10 @@ public interface OnClickItemViewListener<T> {
 
     /**
      * @param v 点击的那个View
-     * @param type ItemType标识符，与ItemType getViewType对应。
-     * @param item 当前item实体对象
+     * @param viewType 。
+     * @param bean 当前item实体对象
      * @param position 当前position
      */
-    void onClickItemView(@NonNull View v,int type, @NonNull T item, int position);
+    void onClickItemView(@NonNull View v,int viewType, @NonNull T bean, int position);
 
 }

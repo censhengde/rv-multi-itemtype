@@ -7,7 +7,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.tencent.lib.multi.core.MultiHelper;
-import com.tencent.lib.multi.core.MultiItemType;
+import com.tencent.lib.multi.core.SimpleMultiItem;
 import com.tencent.lib.multi.core.MultiViewHolder;
 import com.tencent.multiadapter.R;
 import com.tencent.multiadapter.example.bean.ItemBean;
@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * 说明：
  */
-public class AItemType extends MultiItemType<ItemBean> {
+public class AMultiItem extends SimpleMultiItem<ItemBean> {
 
 
     /**
@@ -28,7 +28,7 @@ public class AItemType extends MultiItemType<ItemBean> {
      * @return true 表示成功匹配到对应的ItemType
      */
     @Override
-    public boolean matchItemType(@Nullable Object bean, int position) {
+    public boolean isMatchForMe(@Nullable Object bean, int position) {
 
         return bean == null  || ItemBean.TYPE_A == ((ItemBean)bean).viewType;//这句话的含义是：当前position 的ItemBean想要表现的item类型是哪一种，
         //以本例为例，会依次遍历A、B、C三个Item类型，直到返回true为止。（详见MultiHelper getItemViewType方法实现）

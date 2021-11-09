@@ -1,7 +1,7 @@
 package com.tencent.multiadapter.example.itemtype.multiDatatype
 
 import com.tencent.lib.multi.core.MultiHelper
-import com.tencent.lib.multi.core.MultiVBItemType
+import com.tencent.lib.multi.core.BindingMultiItem
 import com.tencent.lib.multi.core.MultiViewHolder
 import com.tencent.multiadapter.R
 import com.tencent.multiadapter.databinding.ItemCheckingCheckableBinding
@@ -14,13 +14,13 @@ import com.tencent.multiadapter.example.bean.CheckableBean
  * 说明：
 
  */
-class CheckableBeanType(observer:Any):MultiVBItemType<CheckableBean,ItemCheckingCheckableBinding>() {
+class CheckableBeanMulti(observer:Any): BindingMultiItem<CheckableBean, ItemCheckingCheckableBinding>() {
 
     init {
         inject(observer)
     }
 
-    override fun matchItemType(bean: Any?, position: Int): Boolean {
+    override fun isMatchForMe(bean: Any?, position: Int): Boolean {
         return bean is CheckableBean
     }
 

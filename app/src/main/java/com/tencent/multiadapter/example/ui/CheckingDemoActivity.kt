@@ -10,9 +10,9 @@ import com.tencent.lib.multi.core.MultiViewHolder
 import com.tencent.lib.multi.core.listener.OnCheckingFinishedCallback
 import com.tencent.multiadapter.R
 import com.tencent.multiadapter.example.bean.CheckableBean
-import com.tencent.multiadapter.example.itemtype.checking.CheckableItemType
-import com.tencent.multiadapter.example.itemtype.checking.FooterItemType
-import com.tencent.multiadapter.example.itemtype.checking.HeaderItemType
+import com.tencent.multiadapter.example.itemtype.checking.CheckableMultiItem
+import com.tencent.multiadapter.example.itemtype.checking.FooterMultiItem
+import com.tencent.multiadapter.example.itemtype.checking.HeaderMultiItem
 import kotlinx.android.synthetic.main.activity_check_item.*
 
 class CheckingDemoActivity : AppCompatActivity(), OnCheckingFinishedCallback<CheckableBean> {
@@ -21,14 +21,14 @@ class CheckingDemoActivity : AppCompatActivity(), OnCheckingFinishedCallback<Che
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_check_item)
-        val checkableItemType = CheckableItemType()
+        val checkableItemType = CheckableMultiItem()
         /*注册item点击监听*/
         checkableItemType.inject(this)
 
         /*添加ItemType*/
-        adapter.addItemType(HeaderItemType())
+        adapter.addItemType(HeaderMultiItem())
                 .addItemType(checkableItemType)
-                .addItemType(FooterItemType())
+                .addItemType(FooterMultiItem())
 
         //设置完成选择的回调
         adapter.checkingHelper.setOnCheckingFinishedCallback(this)

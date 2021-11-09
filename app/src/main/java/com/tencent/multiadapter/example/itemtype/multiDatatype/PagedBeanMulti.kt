@@ -1,7 +1,7 @@
 package com.tencent.multiadapter.example.itemtype.multiDatatype
 
 import com.tencent.lib.multi.core.MultiHelper
-import com.tencent.lib.multi.core.MultiVBItemType
+import com.tencent.lib.multi.core.BindingMultiItem
 import com.tencent.lib.multi.core.MultiViewHolder
 import com.tencent.multiadapter.R
 import com.tencent.multiadapter.databinding.ItemCBinding
@@ -14,12 +14,12 @@ import com.tencent.multiadapter.example.bean.PagedBean
  * 说明：
 
  */
-class PagedBeanType( observer: Any) : MultiVBItemType<PagedBean, ItemCBinding>() {
+class PagedBeanMulti(observer: Any) : BindingMultiItem<PagedBean, ItemCBinding>() {
 
     init {
         inject(observer)
     }
-    override fun matchItemType(bean: Any?, position: Int): Boolean {
+    override fun isMatchForMe(bean: Any?, position: Int): Boolean {
         return bean is PagedBean
     }
 

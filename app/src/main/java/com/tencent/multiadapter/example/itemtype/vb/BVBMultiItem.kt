@@ -1,6 +1,6 @@
 package com.tencent.multiadapter.example.itemtype.vb
 
-import com.tencent.lib.multi.core.MultiVBItemType
+import com.tencent.lib.multi.core.BindingMultiItem
 import com.tencent.multiadapter.R
 import com.tencent.multiadapter.databinding.ItemBBinding
 import com.tencent.multiadapter.example.bean.ItemBean
@@ -12,8 +12,8 @@ import com.tencent.multiadapter.example.bean.ItemBean
  * 说明：
 
  */
-class BVBItemType : MultiVBItemType<ItemBean, ItemBBinding>() {
-    override fun matchItemType(bean: Any?, position: Int): Boolean {
+class BVBMultiItem : BindingMultiItem<ItemBean, ItemBBinding>() {
+    override fun isMatchForMe(bean: Any?, position: Int): Boolean {
         return (bean as ItemBean).viewType == ItemBean.TYPE_B
     }
 

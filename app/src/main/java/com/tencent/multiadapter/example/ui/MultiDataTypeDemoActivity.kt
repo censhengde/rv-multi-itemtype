@@ -9,9 +9,9 @@ import com.tencent.multiadapter.R
 import com.tencent.multiadapter.example.bean.CheckableBean
 import com.tencent.multiadapter.example.bean.ItemBean
 import com.tencent.multiadapter.example.bean.PagedBean
-import com.tencent.multiadapter.example.itemtype.multiDatatype.CheckableBeanType
-import com.tencent.multiadapter.example.itemtype.multiDatatype.PagedBeanType
-import com.tencent.multiadapter.example.itemtype.multiDatatype.ItemBeanType
+import com.tencent.multiadapter.example.itemtype.multiDatatype.CheckableBeanMulti
+import com.tencent.multiadapter.example.itemtype.multiDatatype.PagedBeanMulti
+import com.tencent.multiadapter.example.itemtype.multiDatatype.MultiItemBean
 import kotlinx.android.synthetic.main.activity_multi_data_type_demo.*
 import java.util.ArrayList
 
@@ -25,9 +25,9 @@ class MultiDataTypeDemoActivity : AppCompatActivity() {
         /*必须传Any类型才能兼容不同bean类型*/
         val adapter=MultiAdapter2<Any>()
         /*添加 ItemType。*/
-        adapter.addItemType(CheckableBeanType(this))
-        adapter.addItemType(PagedBeanType(this))
-        adapter.addItemType(ItemBeanType(this))
+        adapter.addItemType(CheckableBeanMulti(this))
+        adapter.addItemType(PagedBeanMulti(this))
+        adapter.addItemType(MultiItemBean(this))
 
         adapter.setData(getData())
         rv_list.adapter=adapter

@@ -11,6 +11,6 @@ import androidx.annotation.Nullable;
  */
 public interface OnLongClickItemViewListener<T> {
 
-    boolean onLongClickItemView(@NonNull View v,int type,@NonNull T item, int position);
+    boolean onLongClickItemView(@NonNull View v,int viewType,@NonNull T bean, int position);
 
 }

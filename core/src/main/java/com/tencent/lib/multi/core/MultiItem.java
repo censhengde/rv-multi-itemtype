@@ -12,8 +12,9 @@ import androidx.annotation.IdRes;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import com.tencent.lib.multi.core.listener.OnClickItemViewListener;
 import com.tencent.lib.multi.core.listener.OnLongClickItemViewListener;
 import java.lang.reflect.Constructor;
@@ -27,20 +28,44 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Author：岑胜德 on 2021/2/22 16:23
  *
- * 说明：的 ItemType 实现
+ * 说明：某一种类型 item 的抽象。
  */
-public abstract class ItemType<T, VH extends RecyclerView.ViewHolder> {
+public abstract class MultiItem<T, VH extends RecyclerView.ViewHolder> {
 
-    private static final String TAG = "ItemType";
-    private static Map<String, Method> sMethodMap;/*缓存反射获取的method对象，减少反射成本*/
+    private static final String TAG = "MultiItem";
+
+    private Map<String, Method> mMethodMap;/*缓存反射获取的method对象，减少反射成本*/
     private OnClickItemViewListener<T> mOnClickItemViewListener;
     private OnLongClickItemViewListener<T> mOnLongClickItemViewListener;
-
     private Object mObserver;/*item view 点击事件的接收者*/
     private String mObserverName;
     private Class<?> mEntityClass;/*泛型参数T的Class*/
     private Constructor<VH> mVHConstructor;
+    // 我们希望本类型item相关的点击事件也集中到这里处理，故需要外部提供Activity和Fragment环境。
+    private FragmentActivity mActivity;
+    private Fragment mFragment;
 
+    public MultiItem() {
+    }
+
+    public MultiItem(FragmentActivity activity) {
+        mActivity = activity;
+    }
+
+    public MultiItem(Fragment fragment) {
+        this(fragment.requireActivity());
+        mFragment = fragment;
+    }
+
+    @Nullable
+    public final FragmentActivity getActivity() {
+        return mActivity;
+    }
+
+    @Nullable
+    public final Fragment getFragment() {
+        return mFragment;
+    }
 
     /**
      * @return 返回当前ItemType的布局文件id
@@ -57,14 +82,14 @@ public abstract class ItemType<T, VH extends RecyclerView.ViewHolder> {
     }
 
     /**
-     * 当前 ItemType 是否匹配当前 position。这个方法是实现多样式 item 的关键！
+     * 当前 position 是否匹配当前 MultiItem。这个方法是实现多样式 item 的关键！
      * 如若此方法实现错误，那将导致某position上匹配不到ItemType，进而引发程序崩溃！
      *
      * @param bean 当前 position 对应的 实体对象
      * @param position 当前 position
      * @return true 表示匹配；否则不匹配。
      */
-    public boolean matchItemType(Object bean, int position) {
+    public boolean isMatchForMe(Object bean, int position) {
         return true;
     }
 
@@ -90,8 +115,8 @@ public abstract class ItemType<T, VH extends RecyclerView.ViewHolder> {
         final VH vh;
         try {
             if (mVHConstructor == null) {
-                final Type type = this.getClass().getGenericSuperclass();
-                final ParameterizedType p = (ParameterizedType) type;
+                final Type multi = this.getClass().getGenericSuperclass();
+                final ParameterizedType p = (ParameterizedType) multi;
                 /*AbstractItemType 的孙类以下如果不透传 VH 泛型参数到其父类则获取其Class对象失败，
                  *此时解决方案是全盘重写 onCreateViewHolder(@NonNull ViewGroup parent)方法，手动创建 ViewHolder
                  */
@@ -126,7 +151,7 @@ public abstract class ItemType<T, VH extends RecyclerView.ViewHolder> {
      */
     public void onBindViewHolder(@NonNull VH holder, @NonNull T bean, int position,
             @NonNull List<Object> payloads) {
-
+        onBindViewHolder(holder, bean, position);
     }
 
     /**
@@ -160,14 +185,12 @@ public abstract class ItemType<T, VH extends RecyclerView.ViewHolder> {
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
     }
 
-
     public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
     }
 
     public void setOnLongClickItemViewListener(OnLongClickItemViewListener<T> listener) {
         mOnLongClickItemViewListener = listener;
     }
-
 
     public void setOnClickItemViewListener(OnClickItemViewListener<T> itemListener) {
         mOnClickItemViewListener = itemListener;
@@ -187,6 +210,19 @@ public abstract class ItemType<T, VH extends RecyclerView.ViewHolder> {
         return mObserver;
     }
 
+    /**
+     * registerItemViewClickListener重载。倘若不采用反射方式，则调用这个方法注册。
+     *
+     * @param holder
+     * @param helper
+     * @param viewIds
+     */
+    protected final void registerItemViewClickListener(@NonNull VH holder,
+            @NonNull MultiHelper<T, VH> helper,
+            @IdRes int... viewIds) {
+        registerItemViewClickListener(holder, helper, null, viewIds);
+
+    }
 
     /**
      * Item view 点击事件注册。（包含item 子view）
@@ -213,19 +249,6 @@ public abstract class ItemType<T, VH extends RecyclerView.ViewHolder> {
 
     }
 
-    /**
-     * registerItemViewClickListener重载。倘若不采用反射方式，则调用这个方法注册。
-     *
-     * @param holder
-     * @param helper
-     * @param viewIds
-     */
-    protected final void registerItemViewClickListener(@NonNull VH holder,
-            @NonNull MultiHelper<T, VH> helper,
-            @IdRes int... viewIds) {
-        registerItemViewClickListener(holder, helper, null, viewIds);
-
-    }
 
     private void registerInternal(VH holder, MultiHelper<T, VH> helper, View view, @Nullable String target) {
         view.setClickable(true);
@@ -250,7 +273,6 @@ public abstract class ItemType<T, VH extends RecyclerView.ViewHolder> {
             if (TextUtils.isEmpty(target)) {
                 return;
             }
-
             callTagMethod(v, target, data, position, "item 点击异常");
         });
 
@@ -372,28 +394,33 @@ public abstract class ItemType<T, VH extends RecyclerView.ViewHolder> {
             Log.e(TAG, "===> mObserver = null， 请先调用ItemType inject 方法注入 Observer！");
             return null;
         }
-        if (sMethodMap == null) {
-            sMethodMap = new ArrayMap<>();
-        }
+
         final Class<?> clazz = mObserver.getClass();
         if (mObserverName == null) {
             mObserverName = clazz.getName();
         }
         final String key = mObserverName + "@" + methodName;
-        Method method = sMethodMap.get(key);
+        Method method = getMethodMap().get(key);
         if (method == null) {
             try {
                 if (mEntityClass == null) {
                     mEntityClass = getEntityClass();
                 }
                 method = clazz.getDeclaredMethod(methodName, View.class, mEntityClass, int.class);
-                sMethodMap.put(key, method);
+                getMethodMap().put(key, method);
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
             }
         }
         return method;
+    }
+
+    private Map<String, Method> getMethodMap() {
+        if (mMethodMap == null) {
+            mMethodMap = new ArrayMap<>();
+        }
+        return mMethodMap;
     }
 
     /**

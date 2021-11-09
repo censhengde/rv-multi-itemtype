@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.tencent.lib.multi.core.ItemType
+import com.tencent.lib.multi.core.MultiItem
 import com.tencent.lib.multi.core.MultiHelper
 import com.tencent.lib.multi.core.checking.CheckingHelper
 
@@ -72,8 +72,8 @@ open class MultiPagingDataAdapter<T : Any, VH : RecyclerView.ViewHolder>(diffCal
         return mDelegate.onFailedToRecycleView(holder)
     }
 
-    fun addItemType(type: ItemType<*, *>): MultiPagingDataAdapter<T, VH> {
-        mDelegate.addItemType(type)
+    fun addItemType(multi: MultiItem<*, *>): MultiPagingDataAdapter<T, VH> {
+        mDelegate.addMultiItem(multi)
         return this
     }
 

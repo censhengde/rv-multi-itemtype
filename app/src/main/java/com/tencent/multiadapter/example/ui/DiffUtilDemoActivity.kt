@@ -7,9 +7,9 @@ import androidx.recyclerview.widget.DiffUtil
 import com.tencent.lib.multi.MultiAdapter2
 import com.tencent.multiadapter.R
 import com.tencent.multiadapter.example.bean.ItemBean
-import com.tencent.multiadapter.example.itemtype.AItemType
-import com.tencent.multiadapter.example.itemtype.BItemType
-import com.tencent.multiadapter.example.itemtype.CItemType
+import com.tencent.multiadapter.example.itemtype.AMultiItem
+import com.tencent.multiadapter.example.itemtype.BMultiItem
+import com.tencent.multiadapter.example.itemtype.CMultiItem
 import kotlinx.android.synthetic.main.activity_diff_util_demo.*
 import java.util.ArrayList
 
@@ -47,9 +47,9 @@ class DiffUtilDemoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_diff_util_demo)
         val adapter = MultiAdapter2<ItemBean>(callback)
-        adapter.addItemType(AItemType())
-                .addItemType(BItemType())
-                .addItemType(CItemType())
+        adapter.addItemType(AMultiItem())
+                .addItemType(BMultiItem())
+                .addItemType(CMultiItem())
         rv_list.adapter = adapter
         adapter.setData(getData(5, "初始内容"))
 

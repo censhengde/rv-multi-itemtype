@@ -3,7 +3,7 @@ package com.tencent.multiadapter.example.itemtype.checking
 import android.widget.CheckBox
 import android.widget.TextView
 import com.tencent.lib.multi.core.MultiHelper
-import com.tencent.lib.multi.core.MultiItemType
+import com.tencent.lib.multi.core.SimpleMultiItem
 import com.tencent.lib.multi.core.MultiViewHolder
 import com.tencent.multiadapter.R
 import com.tencent.multiadapter.example.bean.CheckableBean
@@ -15,12 +15,12 @@ import com.tencent.multiadapter.example.bean.CheckableBean
  * 说明：
 
  */
-class CheckableItemType : MultiItemType<CheckableBean>() {
+class CheckableMultiItem : SimpleMultiItem<CheckableBean>() {
 
 
     override fun getItemLayoutRes(): Int = R.layout.item_checking_checkable
 
-    override fun matchItemType(bean: Any?, position: Int): Boolean {
+    override fun isMatchForMe(bean: Any?, position: Int): Boolean {
         return (bean as CheckableBean).viewType== CheckableBean.VIEW_TYPE_CHECKABLE
     }
 

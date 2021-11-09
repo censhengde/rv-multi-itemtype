@@ -1,8 +1,6 @@
 package com.tencent.multiadapter.example.itemtype.vb
 
-import android.os.Parcel
-import android.os.Parcelable
-import com.tencent.lib.multi.core.MultiVBItemType
+import com.tencent.lib.multi.core.BindingMultiItem
 import com.tencent.multiadapter.R
 import com.tencent.multiadapter.databinding.ItemABinding
 import com.tencent.multiadapter.example.bean.ItemBean
@@ -14,9 +12,9 @@ import com.tencent.multiadapter.example.bean.ItemBean
  * 说明：
 
  */
-class AVBItemType : MultiVBItemType<ItemBean, ItemABinding>(){
+class AVBMultiItem : BindingMultiItem<ItemBean, ItemABinding>(){
 
-    override fun matchItemType(bean: Any?, position: Int): Boolean {
+    override fun isMatchForMe(bean: Any?, position: Int): Boolean {
         return (bean as ItemBean).viewType==ItemBean.TYPE_A
     }
 
