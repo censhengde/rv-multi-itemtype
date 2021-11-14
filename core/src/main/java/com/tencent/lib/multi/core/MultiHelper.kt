@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
-import java.lang.ref.WeakReference
 
 /**
  * Author：岑胜德 on 2021/1/27 16:33
@@ -19,8 +18,6 @@ abstract class MultiHelper<T, VH : RecyclerView.ViewHolder?>(private val activit
      * MultiItem 集合.
      */
     private val mItemTypePool = SparseArray<MultiItem<Any, RecyclerView.ViewHolder>>()
-    private var mActivityRef: WeakReference<FragmentActivity>? = null
-    private var mFragmentRef: WeakReference<Fragment>? = null
 
 
     fun getItemId(position: Int): Long {
@@ -131,8 +128,7 @@ abstract class MultiHelper<T, VH : RecyclerView.ViewHolder?>(private val activit
             return
         }
         // 关联 Activity、Fragment。
-        item.onAttach(if (mActivityRef != null) mActivityRef!!.get() else null,
-                if (mFragmentRef != null) mFragmentRef!!.get() else null)
+        item.onAttach(activity, fragment)
         mItemTypePool.put(item.itemType, item as MultiItem<Any, RecyclerView.ViewHolder>)
     }
 }

@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.tencent.lib.multi.core.MultiHelper
 import com.tencent.lib.multi.core.MultiItem
-import com.tencent.lib.multi.core.checking.Checkable
 import com.tencent.lib.multi.core.checking.CheckingHelper
 import kotlin.collections.emptyList as emptyList1
 
@@ -21,14 +20,14 @@ import kotlin.collections.emptyList as emptyList1
 open class MultiAdapter<T, VH : RecyclerView.ViewHolder>(
         activity: FragmentActivity? = null,
         fragment: Fragment? = null,
-        private val callback: DiffUtil.ItemCallback<T>? = null)
+        private val diffCallback: DiffUtil.ItemCallback<T>? = null)
     : RecyclerView.Adapter<VH>() {
 
     private val mAsyncListDiffer: AsyncListDiffer<T>?
         get() {
-            return AsyncListDiffer(this, callback ?: return null)
+            return AsyncListDiffer(this, diffCallback ?: return null)
         }
-    val multiHelper: MultiHelper<T, VH> = object : MultiHelper<T, VH>(activity, fragment) {
+    private val multiHelper: MultiHelper<T, VH> = object : MultiHelper<T, VH>(activity, fragment) {
         override fun getItem(position: Int): T? {
             return this@MultiAdapter.getItem(position)
         }

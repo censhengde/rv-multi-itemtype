@@ -3,17 +3,20 @@ package com.tencent.lib.multi.core;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.viewbinding.ViewBinding;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
+
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Author：岑胜德 on 2021/8/30 10:58
- *
+ * <p>
  * 说明：支持 ViewBinding用法的  MultiItem。
  */
 public abstract class BindingMultiItem<T, VB extends ViewBinding> extends SimpleMultiItem<T> {
@@ -22,8 +25,7 @@ public abstract class BindingMultiItem<T, VB extends ViewBinding> extends Simple
     private Method mBindMethod;
 
     @NotNull
-    protected VB onCreateViewBinding(ViewGroup parent) {
-        final View itemView = LayoutInflater.from(parent.getContext()).inflate(getItemLayoutRes(), parent, false);
+    protected VB onCreateViewBinding(ViewGroup parent, @NotNull View itemView) {
         VB vb = null;
         try {
             if (mBindMethod == null) {
@@ -56,8 +58,11 @@ public abstract class BindingMultiItem<T, VB extends ViewBinding> extends Simple
      */
     @NotNull
     @Override
-    public MultiViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent) {
-        return new MultiViewHolder(onCreateViewBinding(parent));
+    public MultiViewHolder onCreateViewHolder(@NotNull ViewGroup parent) {
+        final View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(getItemLayoutRes(), parent, false);
+
+        return new MultiViewHolder(onCreateViewBinding(parent, itemView));
     }
 
     /**
@@ -70,7 +75,7 @@ public abstract class BindingMultiItem<T, VB extends ViewBinding> extends Simple
      */
     @Override
     public final void onBindViewHolder(@NotNull MultiViewHolder holder, @NonNull @NotNull T bean, int position,
-            @NonNull @NotNull List<Object> payloads) {
+                                       @NonNull @NotNull List<Object> payloads) {
         /*这里直接 将ViewHolder 转换成 ViewBinding，让子类获取控件代码更简洁！*/
         onBindViewHolder((VB) holder.vb, bean, position, payloads);
 
@@ -78,7 +83,7 @@ public abstract class BindingMultiItem<T, VB extends ViewBinding> extends Simple
 
     @Override
     public final void onBindViewHolder(@NonNull @NotNull MultiViewHolder holder, @NonNull @NotNull T bean,
-            int position) {
+                                       int position) {
         /*这里直接 将ViewHolder 转换成 ViewBinding，让子类获取控件代码更简洁！*/
         onBindViewHolder((VB) holder.vb, bean, position);
 

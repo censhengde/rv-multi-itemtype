@@ -50,36 +50,27 @@ public abstract class MultiItem<T, VH extends RecyclerView.ViewHolder> {
     private Class<?> mEntityClass;/*泛型参数T的Class*/
     private Constructor<VH> mVHConstructor;
     // 我们希望本类型item相关的点击事件也集中到这里处理，故需要外部提供Activity和Fragment环境。
-    private WeakReference<FragmentActivity> mActivityRef;
-    private WeakReference<Fragment> mFragmentRef;
+    private FragmentActivity mActivity;
+    private Fragment mFragment;
 
 
     public void onAttach(@Nullable FragmentActivity activity, @Nullable Fragment fragment) {
 
-        mActivityRef = activity != null ? new WeakReference<>(activity) : null;
-        mFragmentRef = fragment != null ? new WeakReference<>(fragment) : null;
-
-        if (mActivityRef == null && mFragmentRef != null && mFragmentRef.get() != null) {
-            mActivityRef = new WeakReference<>(mFragmentRef.get().requireActivity());
+        mActivity = activity ;
+        mFragment = fragment;
+        if (mActivity == null && mFragment != null ) {
+            mActivity = mFragment.requireActivity();
         }
     }
 
     @Nullable
     public final FragmentActivity getActivity() {
-        FragmentActivity activity = null;
-        if (mActivityRef != null) {
-            activity = mActivityRef.get();
-        }
-        return activity;
+        return mActivity;
     }
 
     @Nullable
     public final Fragment getFragment() {
-        Fragment fragment = null;
-        if (mFragmentRef != null) {
-            fragment = mFragmentRef.get();
-        }
-        return fragment;
+        return mFragment;
     }
 
     @NotNull
