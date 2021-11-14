@@ -16,4 +16,6 @@ public class MultiAdapter2<T> extends MultiAdapter<T, MultiViewHolder> {
 
     public MultiAdapter2() {
     }
+
+
 }
