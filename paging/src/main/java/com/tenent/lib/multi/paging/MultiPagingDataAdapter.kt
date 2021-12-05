@@ -18,7 +18,7 @@ import com.tencent.lib.multi.core.checking.CheckingHelper
 open class MultiPagingDataAdapter<T : Any, VH : RecyclerView.ViewHolder>(diffCallback: DiffUtil.ItemCallback<T>)
     : PagingDataAdapter<T, VH>(diffCallback) {
 
-    private val mDelegate = object : MultiHelper<T, VH>() {
+    private val mDelegate = object : MultiHelper() {
 
         override fun getItem(p0: Int): T? {
             return this@MultiPagingDataAdapter.getItem(p0)
@@ -37,7 +37,7 @@ open class MultiPagingDataAdapter<T : Any, VH : RecyclerView.ViewHolder>(diffCal
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-        return mDelegate.onCreateViewHolder(parent, viewType)
+        return mDelegate.onCreateViewHolder(parent, viewType) as VH
     }
 
     override fun onBindViewHolder(holder: VH, position: Int, payloads: List<Any?>) {

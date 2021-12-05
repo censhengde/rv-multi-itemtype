@@ -13,7 +13,9 @@ import androidx.recyclerview.widget.RecyclerView
  * 说明：实现Item多样式的公共逻辑封装。本质上是Adapter 生命周期的代理类，
  * 将 Adapter 生命周期分发给了position对应的ItemType。
  */
-abstract class MultiHelper<T, VH : RecyclerView.ViewHolder?>(private val activity: FragmentActivity? = null, private val fragment: Fragment? = null) {
+abstract class MultiHelper(val adapter: RecyclerView.Adapter<*>,
+                           val activity: FragmentActivity? = null,
+                           val fragment: Fragment? = null) {
     /**
      * MultiItem 集合.
      */
@@ -41,7 +43,7 @@ abstract class MultiHelper<T, VH : RecyclerView.ViewHolder?>(private val activit
      * @param position
      * @return
      */
-    private fun findCurrentItem(data: T?, position: Int): MultiItem<*, *>? {
+    private fun findCurrentItem(data: Any?, position: Int): MultiItem<*, *>? {
         //为当前position 匹配它的ItemType
         for (i in 0 until mItemTypePool.size()) {
             val item = mItemTypePool.valueAt(i)
@@ -52,18 +54,18 @@ abstract class MultiHelper<T, VH : RecyclerView.ViewHolder?>(private val activit
         return null
     }
 
-    fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
+    fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val item = mItemTypePool[viewType]
         if (viewType == RecyclerView.INVALID_TYPE || item == null) { //表示无效
             /*一般由于ItemType matchItemTYpe方法实现错误引起的异常*/
             throw RuntimeException("")
         }
         val holder = item.onCreateViewHolder(parent)
-        item.onViewHolderCreated(holder, this as MultiHelper<Any, RecyclerView.ViewHolder>)
-        return holder as VH
+        item.onViewHolderCreated(holder)
+        return holder
     }
 
-    fun onBindViewHolder(holder: VH,
+    fun onBindViewHolder(holder: RecyclerView.ViewHolder,
                          position: Int,
                          payloads: List<Any?>) {
         if (position == RecyclerView.NO_POSITION) {
@@ -78,22 +80,22 @@ abstract class MultiHelper<T, VH : RecyclerView.ViewHolder?>(private val activit
         currentItem.onBindViewHolder(holder, bean, position, payloads)
     }
 
-    fun onViewRecycled(holder: VH) {
+    fun onViewRecycled(holder: RecyclerView.ViewHolder) {
         val item = mItemTypePool[holder!!.itemViewType]
         item?.onViewRecycled(holder)
     }
 
-    fun onFailedToRecycleView(holder: VH): Boolean {
+    fun onFailedToRecycleView(holder: RecyclerView.ViewHolder): Boolean {
         val item = mItemTypePool[holder!!.itemViewType]
         return item != null && item.onFailedToRecycleView(holder)
     }
 
-    fun onViewAttachedToWindow(holder: VH) {
+    fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
         val item = mItemTypePool[holder!!.itemViewType]
         item?.onViewAttachedToWindow(holder)
     }
 
-    fun onViewDetachedFromWindow(holder: VH) {
+    fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
         val item = mItemTypePool[holder!!.itemViewType]
         item?.onViewDetachedFromWindow(holder)
     }
@@ -116,19 +118,16 @@ abstract class MultiHelper<T, VH : RecyclerView.ViewHolder?>(private val activit
         }
     }
 
-    abstract fun getItem(position: Int): T?
+    abstract fun getItem(position: Int): Any?
 
     /**
      * 添加 MultiItem
      *
      * @param item
      */
-    fun addMultiItem(item: MultiItem<*, *>?) {
-        if (item == null) {
-            return
-        }
-        // 关联 Activity、Fragment。
-        item.onAttach(activity, fragment)
+    fun addMultiItem(item: MultiItem<*, *>) {
+        // 关联
+        item.onAttach(this)
         mItemTypePool.put(item.itemType, item as MultiItem<Any, RecyclerView.ViewHolder>)
     }
 }

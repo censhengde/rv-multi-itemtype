@@ -13,17 +13,11 @@ import androidx.annotation.IdRes;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleObserver;
-import androidx.lifecycle.OnLifecycleEvent;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.lib.multi.core.listener.OnClickItemViewListener;
 import com.tencent.lib.multi.core.listener.OnLongClickItemViewListener;
 
-import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -50,47 +44,21 @@ public abstract class MultiItem<T, VH extends RecyclerView.ViewHolder> {
     private Class<?> mEntityClass;/*泛型参数T的Class*/
     private Constructor<VH> mVHConstructor;
     // 我们希望本类型item相关的点击事件也集中到这里处理，故需要外部提供Activity和Fragment环境。
-    private FragmentActivity mActivity;
-    private Fragment mFragment;
+
+    private MultiHelper mHelper;
 
 
-    public void onAttach(@Nullable FragmentActivity activity, @Nullable Fragment fragment) {
-
-        mActivity = activity ;
-        mFragment = fragment;
-        if (mActivity == null && mFragment != null ) {
-            mActivity = mFragment.requireActivity();
-        }
-    }
-
-    @Nullable
-    public final FragmentActivity getActivity() {
-        return mActivity;
-    }
-
-    @Nullable
-    public final Fragment getFragment() {
-        return mFragment;
+    public void onAttach(MultiHelper helper) {
+        mHelper = helper;
     }
 
     @NotNull
-    public final FragmentActivity requireActivity() {
-        final FragmentActivity activity = getActivity();
-        if (activity == null) {
-            throw new IllegalStateException("MultiItem " + this + " not attached to an activity.");
+    public final MultiHelper getHelper() {
+        if (mHelper == null) {
+            throw new IllegalStateException("MultiItem " + this + " not attached to an MultiHelper.");
         }
-        return activity;
+        return mHelper;
     }
-
-    @NotNull
-    public final Fragment requireFragment() {
-        final Fragment fragment = getFragment();
-        if (fragment == null) {
-            throw new IllegalStateException("MultiItem " + this + " not attached to an fragment.");
-        }
-        return fragment;
-    }
-
 
     /**
      * @return 返回当前ItemType的布局文件id
@@ -102,7 +70,7 @@ public abstract class MultiItem<T, VH extends RecyclerView.ViewHolder> {
         return NO_ID;
     }
 
-    final int getItemType() {
+    public int getItemType() {
         return this.getClass().hashCode();
     }
 
@@ -160,10 +128,8 @@ public abstract class MultiItem<T, VH extends RecyclerView.ViewHolder> {
      * 表示 ViewHolder 创建完成。这里适合进行item view事件监听注册。
      *
      * @param holder
-     * @param helper
      */
-    public void onViewHolderCreated(@NonNull VH holder, @NonNull MultiHelper<T, VH> helper) {
-
+    public void onViewHolderCreated(@NonNull VH holder) {
     }
 
     /**
@@ -239,13 +205,12 @@ public abstract class MultiItem<T, VH extends RecyclerView.ViewHolder> {
      * registerItemViewClickListener重载。倘若不采用反射方式，则调用这个方法注册。
      *
      * @param holder
-     * @param helper
      * @param viewIds
      */
     protected final void registerItemViewClickListener(@NonNull VH holder,
-                                                       @NonNull MultiHelper<T, VH> helper,
+
                                                        @IdRes int... viewIds) {
-        registerItemViewClickListener(holder, helper, null, viewIds);
+        registerItemViewClickListener(holder,  null, viewIds);
 
     }
 
@@ -253,29 +218,27 @@ public abstract class MultiItem<T, VH extends RecyclerView.ViewHolder> {
      * Item view 点击事件注册。（包含item 子view）
      *
      * @param holder
-     * @param helper
-     * @param target  目标方法名
+     * @param method  目标方法名
      * @param viewIds view的id 集合；因为可能存在多个view响应同一套点击逻辑的情况。
      */
     protected final void registerItemViewClickListener(@NonNull VH holder,
-                                                       @NonNull MultiHelper<T, VH> helper,
-                                                       @Nullable String target,
+                                                       @Nullable String method,
                                                        @IdRes int... viewIds) {
         /*如果不传viewId，则默认是注册item根布局的点击事件监听*/
         if (viewIds.length == 0) {
-            registerInternal(holder, helper, holder.itemView, target);
+            registerItemViewClickListener(holder,  holder.itemView, method);
             return;
         }
 
         for (int id : viewIds) {
             final View view = holder.itemView.findViewById(id);
-            registerInternal(holder, helper, view, target);
+            registerItemViewClickListener(holder, view, method);
         }
 
     }
 
 
-    private void registerInternal(VH holder, MultiHelper<T, VH> helper, View view, @Nullable String target) {
+    protected final void registerItemViewClickListener(VH holder, View view, @Nullable String method) {
         view.setClickable(true);
         view.setOnClickListener(v -> {
             final int position = holder.getAdapterPosition();
@@ -284,21 +247,21 @@ public abstract class MultiItem<T, VH extends RecyclerView.ViewHolder> {
                 return;
             }
 
-            final T data = helper.getItem(position);
+            final Object data =  getHelper().getItem(position);
             if (data == null) {
                 Log.e(TAG, "item 点击异常:data=" + data);
                 return;
             }
             //优先监听器
             if (mOnClickItemViewListener != null) {
-                mOnClickItemViewListener.onClickItemView(v, this.getItemType(), data, position);
+                mOnClickItemViewListener.onClickItemView(v, this.getItemType(), (T) data, position);
                 return;
             }
             /*不传入目标方法名，则表示不采用反射方式回调点击事件*/
-            if (TextUtils.isEmpty(target)) {
+            if (TextUtils.isEmpty(method)) {
                 return;
             }
-            callTagMethod(v, target, data, position, "item 点击异常");
+            callTagMethod(v, method, (T) data, position, "item 点击异常");
         });
 
     }
@@ -307,34 +270,27 @@ public abstract class MultiItem<T, VH extends RecyclerView.ViewHolder> {
      * Item view 长点击事件注册。（包含item 子view）
      *
      * @param holder
-     * @param helper
-     * @param target  目标方法名
+     * @param method  目标方法名
      * @param viewIds view的id 集合；因为可能存在多个view响应同一套点击逻辑的情况。
      */
     protected final void registerItemViewLongClickListener(@NonNull VH holder,
-                                                           @NonNull MultiHelper<T, VH> helper,
-                                                           @Nullable String target,
+                                                           @Nullable String method,
                                                            @IdRes int... viewIds) {
         /*如果不传viewId，则默认是注册item根布局的点击事件监听*/
         if (viewIds.length == 0) {
-            registerLongInternal(holder, helper, holder.itemView, target);
+            registerItemViewLongClickListener(holder, holder.itemView, method);
             return;
         }
         for (int id : viewIds) {
             final View view = holder.itemView.findViewById(id);
-            registerLongInternal(holder, helper, view, target);
+            registerItemViewLongClickListener(holder, view, method);
         }
 
     }
 
-    protected final void registerItemViewLongClickListener(@NonNull VH holder,
-                                                           @NonNull MultiHelper<T, VH> helper,
-                                                           @IdRes int... viewIds) {
-        registerItemViewLongClickListener(holder, helper, null, viewIds);
 
-    }
 
-    private void registerLongInternal(VH holder, MultiHelper<T, VH> helper, View view, String target) {
+    protected final void registerItemViewLongClickListener(VH holder, View view, String method) {
         view.setLongClickable(true);
         view.setOnLongClickListener(v -> {
             boolean consume = false;
@@ -343,7 +299,7 @@ public abstract class MultiItem<T, VH extends RecyclerView.ViewHolder> {
                 Log.e(TAG, "item 长点击异常: position=" + position);
                 return consume;
             }
-            final T data = helper.getItem(position);
+            final T data = (T) getHelper().getItem(position);
             if (data == null) {
                 Log.e(TAG, "item 长点击异常:data=" + data);
                 return consume;
@@ -353,10 +309,10 @@ public abstract class MultiItem<T, VH extends RecyclerView.ViewHolder> {
                 return mOnLongClickItemViewListener.onLongClickItemView(v, this.getItemType(), data, position);
             }
             /*不传入目标方法名，则表示不采用反射方式回调点击事件*/
-            if (TextUtils.isEmpty(target)) {
+            if (TextUtils.isEmpty(method)) {
                 return consume;
             }
-            consume = callTagLongClickMethod(v, target, data, position, "item 长点击异常");
+            consume = callTagLongClickMethod(v, method, data, position, "item 长点击异常");
             return consume;
 
         });

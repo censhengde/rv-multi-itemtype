@@ -1,7 +1,7 @@
 package com.tencent.multiadapter.example.viewmodel;
 
 import androidx.lifecycle.ViewModel;
-import com.tencent.multiadapter.example.bean.ItemBean;
+import com.tencent.multiadapter.example.bean.AItemBean;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,10 +12,10 @@ import java.util.List;
  */
 public class SelectionViewModel extends ViewModel {
 
-  public  final List<ItemBean> items=new ArrayList<>();
+  public  final List<AItemBean> items=new ArrayList<>();
   public SelectionViewModel(){
       for (int i=0;i<20;i++){
-          items.add(new ItemBean(0, "Item:"+i));
+          items.add(new AItemBean(0, "Item:"+i));
       }
 
   }

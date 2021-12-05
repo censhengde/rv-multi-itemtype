@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 
 import java.lang.reflect.Method;
@@ -13,6 +14,8 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
+
+import kotlin.jvm.Throws;
 
 /**
  * Author：岑胜德 on 2021/8/30 10:58
@@ -25,7 +28,7 @@ public abstract class BindingMultiItem<T, VB extends ViewBinding> extends Simple
     private Method mBindMethod;
 
     @NotNull
-    protected VB onCreateViewBinding(ViewGroup parent, @NotNull View itemView) {
+    protected VB onCreateViewBinding(ViewGroup parent, @NotNull LayoutInflater inflater) {
         VB vb = null;
         try {
             if (mBindMethod == null) {
@@ -37,9 +40,9 @@ public abstract class BindingMultiItem<T, VB extends ViewBinding> extends Simple
                 final Class<VB> c = (Class<VB>) p.getActualTypeArguments()[1];
                 //Gradle 开启 viewBinding 后会自动生成 ViewBinding 的实现类，其中就有 bind(View root) 静态方法，
                 // 该方法用于创建 ViewBinding 实现类的实例。
-                mBindMethod = c.getMethod("bind", View.class);
+                mBindMethod = c.getMethod("inflate", LayoutInflater.class, ViewGroup.class, boolean.class);
             }
-            vb = (VB) mBindMethod.invoke(null, itemView);
+            vb = (VB) mBindMethod.invoke(null, inflater, parent, false);
         } catch (Exception e) {
             e.printStackTrace();
             throw new IllegalStateException("反射创建 ViewHolder 失败:" + e.getMessage());
@@ -48,6 +51,12 @@ public abstract class BindingMultiItem<T, VB extends ViewBinding> extends Simple
             throw new IllegalStateException("反射创建 ViewHolder 失败：vb==" + vb);
         }
         return vb;
+    }
+
+    @Deprecated
+    @Override
+    protected final int getItemLayoutRes() {
+        throw new RuntimeException("getItemLayoutRes 不可用");
     }
 
     /**
@@ -59,10 +68,21 @@ public abstract class BindingMultiItem<T, VB extends ViewBinding> extends Simple
     @NotNull
     @Override
     public MultiViewHolder onCreateViewHolder(@NotNull ViewGroup parent) {
-        final View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(getItemLayoutRes(), parent, false);
+        final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        final VB vb = onCreateViewBinding(parent, inflater);
+        final MultiViewHolder holder = new MultiViewHolder(vb);
+        onViewHolderCreated(holder, vb);
+        return holder;
+    }
 
-        return new MultiViewHolder(onCreateViewBinding(parent, itemView));
+    @Override
+    public final void onViewHolderCreated(@NonNull MultiViewHolder holder) {
+
+    }
+
+    protected void onViewHolderCreated(@NonNull MultiViewHolder holder,
+                                       @NotNull VB binding) {
+
     }
 
     /**

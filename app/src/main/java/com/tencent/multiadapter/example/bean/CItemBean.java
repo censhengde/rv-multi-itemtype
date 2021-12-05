@@ -8,7 +8,7 @@ import com.tencent.lib.multi.core.checking.Checkable;
  * 说明：简单的列表单选/多选直接继承 SimpleCheckable 即可，
  *      更复杂的列表选择请实现Checkable接口
  * */
-public class CheckableBean implements Checkable {
+public class CItemBean implements Checkable {
 
     public static final int VIEW_TYPE_HEADER=1;/*头布局标识位*/
     public static final int VIEW_TYPE_CHECKABLE = 0;/*可选中的Item标识位*/
@@ -18,7 +18,7 @@ public class CheckableBean implements Checkable {
     private boolean mIsChecked;/*判断当前item是否被选中*/
 
     public String text="";
-    public CheckableBean(int viewType, String text) {
+    public CItemBean(int viewType, String text) {
         this.viewType = viewType;
         this.text = text;
     }
