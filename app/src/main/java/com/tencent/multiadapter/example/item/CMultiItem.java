@@ -6,7 +6,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.tencent.lib.multi.core.BindingMultiItem;
+import com.tencent.lib.multi.core.SimpleMultiItem;
 import com.tencent.lib.multi.core.MultiViewHolder;
 import com.tencent.multiadapter.databinding.ItemCBinding;
 import com.tencent.multiadapter.example.bean.CItemBean;
@@ -19,18 +19,17 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * 说明：
  */
-public class CMultiItem extends BindingMultiItem<CItemBean, ItemCBinding> {
+public class CMultiItem extends SimpleMultiItem<CItemBean, ItemCBinding> {
 
     @Override
     public boolean isMatchForMe(Object bean, int position) {
-
         return  bean instanceof CItemBean;
     }
 
     @Override
     public void onViewHolderCreated(@NonNull MultiViewHolder holder,
             @NonNull ItemCBinding binding) {
-        registerItemViewLongClickListener(holder, binding.ivC,"onLongClickItemChildView");
+        registerLongClickEvent(holder, binding.ivC,"onLongClickItemChildView");
     }
 
     @Override

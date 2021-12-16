@@ -17,11 +17,11 @@ import kotlin.collections.emptyList as emptyList1
  *
  * 说明：未分页的Adapter
  */
-open class MultiAdapter< VH : RecyclerView.ViewHolder>(
+open class MultiAdapter (
         activity: FragmentActivity? = null,
         fragment: Fragment? = null,
         private val diffCallback: DiffUtil.ItemCallback<Any>? = null)
-    : RecyclerView.Adapter<VH>() {
+    : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val mAsyncListDiffer: AsyncListDiffer<Any>?
         get() {
@@ -33,16 +33,16 @@ open class MultiAdapter< VH : RecyclerView.ViewHolder>(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-        return multiHelper.onCreateViewHolder(parent, viewType) as VH
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return multiHelper.onCreateViewHolder(parent, viewType) as RecyclerView.ViewHolder
     }
 
-    override fun onBindViewHolder(holder: VH, position: Int) {}
-    override fun onBindViewHolder(holder: VH, position: Int, payloads: List<Any>) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {}
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: List<Any>) {
         multiHelper.onBindViewHolder(holder, position, payloads)
     }
 
-    override fun onViewRecycled(holder: VH) {
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
         multiHelper.onViewRecycled(holder)
     }
 
@@ -54,15 +54,15 @@ open class MultiAdapter< VH : RecyclerView.ViewHolder>(
         return multiHelper.getItemId(position)
     }
 
-    override fun onFailedToRecycleView(holder: VH): Boolean {
+    override fun onFailedToRecycleView(holder: RecyclerView.ViewHolder): Boolean {
         return multiHelper.onFailedToRecycleView(holder)
     }
 
-    override fun onViewAttachedToWindow(holder: VH) {
+    override fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
         multiHelper.onViewAttachedToWindow(holder)
     }
 
-    override fun onViewDetachedFromWindow(holder: VH) {
+    override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
         multiHelper.onViewAttachedToWindow(holder)
     }
 
@@ -86,7 +86,7 @@ open class MultiAdapter< VH : RecyclerView.ViewHolder>(
         }
     }
 
-    fun addItemType(type: MultiItem<*, *>): MultiAdapter<VH> {
+    fun addItemType(type: MultiItem<*, *>): MultiAdapter {
         multiHelper.addMultiItem(type)
         return this
     }

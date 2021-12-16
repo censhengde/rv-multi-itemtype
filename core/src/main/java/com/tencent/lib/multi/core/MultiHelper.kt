@@ -60,9 +60,7 @@ abstract class MultiHelper(val adapter: RecyclerView.Adapter<*>,
             /*一般由于ItemType matchItemTYpe方法实现错误引起的异常*/
             throw RuntimeException("")
         }
-        val holder = item.onCreateViewHolder(parent)
-        item.onViewHolderCreated(holder)
-        return holder
+        return item.onCreateViewHolder(parent)
     }
 
     fun onBindViewHolder(holder: RecyclerView.ViewHolder,

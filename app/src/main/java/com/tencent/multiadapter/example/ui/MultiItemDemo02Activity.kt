@@ -5,7 +5,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.annotation.Keep
 import androidx.appcompat.app.AppCompatActivity
-import com.tencent.lib.multi.MultiAdapter2
+import com.tencent.lib.multi.MultiAdapter
 import com.tencent.multiadapter.R
 import com.tencent.multiadapter.example.bean.AItemBean
 import com.tencent.multiadapter.example.bean.BItemBean
@@ -18,22 +18,19 @@ import java.util.*
 
 class MultiItemDemo02Activity : AppCompatActivity() {
 
-    lateinit var adapter: MultiAdapter2
+    lateinit var adapter: MultiAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_multi_item)
         //初始化ItemType
         val aItemType = AMultiItem()
-
-        aItemType.inject(this)
-
         val bItemType = BMultiItem()
         val cItemType = CMultiItem()
         bItemType.inject(this)
         cItemType.inject(this)
         /*初始化Adapter*/
-        adapter = MultiAdapter2()
+        adapter = MultiAdapter(this)
         /*将所有ItemType添加到Adapter中*/
         adapter.addItemType(aItemType)
                 .addItemType(bItemType)
@@ -60,13 +57,7 @@ class MultiItemDemo02Activity : AppCompatActivity() {
         return beans
     }
 
-    /**
-     *item点击事件
-     */
-    @Keep
-    private fun onClickItem(view: View, itemBean: AItemBean, position: Int) {
-        Toast.makeText(this, "ItemBean:${itemBean.text},position:$position", Toast.LENGTH_SHORT).show()
-    }
+
 
     /**
      * item 子View 点击事件

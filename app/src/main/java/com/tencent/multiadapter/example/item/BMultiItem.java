@@ -6,7 +6,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.tencent.lib.multi.core.BindingMultiItem;
+import com.tencent.lib.multi.core.SimpleMultiItem;
 import com.tencent.lib.multi.core.MultiViewHolder;
 import com.tencent.multiadapter.databinding.ItemBBinding;
 import com.tencent.multiadapter.example.bean.BItemBean;
@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * 说明：
  */
-public class BMultiItem extends BindingMultiItem<BItemBean, ItemBBinding> {
+public class BMultiItem extends SimpleMultiItem<BItemBean, ItemBBinding> {
 
 
     @Override
@@ -31,9 +31,9 @@ public class BMultiItem extends BindingMultiItem<BItemBean, ItemBBinding> {
     @Override
     public void onViewHolderCreated(@NonNull MultiViewHolder holder, @NonNull ItemBBinding binding) {
         /*注册监听器，不传viewId则默认是给item根布局注册监听*/
-        registerItemViewLongClickListener(holder,"onLongClickItem");
-        registerItemViewClickListener(holder,binding.btnB,"onClickItemChildView");
-        registerItemViewClickListener(holder,binding.tvB,"onClickItemChildView");
+        registerLongClickEvent(holder,"onLongClickItem");
+        registerClickEvent(holder,binding.btnB,"onClickItemChildView");
+        registerClickEvent(holder,binding.tvB,"onClickItemChildView");
 
     }
 

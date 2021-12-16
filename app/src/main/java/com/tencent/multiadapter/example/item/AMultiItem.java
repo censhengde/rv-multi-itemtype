@@ -3,12 +3,15 @@ package com.tencent.multiadapter.example.item;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.tencent.lib.multi.core.BindingMultiItem;
+import com.tencent.lib.multi.core.SimpleMultiItem;
 import com.tencent.lib.multi.core.MultiViewHolder;
+import com.tencent.lib.multi.core.annotation.BindItemViewClickEvent;
 import com.tencent.multiadapter.databinding.ItemABinding;
 import com.tencent.multiadapter.example.bean.AItemBean;
 
@@ -21,20 +24,15 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * 说明：
  */
-public class AMultiItem extends BindingMultiItem<AItemBean, ItemABinding> {
+public class AMultiItem extends SimpleMultiItem<AItemBean, ItemABinding> {
 
-    /**
-     * @param bean     当前position对应的实体对象
-     * @param position
-     * @return true 表示成功匹配到对应的ItemType
-     */
+    public AMultiItem() {
+        inject(this);
+    }
+
     @Override
     public boolean isMatchForMe(@Nullable Object bean, int position) {
-        if (bean instanceof  AItemBean){
-            return true;
-        }
-        return  AItemBean.TYPE_A_00 == ((AItemBean) bean).viewType;//这句话的含义是：当前position 的ItemBean想要表现的item类型是哪一种，
-        //以本例为例，会依次遍历A、B、C三个Item类型，直到返回true为止。（详见MultiHelper getItemViewType方法实现）
+        return bean instanceof AItemBean;
     }
 
     /**
@@ -45,8 +43,8 @@ public class AMultiItem extends BindingMultiItem<AItemBean, ItemABinding> {
      */
     @Override
     public void onViewHolderCreated(@NonNull MultiViewHolder holder, ItemABinding binding) {
-        /*注册监听器，不传viewId则默认是给item根布局注册监听*/
-        registerItemViewClickListener(holder, "onClickItem");
+        /*注册监听器，不传view则默认是给item根布局注册监听*/
+        registerClickEvent(holder, "onClickItem");
     }
 
     @Override
@@ -54,6 +52,10 @@ public class AMultiItem extends BindingMultiItem<AItemBean, ItemABinding> {
                                  @NonNull @NotNull AItemBean bean,
                                  int position,
                                  @NonNull @NotNull List<Object> payloads) {
+        if (payloads.isEmpty()){
+            onBindViewHolder(binding,bean,position);
+            return;
+        }
         Log.e("===>", " A 类Item 局部刷新：" + position);
         for (Object payload : payloads) {
             if (payload instanceof Bundle) {
@@ -62,13 +64,8 @@ public class AMultiItem extends BindingMultiItem<AItemBean, ItemABinding> {
             }
         }
 
-    }
 
-    /**
-     * 给当前item类型布局视图设置数据，意义基本与RecyclerView.Adapter onBindViewHolder 相同。
-     *
-     * @param position
-     */
+    }
 
     @Override
     public void onBindViewHolder(@NonNull ItemABinding binding,
@@ -78,9 +75,16 @@ public class AMultiItem extends BindingMultiItem<AItemBean, ItemABinding> {
         binding.tvA.setText(itemBean.text);
     }
 
-    @SuppressLint("LongLogTag")
     @Override
     public void onViewRecycled(MultiViewHolder holder) {
-        Log.e("===> AItemType onViewRecycled", "" + holder.getItemViewType());
+        Log.e("AItemType ", "===> onViewRecycled" + holder.getItemViewType());
+    }
+
+    /**
+     * item点击事件
+     */
+    @BindItemViewClickEvent("onClickItem")
+    private void onClickItem(View view, AItemBean bean, int position) {
+        Toast.makeText(view.getContext(), "点击事件："+bean.text, Toast.LENGTH_SHORT).show();
     }
 }

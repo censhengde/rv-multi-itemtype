@@ -2,11 +2,10 @@ package com.tencent.multiadapter.example.item
 
 import android.view.View
 import android.widget.Toast
-import androidx.annotation.Keep
-import com.tencent.lib.multi.core.BindingMultiItem
+import com.tencent.lib.multi.core.SimpleMultiItem
 import com.tencent.lib.multi.core.MultiViewHolder
-import com.tencent.multiadapter.databinding.ItemA01Binding
-import com.tencent.multiadapter.example.bean.AItemBean
+import com.tencent.lib.multi.core.annotation.BindItemViewClickEvent
+import com.tencent.multiadapter.databinding.ItemA00Binding
 import com.tencent.multiadapter.example.bean.ItemBean
 
 /**
@@ -16,25 +15,42 @@ import com.tencent.multiadapter.example.bean.ItemBean
  * 说明：
 
  */
-class MultiItem00 : BindingMultiItem<ItemBean, ItemA01Binding>() {
+class MultiItem00 : SimpleMultiItem<ItemBean, ItemA00Binding>() {
 
     init {
         inject(this)
     }
+
     override fun isMatchForMe(bean: Any?, position: Int): Boolean {
         return bean is ItemBean && bean.viewType == ItemBean.TYPE_00
     }
 
-    override fun onViewHolderCreated(holder: MultiViewHolder, binding: ItemA01Binding) {
-        registerItemViewClickListener(holder,binding.root,"onClickItem")
+    override fun onViewHolderCreated(holder: MultiViewHolder, binding: ItemA00Binding) {
+        // 注册 item view 点击事件
+        registerClickEvent(holder, binding.root, "onClickItem")
+        // 注册 item view 长点击事件
+        registerLongClickEvent(holder,binding.tvA,"onLongClickItemChildView")
     }
-    override fun onBindViewHolder(vb: ItemA01Binding, bean: ItemBean, position: Int) {
+
+    override fun onBindViewHolder(vb: ItemA00Binding, bean: ItemBean, position: Int) {
         vb.tvA.text = bean.text
     }
 
-    //
-    @Keep
-    private fun onClickItem(view:View,itemBean: ItemBean,position: Int){
-        Toast.makeText(view.context,"${itemBean.text} position:$position",Toast.LENGTH_SHORT).show()
+    /**
+     *item点击事件
+     */
+    @BindItemViewClickEvent("onClickItem")
+    private fun onClickItem(view: View, itemBean: ItemBean, position: Int) {
+        Toast.makeText(view.context, "点击事件：ItemBean:${itemBean.text},position:$position", Toast.LENGTH_SHORT).show()
     }
+
+    /**
+     * item 子View 长点击事件
+     */
+    @BindItemViewClickEvent("onLongClickItemChildView")
+    private fun onLongClickItemChildView(view: View, itemBean: ItemBean, position: Int): Boolean {
+        Toast.makeText(view.context, "长点击事件：ItemBean:${itemBean.text},position:$position", Toast.LENGTH_SHORT).show()
+        return true
+    }
+
 }
