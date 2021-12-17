@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
+import java.util.ArrayList
 
 /**
  * Author：岑胜德 on 2021/1/27 16:33
@@ -15,51 +16,35 @@ import androidx.recyclerview.widget.RecyclerView
  */
 abstract class MultiHelper(val adapter: RecyclerView.Adapter<*>,
                            val activity: FragmentActivity? = null,
-                           val fragment: Fragment? = null) {
+                           val fragment: Fragment? = null,
+                           private val initialCapacity: Int = 0) {
     /**
      * MultiItem 集合.
      */
-    private val mItemTypePool = SparseArray<MultiItem<Any, RecyclerView.ViewHolder>>()
+    private val itemsPool = ArrayList<MultiItem<Any, RecyclerView.ViewHolder>>(initialCapacity)
 
 
     fun getItemId(position: Int): Long {
-        val type = findCurrentItem(getItem(position), position)
-        return type?.getItemId(position) ?: RecyclerView.NO_ID
+        val type = findCurrentItemViewType(getItem(position), position)
+        return itemsPool[type].getItemId(position)
     }
 
     fun getItemViewType(position: Int): Int {
-        if (position == RecyclerView.NO_POSITION) {
-            return RecyclerView.INVALID_TYPE
-        }
         val data = getItem(position)
-        val currentItem = findCurrentItem(data, position)
-        return currentItem?.itemType ?: RecyclerView.INVALID_TYPE
+        return findCurrentItemViewType(data, position)
     }
 
-    /**
-     * 遍历查找当前position对应的ItemType。
-     *
-     * @param data
-     * @param position
-     * @return
-     */
-    private fun findCurrentItem(data: Any?, position: Int): MultiItem<*, *>? {
-        //为当前position 匹配它的ItemType
-        for (i in 0 until mItemTypePool.size()) {
-            val item = mItemTypePool.valueAt(i)
+    private fun findCurrentItemViewType(data: Any?, position: Int): Int {
+        itemsPool.forEachIndexed { index, item ->
             if (item.isMatchForMe(data, position)) {
-                return item
+                return index
             }
         }
-        return null
+        throw java.lang.RuntimeException("Item view type not found!")
     }
 
     fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val item = mItemTypePool[viewType]
-        if (viewType == RecyclerView.INVALID_TYPE || item == null) { //表示无效
-            /*一般由于ItemType matchItemTYpe方法实现错误引起的异常*/
-            throw RuntimeException("")
-        }
+        val item = itemsPool[viewType]
         return item.onCreateViewHolder(parent)
     }
 
@@ -69,38 +54,30 @@ abstract class MultiHelper(val adapter: RecyclerView.Adapter<*>,
         if (position == RecyclerView.NO_POSITION) {
             return
         }
-        /*统一捕获由position引发的可能异常*/
-        val currentItem = mItemTypePool[holder!!.itemViewType]
-        val bean = getItem(position)
-        if (bean == null || currentItem == null) {
-            return
-        }
+        val currentItem = itemsPool[holder.itemViewType]
+        val bean = getItem(position) ?: return
         currentItem.onBindViewHolder(holder, bean, position, payloads)
     }
 
     fun onViewRecycled(holder: RecyclerView.ViewHolder) {
-        val item = mItemTypePool[holder!!.itemViewType]
-        item?.onViewRecycled(holder)
+        itemsPool[holder.itemViewType].onViewRecycled(holder)
     }
 
     fun onFailedToRecycleView(holder: RecyclerView.ViewHolder): Boolean {
-        val item = mItemTypePool[holder!!.itemViewType]
-        return item != null && item.onFailedToRecycleView(holder)
+        return itemsPool[holder.itemViewType].onFailedToRecycleView(holder)
     }
 
     fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
-        val item = mItemTypePool[holder!!.itemViewType]
-        item?.onViewAttachedToWindow(holder)
+        itemsPool[holder.itemViewType].onViewAttachedToWindow(holder)
     }
 
     fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
-        val item = mItemTypePool[holder!!.itemViewType]
-        item?.onViewDetachedFromWindow(holder)
+        itemsPool[holder.itemViewType].onViewDetachedFromWindow(holder)
     }
 
     fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-        for (i in 0 until mItemTypePool.size()) {
-            mItemTypePool.valueAt(i).onAttachedToRecyclerView(recyclerView)
+        itemsPool.forEach {
+            it.onAttachedToRecyclerView(recyclerView)
         }
     }
 
@@ -111,8 +88,8 @@ abstract class MultiHelper(val adapter: RecyclerView.Adapter<*>,
      * @see .onAttachedToRecyclerView
      */
     fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-        for (i in 0 until mItemTypePool.size()) {
-            mItemTypePool.valueAt(i).onDetachedFromRecyclerView(recyclerView)
+        itemsPool.forEach {
+            it.onDetachedFromRecyclerView(recyclerView)
         }
     }
 
@@ -123,9 +100,13 @@ abstract class MultiHelper(val adapter: RecyclerView.Adapter<*>,
      *
      * @param item
      */
+    @SuppressWarnings("unchecked all")
     fun addMultiItem(item: MultiItem<*, *>) {
+        if (itemsPool.contains(item)) {
+            return
+        }
         // 关联
         item.onAttach(this)
-        mItemTypePool.put(item.itemType, item as MultiItem<Any, RecyclerView.ViewHolder>)
+        itemsPool.add(item as MultiItem<Any, RecyclerView.ViewHolder>)
     }
 }

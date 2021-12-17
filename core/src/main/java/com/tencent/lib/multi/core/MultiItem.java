@@ -56,10 +56,6 @@ public abstract class MultiItem<T, VH extends RecyclerView.ViewHolder> {
         return NO_ID;
     }
 
-    public int getItemType() {
-        return this.getClass().hashCode();
-    }
-
     /**
      * 当前 position 是否匹配当前 MultiItem。这个方法是实现多样式 item 的关键！
      * 如若此方法实现错误，那将导致某position上匹配不到ItemType，进而引发程序崩溃！
@@ -216,7 +212,7 @@ public abstract class MultiItem<T, VH extends RecyclerView.ViewHolder> {
             }
             //优先监听器
             if (mOnClickItemViewListener != null) {
-                mOnClickItemViewListener.onClickItemView(v, this.getItemType(), (T) data, position);
+                mOnClickItemViewListener.onClickItemView(v, this, (T) data, position);
                 return;
             }
             /*不传入目标方法名，则表示不采用反射方式回调点击事件*/
@@ -266,7 +262,7 @@ public abstract class MultiItem<T, VH extends RecyclerView.ViewHolder> {
             }
             //监听器优先
             if (mOnLongClickItemViewListener != null) {
-                return mOnLongClickItemViewListener.onLongClickItemView(v, this.getItemType(), (T) data, position);
+                return mOnLongClickItemViewListener.onLongClickItemView(v, this, (T) data, position);
             }
             /*不传入目标方法名，则表示不采用反射方式回调点击事件*/
             if (TextUtils.isEmpty(method)) {
