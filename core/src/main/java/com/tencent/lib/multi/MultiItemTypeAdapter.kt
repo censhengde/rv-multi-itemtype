@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.tencent.lib.multi.core.MultiHelper
 import com.tencent.lib.multi.core.MultiItemType
+import java.lang.reflect.Method
 
 /**
  * Author：岑胜德 on 2021/1/6 14:57
@@ -18,6 +19,7 @@ import com.tencent.lib.multi.core.MultiItemType
 open class MultiItemTypeAdapter (
         activity: FragmentActivity? = null,
         fragment: Fragment? = null,
+        shareMethodCachePool: Map<String, Method>? = null,
         private val diffCallback: DiffUtil.ItemCallback<Any>? = null)
     : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -25,7 +27,7 @@ open class MultiItemTypeAdapter (
         get() {
             return AsyncListDiffer(this, diffCallback ?: return null)
         }
-    private val multiHelper: MultiHelper= object : MultiHelper(this,activity, fragment) {
+    private val multiHelper: MultiHelper= object : MultiHelper(this,activity, fragment,shareMethodCachePool) {
         override fun getItem(position: Int): Any? {
             return this@MultiItemTypeAdapter.getItem(position)
         }

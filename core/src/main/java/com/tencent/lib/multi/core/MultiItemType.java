@@ -8,12 +8,13 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.CallSuper;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.tencent.lib.multi.core.annotation.BindItemViewClickEvent;
+import com.tencent.lib.multi.core.annotation.OnClickItemView;
 import com.tencent.lib.multi.core.listener.OnClickItemViewListener;
 import com.tencent.lib.multi.core.listener.OnLongClickItemViewListener;
 
@@ -32,13 +33,26 @@ public abstract class MultiItemType<T, VH extends RecyclerView.ViewHolder> {
 
     private static final String TAG = "MultiItem";
 
-    private Map<String, Method> mMethodMap;/*缓存反射获取的method对象，减少反射成本*/
+    private Map<String, Method> mMethodCachePool;/*缓存反射获取的method对象，减少反射成本*/
     private OnClickItemViewListener<T> mOnClickItemViewListener;
     private OnLongClickItemViewListener<T> mOnLongClickItemViewListener;
-    private Object mObserver;/*item view 点击事件的接收者*/
+    private Object mClickEventReceiver;/*item view 点击事件的接收者*/
     private MultiHelper mHelper;
 
 
+    public final void setMethodCachePool(Map<String, Method> cachePool) {
+        this.mMethodCachePool = cachePool;
+    }
+
+    @NotNull
+    public final Map<String, Method> getMethodCachePool() {
+        if (mMethodCachePool == null) {
+            mMethodCachePool = new ArrayMap<>();
+        }
+        return mMethodCachePool;
+    }
+
+    @CallSuper
     public void onAttach(@NotNull MultiHelper helper) {
         mHelper = helper;
     }
@@ -124,6 +138,7 @@ public abstract class MultiItemType<T, VH extends RecyclerView.ViewHolder> {
     public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
     }
 
+
     public void setOnLongClickItemViewListener(OnLongClickItemViewListener<T> listener) {
         mOnLongClickItemViewListener = listener;
     }
@@ -132,41 +147,38 @@ public abstract class MultiItemType<T, VH extends RecyclerView.ViewHolder> {
         mOnClickItemViewListener = itemListener;
     }
 
-    /**
-     * 注入观察者对象
-     *
-     * @param observer
-     */
-    public final void inject(Object observer) {
-        if (checkIsNull(observer, "inject observer is null")) {
+    public final void inject(Object receiver) {
+        if (checkIsNull(receiver, "inject receiver is null")) {
             return;
         }
-        mObserver = observer;
+        mClickEventReceiver = receiver;
+        if (mMethodCachePool == null) {
+            mMethodCachePool = createMethodCachePool(receiver);
+        }
+    }
+
+    @NotNull
+    public static Map<String, Method> createMethodCachePool(Object clickEventReceiver) {
+        final Map<String, Method> pool = new ArrayMap<>();
         try {
-            Class<?> clazz = observer.getClass();
+            Class<?> clazz = clickEventReceiver.getClass();
             Method[] methods = clazz.getDeclaredMethods();
             for (Method m : methods) {
-                BindItemViewClickEvent annotation = m.getAnnotation(BindItemViewClickEvent.class);
+                OnClickItemView annotation = m.getAnnotation(OnClickItemView.class);
                 if (annotation != null) {
-                    getMethodMap().put(annotation.value(), m);
+                    pool.put(annotation.value(), m);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return pool;
     }
 
-
-    protected final Object getObserver() {
-        return mObserver;
+    protected final Object getClickEventReceiver() {
+        return mClickEventReceiver;
     }
 
-    /**
-     * registerItemViewClickListener重载。倘若不采用反射方式，则调用这个方法注册。
-     *
-     * @param holder
-     * @param viewIds
-     */
     protected final void registerClickEvent(@NonNull VH holder,
                                             @IdRes int... viewIds) {
         registerClickEvent(holder, null, viewIds);
@@ -285,7 +297,7 @@ public abstract class MultiItemType<T, VH extends RecyclerView.ViewHolder> {
      */
     private void callTagMethod(View v, String methodName, Object data, int position, String errMsg) {
         try {
-            Method method = getMethodMap().get(methodName);
+            Method method = getMethodCachePool().get(methodName);
             if (checkIsNull(method, "callTagMethod method is null")) {
                 return;
             }
@@ -293,7 +305,7 @@ public abstract class MultiItemType<T, VH extends RecyclerView.ViewHolder> {
             if (!method.isAccessible()) {
                 method.setAccessible(true);
             }
-            method.invoke(mObserver, v, data, position);
+            method.invoke(mClickEventReceiver, v, data, position);
         } catch (Exception e) {
             Log.e(TAG, errMsg + ":" + e.getMessage());
         }
@@ -312,7 +324,7 @@ public abstract class MultiItemType<T, VH extends RecyclerView.ViewHolder> {
     private boolean callTagLongClickMethod(View v, String target, Object data, int position, String errMsg) {
         boolean consume = false;
         try {
-            Method method = getMethodMap().get(target);
+            Method method = getMethodCachePool().get(target);
             if (checkIsNull(method, "callTagLongClickMethod method is null")) {
                 return consume;
             }
@@ -320,7 +332,7 @@ public abstract class MultiItemType<T, VH extends RecyclerView.ViewHolder> {
             if (!method.isAccessible()) {
                 method.setAccessible(true);
             }
-            consume = (boolean) method.invoke(mObserver, v, data, position);
+            consume = (boolean) method.invoke(mClickEventReceiver, v, data, position);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -334,11 +346,6 @@ public abstract class MultiItemType<T, VH extends RecyclerView.ViewHolder> {
         return o == null;
     }
 
-    private Map<String, Method> getMethodMap() {
-        if (mMethodMap == null) {
-            mMethodMap = new ArrayMap<>();
-        }
-        return mMethodMap;
-    }
+
 }
 

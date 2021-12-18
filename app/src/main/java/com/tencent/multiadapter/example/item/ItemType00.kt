@@ -4,7 +4,7 @@ import android.view.View
 import android.widget.Toast
 import com.tencent.lib.multi.core.SimpleItemType
 import com.tencent.lib.multi.core.MultiViewHolder
-import com.tencent.lib.multi.core.annotation.BindItemViewClickEvent
+import com.tencent.lib.multi.core.annotation.OnClickItemView
 import com.tencent.multiadapter.databinding.ItemA00Binding
 import com.tencent.multiadapter.example.bean.ItemBean
 
@@ -39,7 +39,7 @@ class ItemType00 : SimpleItemType<ItemBean, ItemA00Binding>() {
     /**
      *item点击事件
      */
-    @BindItemViewClickEvent("onClickItem")
+    @OnClickItemView("onClickItem")
     private fun onClickItem(view: View, itemBean: ItemBean, position: Int) {
         Toast.makeText(view.context, "点击事件：ItemBean:${itemBean.text},position:$position", Toast.LENGTH_SHORT).show()
     }
@@ -47,7 +47,7 @@ class ItemType00 : SimpleItemType<ItemBean, ItemA00Binding>() {
     /**
      * item 子View 长点击事件
      */
-    @BindItemViewClickEvent("onLongClickItemChildView")
+    @OnClickItemView("onLongClickItemChildView")
     private fun onLongClickItemChildView(view: View, itemBean: ItemBean, position: Int): Boolean {
         Toast.makeText(view.context, "长点击事件：ItemBean:${itemBean.text},position:$position", Toast.LENGTH_SHORT).show()
         return true

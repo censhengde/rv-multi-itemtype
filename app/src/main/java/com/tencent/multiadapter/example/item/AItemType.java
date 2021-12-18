@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
 
 import com.tencent.lib.multi.core.SimpleItemType;
 import com.tencent.lib.multi.core.MultiViewHolder;
-import com.tencent.lib.multi.core.annotation.BindItemViewClickEvent;
+import com.tencent.lib.multi.core.annotation.OnClickItemView;
 import com.tencent.multiadapter.databinding.ItemABinding;
 import com.tencent.multiadapter.example.bean.AItemBean;
 
@@ -82,7 +82,7 @@ public class AItemType extends SimpleItemType<AItemBean, ItemABinding> {
     /**
      * item点击事件
      */
-    @BindItemViewClickEvent("onClickItem")
+    @OnClickItemView("onClickItem")
     private void onClickItem(View view, AItemBean bean, int position) {
         Toast.makeText(view.getContext(), "点击事件："+bean.text, Toast.LENGTH_SHORT).show();
     }
