@@ -12,6 +12,6 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface BindItemViewClickEvent {
+public @interface OnClickItemView {
     String value() default "";
 }

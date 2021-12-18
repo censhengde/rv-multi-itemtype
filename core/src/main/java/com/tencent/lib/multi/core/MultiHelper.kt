@@ -4,6 +4,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
+import java.lang.reflect.Method
 import java.util.ArrayList
 
 /**
@@ -16,6 +17,7 @@ import java.util.ArrayList
 abstract class MultiHelper(val adapter: RecyclerView.Adapter<*>,
                            val activity: FragmentActivity? = null,
                            val fragment: Fragment? = null,
+                           val shareMethodCachePool: Map<String, Method>? = null,
                            private val initialCapacity: Int = 0) {
     /**
      * MultiItemType 池.
