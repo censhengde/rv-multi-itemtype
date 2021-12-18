@@ -6,7 +6,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.tencent.lib.multi.core.SimpleMultiItem;
+import com.tencent.lib.multi.core.SimpleItemType;
 import com.tencent.lib.multi.core.MultiViewHolder;
 import com.tencent.multiadapter.databinding.ItemCBinding;
 import com.tencent.multiadapter.example.bean.CItemBean;
@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * 说明：
  */
-public class CMultiItem extends SimpleMultiItem<CItemBean, ItemCBinding> {
+public class CItemType extends SimpleItemType<CItemBean, ItemCBinding> {
 
     @Override
     public boolean isMatchForMe(Object bean, int position) {

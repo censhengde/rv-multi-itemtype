@@ -7,9 +7,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.tencent.lib.multi.core.MultiHelper
-import com.tencent.lib.multi.core.MultiItem
-import com.tencent.lib.multi.core.checking.CheckingHelper
-import kotlin.collections.emptyList as emptyList1
+import com.tencent.lib.multi.core.MultiItemType
 
 /**
  * Author：岑胜德 on 2021/1/6 14:57
@@ -17,7 +15,7 @@ import kotlin.collections.emptyList as emptyList1
  *
  * 说明：未分页的Adapter
  */
-open class MultiAdapter (
+open class MultiItemTypeAdapter (
         activity: FragmentActivity? = null,
         fragment: Fragment? = null,
         private val diffCallback: DiffUtil.ItemCallback<Any>? = null)
@@ -29,7 +27,7 @@ open class MultiAdapter (
         }
     private val multiHelper: MultiHelper= object : MultiHelper(this,activity, fragment) {
         override fun getItem(position: Int): Any? {
-            return this@MultiAdapter.getItem(position)
+            return this@MultiItemTypeAdapter.getItem(position)
         }
     }
 
@@ -86,8 +84,8 @@ open class MultiAdapter (
         }
     }
 
-    fun addItemType(type: MultiItem<*, *>): MultiAdapter {
-        multiHelper.addMultiItem(type)
+    fun addItemType(type: MultiItemType<*, *>): MultiItemTypeAdapter {
+        multiHelper.addItemType(type)
         return this
     }
 

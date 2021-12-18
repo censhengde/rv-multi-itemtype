@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.tencent.lib.multi.MultiAdapter
+import com.tencent.lib.multi.MultiItemTypeAdapter
 import com.tencent.lib.multi.core.annotation.BindItemViewClickEvent
 import com.tencent.multiadapter.R
 import com.tencent.multiadapter.example.bean.AItemBean
@@ -15,17 +15,17 @@ import java.util.*
 
 class MultiItemDemo01Activity : AppCompatActivity() {
 
-    lateinit var adapter: MultiAdapter
+    lateinit var adapter: MultiItemTypeAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_multi_item)
         //初始化ItemType
-        val item00 = MultiItem00()
-        val item01 = MultiItem01()
-        val item02 = MultiItem02()
+        val item00 = ItemType00()
+        val item01 = ItemType01()
+        val item02 = ItemType02()
         /*初始化Adapter*/
-        adapter = MultiAdapter(this)
+        adapter = MultiItemTypeAdapter(this)
         /*将所有ItemType添加到Adapter中*/
         adapter.addItemType(item00)
                 .addItemType(item01)

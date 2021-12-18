@@ -2,7 +2,7 @@ package com.tencent.multiadapter.example.item
 
 import android.view.View
 import android.widget.Toast
-import com.tencent.lib.multi.core.SimpleMultiItem
+import com.tencent.lib.multi.core.SimpleItemType
 import com.tencent.lib.multi.core.MultiViewHolder
 import com.tencent.lib.multi.core.annotation.BindItemViewClickEvent
 import com.tencent.multiadapter.databinding.ItemA00Binding
@@ -15,7 +15,7 @@ import com.tencent.multiadapter.example.bean.ItemBean
  * 说明：
 
  */
-class MultiItem00 : SimpleMultiItem<ItemBean, ItemA00Binding>() {
+class ItemType00 : SimpleItemType<ItemBean, ItemA00Binding>() {
 
     init {
         inject(this)

@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * 说明：某一种类型 item 的抽象。
  */
-public abstract class MultiItem<T, VH extends RecyclerView.ViewHolder> {
+public abstract class MultiItemType<T, VH extends RecyclerView.ViewHolder> {
 
     private static final String TAG = "MultiItem";
 

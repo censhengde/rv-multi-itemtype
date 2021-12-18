@@ -1,6 +1,5 @@
 package com.tencent.lib.multi.core
 
-import android.util.SparseArray
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -19,14 +18,14 @@ abstract class MultiHelper(val adapter: RecyclerView.Adapter<*>,
                            val fragment: Fragment? = null,
                            private val initialCapacity: Int = 0) {
     /**
-     * MultiItem 集合.
+     * MultiItemType 池.
      */
-    private val itemsPool = ArrayList<MultiItem<Any, RecyclerView.ViewHolder>>(initialCapacity)
+    private val itemTypePool = ArrayList<MultiItemType<Any, RecyclerView.ViewHolder>>(initialCapacity)
 
 
     fun getItemId(position: Int): Long {
         val type = findCurrentItemViewType(getItem(position), position)
-        return itemsPool[type].getItemId(position)
+        return itemTypePool[type].getItemId(position)
     }
 
     fun getItemViewType(position: Int): Int {
@@ -35,7 +34,7 @@ abstract class MultiHelper(val adapter: RecyclerView.Adapter<*>,
     }
 
     private fun findCurrentItemViewType(data: Any?, position: Int): Int {
-        itemsPool.forEachIndexed { index, item ->
+        itemTypePool.forEachIndexed { index, item ->
             if (item.isMatchForMe(data, position)) {
                 return index
             }
@@ -44,7 +43,7 @@ abstract class MultiHelper(val adapter: RecyclerView.Adapter<*>,
     }
 
     fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val item = itemsPool[viewType]
+        val item = itemTypePool[viewType]
         return item.onCreateViewHolder(parent)
     }
 
@@ -54,29 +53,29 @@ abstract class MultiHelper(val adapter: RecyclerView.Adapter<*>,
         if (position == RecyclerView.NO_POSITION) {
             return
         }
-        val currentItem = itemsPool[holder.itemViewType]
+        val currentItem = itemTypePool[holder.itemViewType]
         val bean = getItem(position) ?: return
         currentItem.onBindViewHolder(holder, bean, position, payloads)
     }
 
     fun onViewRecycled(holder: RecyclerView.ViewHolder) {
-        itemsPool[holder.itemViewType].onViewRecycled(holder)
+        itemTypePool[holder.itemViewType].onViewRecycled(holder)
     }
 
     fun onFailedToRecycleView(holder: RecyclerView.ViewHolder): Boolean {
-        return itemsPool[holder.itemViewType].onFailedToRecycleView(holder)
+        return itemTypePool[holder.itemViewType].onFailedToRecycleView(holder)
     }
 
     fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
-        itemsPool[holder.itemViewType].onViewAttachedToWindow(holder)
+        itemTypePool[holder.itemViewType].onViewAttachedToWindow(holder)
     }
 
     fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
-        itemsPool[holder.itemViewType].onViewDetachedFromWindow(holder)
+        itemTypePool[holder.itemViewType].onViewDetachedFromWindow(holder)
     }
 
     fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-        itemsPool.forEach {
+        itemTypePool.forEach {
             it.onAttachedToRecyclerView(recyclerView)
         }
     }
@@ -88,7 +87,7 @@ abstract class MultiHelper(val adapter: RecyclerView.Adapter<*>,
      * @see .onAttachedToRecyclerView
      */
     fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-        itemsPool.forEach {
+        itemTypePool.forEach {
             it.onDetachedFromRecyclerView(recyclerView)
         }
     }
@@ -98,15 +97,16 @@ abstract class MultiHelper(val adapter: RecyclerView.Adapter<*>,
     /**
      * 添加 MultiItem
      *
-     * @param item
+     * @param itemType
      */
     @SuppressWarnings("unchecked all")
-    fun addMultiItem(item: MultiItem<*, *>) {
-        if (itemsPool.contains(item)) {
+    fun addItemType(itemType: MultiItemType<*, *>) {
+        // 保证一种 ItemType 只有一个实例。
+        if (itemTypePool.contains(itemType)) {
             return
         }
         // 关联
-        item.onAttach(this)
-        itemsPool.add(item as MultiItem<Any, RecyclerView.ViewHolder>)
+        itemType.onAttach(this)
+        itemTypePool.add(itemType as MultiItemType<Any, RecyclerView.ViewHolder>)
     }
 }
