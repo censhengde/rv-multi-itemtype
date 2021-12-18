@@ -9,12 +9,8 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".example.ui.MultiDataTypeDemoActivity"></activity>
-        <activity android:name=".example.ui.ViewBindingDemoActivity" />
-        <activity android:name=".example.ui.DiffUtilDemoActivity" />
-        <activity android:name=".example.ui.SingleCheckingDemoActivity" />
-        <activity android:name=".example.ui.CheckingDemoActivity" />
-        <activity android:name=".example.ui.MultiItemDemoActivity" />
+        <activity android:name=".example.ui.MultiItemDemo01Activity" />
+        <activity android:name=".example.ui.MultiItemDemo02Activity" />
         <activity android:name=".example.ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

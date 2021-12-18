@@ -17,41 +17,32 @@ import kotlin.collections.emptyList as emptyList1
  *
  * 说明：未分页的Adapter
  */
-open class MultiAdapter<T, VH : RecyclerView.ViewHolder>(
+open class MultiAdapter (
         activity: FragmentActivity? = null,
         fragment: Fragment? = null,
-        private val diffCallback: DiffUtil.ItemCallback<T>? = null)
-    : RecyclerView.Adapter<VH>() {
+        private val diffCallback: DiffUtil.ItemCallback<Any>? = null)
+    : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val mAsyncListDiffer: AsyncListDiffer<T>?
+    private val mAsyncListDiffer: AsyncListDiffer<Any>?
         get() {
             return AsyncListDiffer(this, diffCallback ?: return null)
         }
-    private val multiHelper: MultiHelper<T, VH> = object : MultiHelper<T, VH>(activity, fragment) {
-        override fun getItem(position: Int): T? {
+    private val multiHelper: MultiHelper= object : MultiHelper(this,activity, fragment) {
+        override fun getItem(position: Int): Any? {
             return this@MultiAdapter.getItem(position)
         }
     }
-    val checkingHelper: CheckingHelper<T> = object : CheckingHelper<T>(this) {
-        override fun getItem(position: Int): T? {
-            return this@MultiAdapter.getItem(position)
-        }
 
-        override fun getDataSize(): Int {
-            return this@MultiAdapter.itemCount
-        }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return multiHelper.onCreateViewHolder(parent, viewType) as RecyclerView.ViewHolder
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-        return multiHelper.onCreateViewHolder(parent, viewType)
-    }
-
-    override fun onBindViewHolder(holder: VH, position: Int) {}
-    override fun onBindViewHolder(holder: VH, position: Int, payloads: List<Any>) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {}
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: List<Any>) {
         multiHelper.onBindViewHolder(holder, position, payloads)
     }
 
-    override fun onViewRecycled(holder: VH) {
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
         multiHelper.onViewRecycled(holder)
     }
 
@@ -63,15 +54,15 @@ open class MultiAdapter<T, VH : RecyclerView.ViewHolder>(
         return multiHelper.getItemId(position)
     }
 
-    override fun onFailedToRecycleView(holder: VH): Boolean {
+    override fun onFailedToRecycleView(holder: RecyclerView.ViewHolder): Boolean {
         return multiHelper.onFailedToRecycleView(holder)
     }
 
-    override fun onViewAttachedToWindow(holder: VH) {
+    override fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
         multiHelper.onViewAttachedToWindow(holder)
     }
 
-    override fun onViewDetachedFromWindow(holder: VH) {
+    override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
         multiHelper.onViewAttachedToWindow(holder)
     }
 
@@ -87,7 +78,7 @@ open class MultiAdapter<T, VH : RecyclerView.ViewHolder>(
         return dataList.size
     }
 
-    fun getItem(position: Int): T? {
+    fun getItem(position: Int): Any? {
         return if (position in dataList.indices) {
             dataList[position]
         } else {
@@ -95,43 +86,24 @@ open class MultiAdapter<T, VH : RecyclerView.ViewHolder>(
         }
     }
 
-    fun setData(data: List<T>): MultiAdapter<T, VH> {
-
-        return this
-    }
-
-//    fun removeItem(position: Int) {
-//        val currentList = dataList
-//        if (position in currentList.indices) {
-//            /*如果删除的Item是被选中的Item，则数量要减一*/
-//            val item = currentList[position]
-//            if (item is Checkable) {
-//                val checkable = item as Checkable
-//                if (checkable.isChecked) {
-//                    checkingHelper.checkedItemCount = checkingHelper.checkedItemCount - 1
-//                }
-//            }
-//            currentList.removeAt(position)
-//            notifyItemRemoved(position)
-//            notifyItemRangeChanged(position, currentList.size - position)
-//        }
-//    }
-
-    fun addItemType(type: MultiItem<*, *>?): MultiAdapter<T, VH> {
+    fun addItemType(type: MultiItem<*, *>): MultiAdapter {
         multiHelper.addMultiItem(type)
         return this
     }
 
-    open var dataList: List<T> = kotlin.collections.emptyList()
+    open var dataList: List<Any> = kotlin.collections.emptyList()
         set(value) {
             field = value
-            if (mAsyncListDiffer != null) {
-                mAsyncListDiffer?.submitList(field)
+            mAsyncListDiffer?.let {
+                it.submitList(field)
+                return
             }
             notifyDataSetChanged()
         }
         get() {
-            val currentList = if (mAsyncListDiffer == null) this.dataList else mAsyncListDiffer!!.currentList
-            return (currentList ?: emptyList1()) as MutableList<T>
+            mAsyncListDiffer?.let {
+                return it.currentList
+            }
+           return field
         }
 }

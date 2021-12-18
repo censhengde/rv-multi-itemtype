@@ -5,11 +5,11 @@ package com.tencent.multiadapter.example.bean;
  *
  * 说明：
  */
-public class PagedBean {
+public class BItemBean {
 
     public String text;
 
-    public PagedBean(String text) {
+    public BItemBean(String text) {
         this.text = text;
     }
 }

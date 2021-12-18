@@ -1,6 +1,6 @@
 package com.tencent.multiadapter.example
 
-import com.tencent.multiadapter.example.bean.ItemBean
+import com.tencent.multiadapter.example.bean.AItemBean
 import java.util.ArrayList
 
 /**
@@ -10,12 +10,3 @@ import java.util.ArrayList
  * 说明：
 
  */
-fun getDataList(): MutableList<ItemBean> {
-    val beans = ArrayList<ItemBean>()
-    for (i in 0..5) {
-        beans.add(ItemBean(ItemBean.TYPE_A, "我是A类Item$i"))
-        beans.add(ItemBean(ItemBean.TYPE_B, "我是B类Item${i + 1}"))
-        beans.add(ItemBean(ItemBean.TYPE_C, "我是C类Item${i + 2}"))
-    }
-    return beans
-}

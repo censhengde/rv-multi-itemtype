@@ -5,29 +5,19 @@ import static androidx.recyclerview.widget.RecyclerView.NO_ID;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.IdRes;
-import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleObserver;
-import androidx.lifecycle.OnLifecycleEvent;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.tencent.lib.multi.core.annotation.BindItemViewClickEvent;
 import com.tencent.lib.multi.core.listener.OnClickItemViewListener;
 import com.tencent.lib.multi.core.listener.OnLongClickItemViewListener;
 
-import java.lang.ref.WeakReference;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
@@ -46,64 +36,24 @@ public abstract class MultiItem<T, VH extends RecyclerView.ViewHolder> {
     private OnClickItemViewListener<T> mOnClickItemViewListener;
     private OnLongClickItemViewListener<T> mOnLongClickItemViewListener;
     private Object mObserver;/*item view 点击事件的接收者*/
-    private String mObserverName;
-    private Class<?> mEntityClass;/*泛型参数T的Class*/
-    private Constructor<VH> mVHConstructor;
-    // 我们希望本类型item相关的点击事件也集中到这里处理，故需要外部提供Activity和Fragment环境。
-    private FragmentActivity mActivity;
-    private Fragment mFragment;
+    private MultiHelper mHelper;
 
 
-    public void onAttach(@Nullable FragmentActivity activity, @Nullable Fragment fragment) {
-
-        mActivity = activity ;
-        mFragment = fragment;
-        if (mActivity == null && mFragment != null ) {
-            mActivity = mFragment.requireActivity();
-        }
-    }
-
-    @Nullable
-    public final FragmentActivity getActivity() {
-        return mActivity;
-    }
-
-    @Nullable
-    public final Fragment getFragment() {
-        return mFragment;
+    public void onAttach(@NotNull MultiHelper helper) {
+        mHelper = helper;
     }
 
     @NotNull
-    public final FragmentActivity requireActivity() {
-        final FragmentActivity activity = getActivity();
-        if (activity == null) {
-            throw new IllegalStateException("MultiItem " + this + " not attached to an activity.");
+    public final MultiHelper getHelper() {
+        if (mHelper == null) {
+            throw new IllegalStateException("MultiItem " + this + " not attached to an MultiHelper.");
         }
-        return activity;
+        return mHelper;
     }
 
-    @NotNull
-    public final Fragment requireFragment() {
-        final Fragment fragment = getFragment();
-        if (fragment == null) {
-            throw new IllegalStateException("MultiItem " + this + " not attached to an fragment.");
-        }
-        return fragment;
-    }
-
-
-    /**
-     * @return 返回当前ItemType的布局文件id
-     */
-    @LayoutRes
-    protected abstract int getItemLayoutRes();
 
     public long getItemId(int position) {
         return NO_ID;
-    }
-
-    final int getItemType() {
-        return this.getClass().hashCode();
     }
 
     /**
@@ -125,46 +75,7 @@ public abstract class MultiItem<T, VH extends RecyclerView.ViewHolder> {
      * @return
      */
     @NonNull
-    public VH onCreateViewHolder(@NonNull ViewGroup parent) {
-        final View itemView = LayoutInflater.from(parent.getContext()).inflate(getItemLayoutRes(), parent, false);
-        return resolveVH(itemView);
-    }
-
-    /**
-     * 反射实例化ViewHolder
-     *
-     * @param itemView
-     * @return
-     */
-    private VH resolveVH(View itemView) {
-        final VH vh;
-        try {
-            if (mVHConstructor == null) {
-                final Type multi = this.getClass().getGenericSuperclass();
-                final ParameterizedType p = (ParameterizedType) multi;
-                /*AbstractItemType 的孙类以下如果不透传 VH 泛型参数到其父类则获取其Class对象失败，
-                 *此时解决方案是全盘重写 onCreateViewHolder(@NonNull ViewGroup parent)方法，手动创建 ViewHolder
-                 */
-                final Class<VH> c = (Class<VH>) p.getActualTypeArguments()[1];
-                mVHConstructor = c.getConstructor(View.class);
-            }
-            vh = mVHConstructor.newInstance(itemView);//要求所有VH必需开放参数为View的构造函数
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new IllegalStateException("反射创建 ViewHolder 异常：" + e.getMessage());
-        }
-        return vh;
-    }
-
-    /**
-     * 表示 ViewHolder 创建完成。这里适合进行item view事件监听注册。
-     *
-     * @param holder
-     * @param helper
-     */
-    public void onViewHolderCreated(@NonNull VH holder, @NonNull MultiHelper<T, VH> helper) {
-
-    }
+    public abstract VH onCreateViewHolder(@NonNull ViewGroup parent);
 
     /**
      * 绑定数据
@@ -226,8 +137,23 @@ public abstract class MultiItem<T, VH extends RecyclerView.ViewHolder> {
      *
      * @param observer
      */
-    public final void inject(@NonNull Object observer) {
+    public final void inject(Object observer) {
+        if (checkIsNull(observer, "inject observer is null")) {
+            return;
+        }
         mObserver = observer;
+        try {
+            Class<?> clazz = observer.getClass();
+            Method[] methods = clazz.getDeclaredMethods();
+            for (Method m : methods) {
+                BindItemViewClickEvent annotation = m.getAnnotation(BindItemViewClickEvent.class);
+                if (annotation != null) {
+                    getMethodMap().put(annotation.value(), m);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -239,13 +165,11 @@ public abstract class MultiItem<T, VH extends RecyclerView.ViewHolder> {
      * registerItemViewClickListener重载。倘若不采用反射方式，则调用这个方法注册。
      *
      * @param holder
-     * @param helper
      * @param viewIds
      */
-    protected final void registerItemViewClickListener(@NonNull VH holder,
-                                                       @NonNull MultiHelper<T, VH> helper,
-                                                       @IdRes int... viewIds) {
-        registerItemViewClickListener(holder, helper, null, viewIds);
+    protected final void registerClickEvent(@NonNull VH holder,
+                                            @IdRes int... viewIds) {
+        registerClickEvent(holder, null, viewIds);
 
     }
 
@@ -253,29 +177,27 @@ public abstract class MultiItem<T, VH extends RecyclerView.ViewHolder> {
      * Item view 点击事件注册。（包含item 子view）
      *
      * @param holder
-     * @param helper
-     * @param target  目标方法名
+     * @param method  目标方法名
      * @param viewIds view的id 集合；因为可能存在多个view响应同一套点击逻辑的情况。
      */
-    protected final void registerItemViewClickListener(@NonNull VH holder,
-                                                       @NonNull MultiHelper<T, VH> helper,
-                                                       @Nullable String target,
-                                                       @IdRes int... viewIds) {
+    protected final void registerClickEvent(@NonNull VH holder,
+                                            @Nullable String method,
+                                            @IdRes int... viewIds) {
         /*如果不传viewId，则默认是注册item根布局的点击事件监听*/
         if (viewIds.length == 0) {
-            registerInternal(holder, helper, holder.itemView, target);
+            registerClickEvent(holder, holder.itemView, method);
             return;
         }
 
         for (int id : viewIds) {
             final View view = holder.itemView.findViewById(id);
-            registerInternal(holder, helper, view, target);
+            registerClickEvent(holder, view, method);
         }
 
     }
 
 
-    private void registerInternal(VH holder, MultiHelper<T, VH> helper, View view, @Nullable String target) {
+    protected final void registerClickEvent(VH holder, View view, @Nullable String method) {
         view.setClickable(true);
         view.setOnClickListener(v -> {
             final int position = holder.getAdapterPosition();
@@ -284,21 +206,20 @@ public abstract class MultiItem<T, VH extends RecyclerView.ViewHolder> {
                 return;
             }
 
-            final T data = helper.getItem(position);
-            if (data == null) {
-                Log.e(TAG, "item 点击异常:data=" + data);
+            final Object data = getHelper().getItem(position);
+            if (checkIsNull(data, "item 点击异常:data is null")) {
                 return;
             }
             //优先监听器
             if (mOnClickItemViewListener != null) {
-                mOnClickItemViewListener.onClickItemView(v, this.getItemType(), data, position);
+                mOnClickItemViewListener.onClickItemView(v, this, (T) data, position);
                 return;
             }
             /*不传入目标方法名，则表示不采用反射方式回调点击事件*/
-            if (TextUtils.isEmpty(target)) {
+            if (TextUtils.isEmpty(method)) {
                 return;
             }
-            callTagMethod(v, target, data, position, "item 点击异常");
+            callTagMethod(v, method, data, position, "item 点击异常");
         });
 
     }
@@ -307,34 +228,26 @@ public abstract class MultiItem<T, VH extends RecyclerView.ViewHolder> {
      * Item view 长点击事件注册。（包含item 子view）
      *
      * @param holder
-     * @param helper
-     * @param target  目标方法名
+     * @param method  目标方法名
      * @param viewIds view的id 集合；因为可能存在多个view响应同一套点击逻辑的情况。
      */
-    protected final void registerItemViewLongClickListener(@NonNull VH holder,
-                                                           @NonNull MultiHelper<T, VH> helper,
-                                                           @Nullable String target,
-                                                           @IdRes int... viewIds) {
+    protected final void registerLongClickEvent(@NonNull VH holder,
+                                                @Nullable String method,
+                                                @IdRes int... viewIds) {
         /*如果不传viewId，则默认是注册item根布局的点击事件监听*/
         if (viewIds.length == 0) {
-            registerLongInternal(holder, helper, holder.itemView, target);
+            registerLongClickEvent(holder, holder.itemView, method);
             return;
         }
         for (int id : viewIds) {
             final View view = holder.itemView.findViewById(id);
-            registerLongInternal(holder, helper, view, target);
+            registerLongClickEvent(holder, view, method);
         }
 
     }
 
-    protected final void registerItemViewLongClickListener(@NonNull VH holder,
-                                                           @NonNull MultiHelper<T, VH> helper,
-                                                           @IdRes int... viewIds) {
-        registerItemViewLongClickListener(holder, helper, null, viewIds);
 
-    }
-
-    private void registerLongInternal(VH holder, MultiHelper<T, VH> helper, View view, String target) {
+    protected final void registerLongClickEvent(VH holder, View view, String method) {
         view.setLongClickable(true);
         view.setOnLongClickListener(v -> {
             boolean consume = false;
@@ -343,20 +256,19 @@ public abstract class MultiItem<T, VH extends RecyclerView.ViewHolder> {
                 Log.e(TAG, "item 长点击异常: position=" + position);
                 return consume;
             }
-            final T data = helper.getItem(position);
-            if (data == null) {
-                Log.e(TAG, "item 长点击异常:data=" + data);
+            final Object data = getHelper().getItem(position);
+            if (checkIsNull(data, "item 长点击异常:data is null")) {
                 return consume;
             }
             //监听器优先
             if (mOnLongClickItemViewListener != null) {
-                return mOnLongClickItemViewListener.onLongClickItemView(v, this.getItemType(), data, position);
+                return mOnLongClickItemViewListener.onLongClickItemView(v, this, (T) data, position);
             }
             /*不传入目标方法名，则表示不采用反射方式回调点击事件*/
-            if (TextUtils.isEmpty(target)) {
+            if (TextUtils.isEmpty(method)) {
                 return consume;
             }
-            consume = callTagLongClickMethod(v, target, data, position, "item 长点击异常");
+            consume = callTagLongClickMethod(v, method, data, position, "item 长点击异常");
             return consume;
 
         });
@@ -371,9 +283,13 @@ public abstract class MultiItem<T, VH extends RecyclerView.ViewHolder> {
      * @param position
      * @param errMsg
      */
-    private void callTagMethod(View v, String target, T data, int position, String errMsg) {
+    private void callTagMethod(View v, String methodName, Object data, int position, String errMsg) {
         try {
-            Method method = resolveMethod(target);
+            Method method = getMethodMap().get(methodName);
+            if (checkIsNull(method, "callTagMethod method is null")) {
+                return;
+            }
+            assert method != null;
             if (!method.isAccessible()) {
                 method.setAccessible(true);
             }
@@ -393,52 +309,29 @@ public abstract class MultiItem<T, VH extends RecyclerView.ViewHolder> {
      * @param errMsg
      * @return
      */
-    private boolean callTagLongClickMethod(View v, String target, T data, int position, String errMsg) {
+    private boolean callTagLongClickMethod(View v, String target, Object data, int position, String errMsg) {
         boolean consume = false;
         try {
-            Method method = resolveMethod(target);
+            Method method = getMethodMap().get(target);
+            if (checkIsNull(method, "callTagLongClickMethod method is null")) {
+                return consume;
+            }
+            assert method != null;
             if (!method.isAccessible()) {
                 method.setAccessible(true);
             }
             consume = (boolean) method.invoke(mObserver, v, data, position);
         } catch (Exception e) {
-            Log.e(TAG, errMsg + ":" + e.getMessage());
+            e.printStackTrace();
         }
         return consume;
     }
 
-
-    /**
-     * 根据方法名反射获取目标方法
-     *
-     * @param methodName
-     * @return
-     */
-    private Method resolveMethod(String methodName) {
-        if (mObserver == null) {
-            Log.e(TAG, "===> mObserver = null， 请先调用ItemType inject 方法注入 Observer！");
-            return null;
+    private boolean checkIsNull(Object o, String msg) {
+        if (o == null) {
+            Log.e(TAG, "===>" + msg);
         }
-
-        final Class<?> clazz = mObserver.getClass();
-        if (mObserverName == null) {
-            mObserverName = clazz.getName();
-        }
-        final String key = mObserverName + "@" + methodName;
-        Method method = getMethodMap().get(key);
-        if (method == null) {
-            try {
-                if (mEntityClass == null) {
-                    mEntityClass = getEntityClass();
-                }
-                method = clazz.getDeclaredMethod(methodName, View.class, mEntityClass, int.class);
-                getMethodMap().put(key, method);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-        return method;
+        return o == null;
     }
 
     private Map<String, Method> getMethodMap() {
@@ -447,32 +340,5 @@ public abstract class MultiItem<T, VH extends RecyclerView.ViewHolder> {
         }
         return mMethodMap;
     }
-
-    /**
-     * 针对某些无法解析泛型参数 T 的情况，给子类提供重写方法。
-     *
-     * @return
-     */
-    protected Class<?> getEntityClass() {
-        return resolveT();
-    }
-
-    /**
-     * 解析泛型参数T
-     *
-     * @return
-     */
-    private Class<T> resolveT() {
-        final Type type;
-        try {
-            type = this.getClass().getGenericSuperclass();
-            ParameterizedType p = (ParameterizedType) type;
-            return (Class<T>) p.getActualTypeArguments()[0];
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-            return null;
-        }
-    }
-
 }
 

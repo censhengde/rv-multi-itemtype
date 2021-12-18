@@ -18,27 +18,13 @@ class MainActivity : AppCompatActivity() {
     fun onClickBtn(view: View) {
         val btn = (view as Button)
         when (btn.id) {
-            R.id.btn_to_multi -> {
-                goTo(MultiItemDemoActivity::class.java)
+            R.id.demo_01 -> {
+                goTo(MultiItemDemo01Activity::class.java)
             }
-            R.id.btn_to_check -> {
-                goTo(CheckingDemoActivity::class.java)
-            }
-            R.id.btn_to_check_single -> {
-                goTo(SingleCheckingDemoActivity::class.java)
-            }
-            R.id.btn_to_diff_demo -> {
-                goTo(DiffUtilDemoActivity::class.java)
+            R.id.demo_02 -> {
+                goTo(MultiItemDemo02Activity::class.java)
             }
 
-            R.id.btn_to_viewbinding_demo -> {
-                goTo(ViewBindingDemoActivity::class.java)
-            }
-            R.id.btn_to_multi_data_type_demo -> {
-                goTo(MultiDataTypeDemoActivity::class.java)
-            }
-            else -> {
-            }
         }
 
     }

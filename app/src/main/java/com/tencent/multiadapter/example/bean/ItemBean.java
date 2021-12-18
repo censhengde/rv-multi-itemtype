@@ -1,6 +1,7 @@
 package com.tencent.multiadapter.example.bean;
 
 import android.text.TextUtils;
+
 import java.util.Objects;
 
 /**
@@ -11,9 +12,9 @@ import java.util.Objects;
 public class ItemBean {
 
     //所有Item类型都在这里定义
-    public static final int TYPE_A = 0;
-    public static final int TYPE_B = 1;
-    public static final int TYPE_C = 2;
+    public static final int TYPE_00 = 0;
+    public static final int TYPE_01 = 1;
+    public static final int TYPE_02 = 2;
 
     public int id;
     //Item类型标识（很关键！）
@@ -35,17 +36,4 @@ public class ItemBean {
         this.id = id;
     }
 
-    @Override
-    public boolean equals(Object o) {
-
-        ItemBean itemBean = (ItemBean) o;
-        return id == itemBean.id &&
-                viewType == itemBean.viewType &&
-                TextUtils.equals(text, itemBean.text);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, viewType, text);
-    }
 }
