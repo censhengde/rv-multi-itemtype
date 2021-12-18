@@ -1,6 +1,6 @@
 package com.tencent.multiadapter.example.item
 
-import com.tencent.lib.multi.core.SimpleMultiItem
+import com.tencent.lib.multi.core.SimpleItemType
 import com.tencent.multiadapter.databinding.ItemA02Binding
 import com.tencent.multiadapter.example.bean.ItemBean
 
@@ -11,7 +11,7 @@ import com.tencent.multiadapter.example.bean.ItemBean
  * 说明：
 
  */
-class MultiItem02 : SimpleMultiItem<ItemBean, ItemA02Binding>() {
+class ItemType02 : SimpleItemType<ItemBean, ItemA02Binding>() {
 
     override fun isMatchForMe(bean: Any?, position: Int): Boolean {
         return bean is ItemBean && bean.viewType == ItemBean.TYPE_02

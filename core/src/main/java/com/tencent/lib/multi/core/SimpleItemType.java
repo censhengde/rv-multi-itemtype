@@ -1,11 +1,9 @@
 package com.tencent.lib.multi.core;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 
 import java.lang.reflect.Method;
@@ -15,14 +13,12 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 
-import kotlin.jvm.Throws;
-
 /**
  * Author：岑胜德 on 2021/8/30 10:58
  * <p>
  * 说明：支持 ViewBinding用法的  MultiItem。
  */
-public abstract class SimpleMultiItem<T, VB extends ViewBinding> extends MultiItem<T, MultiViewHolder> {
+public abstract class SimpleItemType<T, VB extends ViewBinding> extends MultiItemType<T, MultiViewHolder> {
 
 
     private Method mBindMethod;

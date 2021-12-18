@@ -6,7 +6,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.tencent.lib.multi.core.SimpleMultiItem;
+import com.tencent.lib.multi.core.SimpleItemType;
 import com.tencent.lib.multi.core.MultiViewHolder;
 import com.tencent.multiadapter.databinding.ItemBBinding;
 import com.tencent.multiadapter.example.bean.BItemBean;
@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * 说明：
  */
-public class BMultiItem extends SimpleMultiItem<BItemBean, ItemBBinding> {
+public class BItemType extends SimpleItemType<BItemBean, ItemBBinding> {
 
 
     @Override

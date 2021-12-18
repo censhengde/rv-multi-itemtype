@@ -1,6 +1,5 @@
 package com.tencent.multiadapter.example.item;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,7 +8,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.tencent.lib.multi.core.SimpleMultiItem;
+import com.tencent.lib.multi.core.SimpleItemType;
 import com.tencent.lib.multi.core.MultiViewHolder;
 import com.tencent.lib.multi.core.annotation.BindItemViewClickEvent;
 import com.tencent.multiadapter.databinding.ItemABinding;
@@ -24,9 +23,9 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * 说明：
  */
-public class AMultiItem extends SimpleMultiItem<AItemBean, ItemABinding> {
+public class AItemType extends SimpleItemType<AItemBean, ItemABinding> {
 
-    public AMultiItem() {
+    public AItemType() {
         inject(this);
     }
 
