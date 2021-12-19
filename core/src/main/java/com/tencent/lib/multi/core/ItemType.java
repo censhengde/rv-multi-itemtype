@@ -29,11 +29,11 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * 说明：某一种类型 item 的抽象。
  */
-public abstract class MultiItemType<T, VH extends RecyclerView.ViewHolder> {
+public abstract class ItemType<T, VH extends RecyclerView.ViewHolder> {
 
     private static final String TAG = "MultiItem";
 
-    private Map<String, Method> mMethodCachePool;/*缓存反射获取的method对象，减少反射成本*/
+    private Map<String, Method> mMethodCachePool; /*缓存反射获取的method对象，减少反射成本*/
     private OnClickItemViewListener<T> mOnClickItemViewListener;
     private OnLongClickItemViewListener<T> mOnLongClickItemViewListener;
     private Object mClickEventReceiver;/*item view 点击事件的接收者*/

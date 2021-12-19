@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.tencent.lib.multi.core.MultiHelper
-import com.tencent.lib.multi.core.MultiItemType
+import com.tencent.lib.multi.core.ItemType
 import java.lang.reflect.Method
 
 /**
@@ -86,7 +86,7 @@ open class MultiItemTypeAdapter (
         }
     }
 
-    fun addItemType(type: MultiItemType<*, *>): MultiItemTypeAdapter {
+    fun addItemType(type: ItemType<*, *>): MultiItemTypeAdapter {
         multiHelper.addItemType(type)
         return this
     }

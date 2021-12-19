@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
 
 android {
@@ -9,7 +8,7 @@ android {
         enabled true
     }
     defaultConfig {
-        applicationId "com.tencent.multiadapter"
+        applicationId "com.tencent.itemtype"
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
@@ -58,15 +57,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
 
-    implementation 'com.scwang.smart:refresh-layout-kernel:2.0.3'      //核心必须依赖
-    implementation 'com.scwang.smart:refresh-header-classics:2.0.3'    //经典加载
-    implementation 'com.scwang.smart:refresh-footer-classics:2.0.3'    //经典加载
 
-    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4'
+}
 
-    implementation project(path: ':paging')
-}
-repositories {
-    maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
-    mavenCentral()
-}
