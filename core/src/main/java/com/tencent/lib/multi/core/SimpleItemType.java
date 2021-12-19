@@ -16,9 +16,9 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Author：岑胜德 on 2021/8/30 10:58
  * <p>
- * 说明：支持 ViewBinding用法的  MultiItem。
+ * 说明：支持 ViewBinding用法。
  */
-public abstract class SimpleItemType<T, VB extends ViewBinding> extends MultiItemType<T, MultiViewHolder> {
+public abstract class SimpleItemType<T, VB extends ViewBinding> extends ItemType<T, MultiViewHolder> {
 
 
     private Method mBindMethod;
@@ -30,11 +30,11 @@ public abstract class SimpleItemType<T, VB extends ViewBinding> extends MultiIte
             if (mBindMethod == null) {
                 final Type type = this.getClass().getGenericSuperclass();
                 final ParameterizedType p = (ParameterizedType) type;
-                //MultiVBItemType的孙类以下如果不透传 VB 泛型参数到其父类就会获取Class对象失败,
-                //此时解决方案就是全盘重写 onCreateViewBinding(ViewGroup parent) 方法，手动创建
-                //ViewBinding 实现类的实例
+                // 孙类以下如果不透传 VB 泛型参数到其父类就会获取Class对象失败,
+                // 此时解决方案就是全盘重写 onCreateViewBinding(ViewGroup parent) 方法，手动创建
+                // ViewBinding 实现类的实例
                 final Class<VB> c = (Class<VB>) p.getActualTypeArguments()[1];
-                //Gradle 开启 viewBinding 后会自动生成 ViewBinding 的实现类，其中就有 bind(View root) 静态方法，
+                 // Gradle 开启 viewBinding 后会自动生成 ViewBinding 的实现类，其中就有 inflate 静态方法，
                 // 该方法用于创建 ViewBinding 实现类的实例。
                 mBindMethod = c.getMethod("inflate", LayoutInflater.class, ViewGroup.class, boolean.class);
             }

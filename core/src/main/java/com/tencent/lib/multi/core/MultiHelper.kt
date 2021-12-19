@@ -17,12 +17,11 @@ import java.util.ArrayList
 abstract class MultiHelper(val adapter: RecyclerView.Adapter<*>,
                            val activity: FragmentActivity? = null,
                            val fragment: Fragment? = null,
+                           // 为减少反射成本，也可以由外部传进一个共享的缓存池。
                            val shareMethodCachePool: Map<String, Method>? = null,
                            private val initialCapacity: Int = 0) {
-    /**
-     * MultiItemType 池.
-     */
-    private val itemTypePool = ArrayList<MultiItemType<Any, RecyclerView.ViewHolder>>(initialCapacity)
+    // ItemType 池.
+    private val itemTypePool = ArrayList<ItemType<Any, RecyclerView.ViewHolder>>(initialCapacity)
 
 
     fun getItemId(position: Int): Long {
@@ -102,13 +101,13 @@ abstract class MultiHelper(val adapter: RecyclerView.Adapter<*>,
      * @param itemType
      */
     @SuppressWarnings("unchecked all")
-    fun addItemType(itemType: MultiItemType<*, *>) {
+    fun addItemType(itemType: ItemType<*, *>) {
         // 保证一种 ItemType 只有一个实例。
         if (itemTypePool.contains(itemType)) {
             return
         }
         // 关联
         itemType.onAttach(this)
-        itemTypePool.add(itemType as MultiItemType<Any, RecyclerView.ViewHolder>)
+        itemTypePool.add(itemType as ItemType<Any, RecyclerView.ViewHolder>)
     }
 }

@@ -3,7 +3,7 @@ package com.tencent.lib.multi.core.listener;
 import android.view.View;
 import androidx.annotation.NonNull;
 
-import com.tencent.lib.multi.core.MultiItemType;
+import com.tencent.lib.multi.core.ItemType;
 
 /**
  * Author：岑胜德 on 2021/3/14 17:18
@@ -17,6 +17,6 @@ public interface OnClickItemViewListener<T> {
      * @param bean 当前item实体对象
      * @param position 当前position
      */
-    void onClickItemView(@NonNull View v, MultiItemType<?,?> item, @NonNull T bean, int position);
+    void onClickItemView(@NonNull View v, ItemType<?,?> item, @NonNull T bean, int position);
 
 }
