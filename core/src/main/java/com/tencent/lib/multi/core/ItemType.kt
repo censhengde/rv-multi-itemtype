@@ -55,7 +55,7 @@ abstract class ItemType<T, VH : RecyclerView.ViewHolder> {
 
     val helper: MultiHelper
         get() {
-            checkNotNull(mHelper) { "MultiItem $this not attached to an MultiHelper." }
+            checkNotNull(mHelper) { "ItemType $this not attached to an MultiHelper." }
             return mHelper as MultiHelper
         }
 
@@ -88,8 +88,11 @@ abstract class ItemType<T, VH : RecyclerView.ViewHolder> {
 
 
     open fun onViewAttachedToWindow(holder: VH) {}
+
     open fun onViewDetachedFromWindow(holder: VH) {}
+
     open fun onAttachedToRecyclerView(recyclerView: RecyclerView) {}
+
     open fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {}
 
     fun setOnLongClickItemViewListener(listener: OnLongClickItemViewListener<T?>?) {

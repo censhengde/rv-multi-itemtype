@@ -54,8 +54,8 @@ abstract class MultiHelper(val adapter: RecyclerView.Adapter<*>,
         if (position == RecyclerView.NO_POSITION) {
             return
         }
-        val currentItem = itemTypePool[holder.itemViewType]
         val bean = getItem(position) ?: return
+        val currentItem = itemTypePool[holder.itemViewType]
         currentItem.onBindViewHolder(holder, bean, position, payloads)
     }
 
