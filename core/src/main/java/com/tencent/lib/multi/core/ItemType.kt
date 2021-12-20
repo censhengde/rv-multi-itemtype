@@ -23,7 +23,7 @@ abstract class ItemType<T, VH : RecyclerView.ViewHolder> {
     private var mMethodCachePool: Map<String, Method>? = null /*缓存反射获取的method对象，减少反射成本*/
     private var mOnClickItemViewListener: OnClickItemViewListener<T?>? = null
     private var mOnLongClickItemViewListener: OnLongClickItemViewListener<T?>? = null
-    private var clickEventReceiver /*item view 点击事件的接收者*/: Any? = null
+    private var clickEventReceiver: Any? = null /*item view 点击事件的接收者*/
 
     private var mHelper: MultiHelper? = null
     private val methodCachePool: Map<String, Method>
@@ -34,9 +34,8 @@ abstract class ItemType<T, VH : RecyclerView.ViewHolder> {
             return mMethodCachePool!!
         }
 
-    fun inject(receiver: Any) {
-        this.inject(receiver, null)
-    }
+    fun inject(receiver: Any) = this.inject(receiver, null)
+
 
     fun inject(receiver: Any, methodCachePool: Map<String, Method>? = null) {
         if (checkIsNull(receiver, "inject receiver is null")) {
@@ -72,50 +71,21 @@ abstract class ItemType<T, VH : RecyclerView.ViewHolder> {
      * @param position 当前 position
      * @return true 表示匹配；否则不匹配。
      */
-    open fun isMatchForMe(bean: Any?, position: Int): Boolean {
-        return true
-    }
+    open fun isMatchForMe(bean: Any?, position: Int): Boolean = true
 
-    /**
-     * 创建 ViewHolder
-     *
-     * @param parent
-     * @return
-     */
     abstract fun onCreateViewHolder(parent: ViewGroup): VH
 
-    /**
-     * 绑定数据
-     *
-     * @param holder
-     * @param bean
-     * @param position
-     * @param payloads
-     */
     open fun onBindViewHolder(holder: VH, bean: T, position: Int,
                               payloads: List<Any>) {
         onBindViewHolder(holder, bean, position)
     }
 
-    /**
-     * 绑定数据
-     *
-     * @param holder
-     * @param bean
-     * @param position
-     */
     abstract fun onBindViewHolder(holder: VH, bean: T, position: Int)
 
-    /**
-     * View 已经回收。
-     *
-     * @param holder
-     */
     open fun onViewRecycled(holder: VH) {}
 
-    open fun onFailedToRecycleView(holder: VH): Boolean {
-        return false
-    }
+    open fun onFailedToRecycleView(holder: VH): Boolean = false
+
 
     open fun onViewAttachedToWindow(holder: VH) {}
     open fun onViewDetachedFromWindow(holder: VH) {}
@@ -130,33 +100,9 @@ abstract class ItemType<T, VH : RecyclerView.ViewHolder> {
         mOnClickItemViewListener = itemListener
     }
 
-
-    protected fun registerClickEvent(holder: VH,
-                                     @IdRes vararg viewIds: Int) {
-        registerClickEvent(holder, null, *viewIds)
-    }
-
     /**
-     * Item view 点击事件注册。（包含item 子view）
-     *
-     * @param holder
-     * @param method  目标方法名
-     * @param viewIds view的id 集合；因为可能存在多个view响应同一套点击逻辑的情况。
+     * 注册 item view 点击事件。
      */
-    protected fun registerClickEvent(holder: VH,
-                                     method: String?,
-                                     @IdRes vararg viewIds: Int) {
-        /*如果不传viewId，则默认是注册item根布局的点击事件监听*/
-        if (viewIds.isEmpty()) {
-            registerClickEvent(holder, holder.itemView, method)
-            return
-        }
-        for (id in viewIds) {
-            val view = holder.itemView.findViewById<View>(id)
-            registerClickEvent(holder, view, method)
-        }
-    }
-
     protected fun registerClickEvent(holder: VH, view: View, method: String?) {
         view.isClickable = true
         view.setOnClickListener { v: View ->
@@ -179,26 +125,8 @@ abstract class ItemType<T, VH : RecyclerView.ViewHolder> {
     }
 
     /**
-     * Item view 长点击事件注册。（包含item 子view）
-     *
-     * @param holder
-     * @param method  目标方法名
-     * @param viewIds view的id 集合；因为可能存在多个view响应同一套点击逻辑的情况。
+     * 注册 item view 长点击事件。
      */
-    protected fun registerLongClickEvent(holder: VH,
-                                         method: String?,
-                                         @IdRes vararg viewIds: Int) {
-        /*如果不传viewId，则默认是注册item根布局的点击事件监听*/
-        if (viewIds.isEmpty()) {
-            registerLongClickEvent(holder, holder.itemView, method)
-            return
-        }
-        for (id in viewIds) {
-            val view = holder.itemView.findViewById<View>(id)
-            registerLongClickEvent(holder, view, method)
-        }
-    }
-
     protected fun registerLongClickEvent(holder: VH, view: View, method: String?) {
         view.isLongClickable = true
         view.setOnLongClickListener { v: View ->
@@ -267,7 +195,7 @@ abstract class ItemType<T, VH : RecyclerView.ViewHolder> {
             }
             consume = method.invoke(clickEventReceiver, v, data, position) as Boolean
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e(TAG, "===>callTagLongClickMethod $errMsg:${e.message} ")
         }
         return consume
     }

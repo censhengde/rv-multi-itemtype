@@ -39,7 +39,7 @@ public class AItemType extends SimpleItemType<BeanA, ItemABinding> {
     @Override
     public void onViewHolderCreated(@NonNull MultiViewHolder holder, @NotNull ItemABinding binding) {
         /*注册监听器，不传view则默认是给item根布局注册监听*/
-        registerClickEvent(holder, "onClickItem");
+        registerClickEvent(holder, holder.itemView,"onClickItem");
     }
 
     @Override
