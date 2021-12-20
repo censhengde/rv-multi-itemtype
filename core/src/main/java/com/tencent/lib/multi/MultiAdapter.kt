@@ -16,7 +16,7 @@ import java.lang.reflect.Method
  *
  * 说明：未分页的Adapter
  */
-open class MultiItemTypeAdapter (
+open class MultiAdapter(
         activity: FragmentActivity? = null,
         fragment: Fragment? = null,
         shareMethodCachePool: Map<String, Method>? = null,
@@ -27,51 +27,51 @@ open class MultiItemTypeAdapter (
         get() {
             return AsyncListDiffer(this, diffCallback ?: return null)
         }
-    private val multiHelper: MultiHelper= object : MultiHelper(this,activity, fragment,shareMethodCachePool) {
+    private val delegate: MultiHelper = object : MultiHelper(this, activity, fragment, shareMethodCachePool) {
         override fun getItem(position: Int): Any? {
-            return this@MultiItemTypeAdapter.getItem(position)
+            return this@MultiAdapter.getItem(position)
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return multiHelper.onCreateViewHolder(parent, viewType) as RecyclerView.ViewHolder
+        return delegate.onCreateViewHolder(parent, viewType)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {}
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: List<Any>) {
-        multiHelper.onBindViewHolder(holder, position, payloads)
+        delegate.onBindViewHolder(holder, position, payloads)
     }
 
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
-        multiHelper.onViewRecycled(holder)
+        delegate.onViewRecycled(holder)
     }
 
     override fun getItemViewType(position: Int): Int {
-        return multiHelper.getItemViewType(position)
+        return delegate.getItemViewType(position)
     }
 
     override fun getItemId(position: Int): Long {
-        return multiHelper.getItemId(position)
+        return delegate.getItemId(position)
     }
 
     override fun onFailedToRecycleView(holder: RecyclerView.ViewHolder): Boolean {
-        return multiHelper.onFailedToRecycleView(holder)
+        return delegate.onFailedToRecycleView(holder)
     }
 
     override fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
-        multiHelper.onViewAttachedToWindow(holder)
+        delegate.onViewAttachedToWindow(holder)
     }
 
     override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
-        multiHelper.onViewAttachedToWindow(holder)
+        delegate.onViewAttachedToWindow(holder)
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-        multiHelper.onAttachedToRecyclerView(recyclerView)
+        delegate.onAttachedToRecyclerView(recyclerView)
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-        multiHelper.onDetachedFromRecyclerView(recyclerView)
+        delegate.onDetachedFromRecyclerView(recyclerView)
     }
 
     override fun getItemCount(): Int {
@@ -86,12 +86,12 @@ open class MultiItemTypeAdapter (
         }
     }
 
-    fun addItemType(type: ItemType<*, *>): MultiItemTypeAdapter {
-        multiHelper.addItemType(type)
+    fun addItemType(type: ItemType<*, *>): MultiAdapter {
+        delegate.addItemType(type)
         return this
     }
 
-    open var dataList: List<Any> = kotlin.collections.emptyList()
+    open var dataList: List<Any> = emptyList()
         set(value) {
             field = value
             mAsyncListDiffer?.let {
@@ -104,6 +104,6 @@ open class MultiItemTypeAdapter (
             mAsyncListDiffer?.let {
                 return it.currentList
             }
-           return field
+            return field
         }
 }

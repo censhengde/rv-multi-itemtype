@@ -8,7 +8,7 @@ import java.util.Objects;
  * <p>
  * 说明：
  */
-public class AItemBean {
+public class BeanA {
 
     //所有Item类型都在这里定义
     public static final int TYPE_A_00 = 0;
@@ -24,12 +24,12 @@ public class AItemBean {
     public String text = "";
 
 
-    public AItemBean(int viewType, String text) {
+    public BeanA(int viewType, String text) {
         this.viewType = viewType;
         this.text = text;
     }
 
-    public AItemBean(int id, int viewType, String text) {
+    public BeanA(int id, int viewType, String text) {
         this.viewType = viewType;
         this.text = text;
         this.id = id;
@@ -38,7 +38,7 @@ public class AItemBean {
     @Override
     public boolean equals(Object o) {
 
-        AItemBean itemBean = (AItemBean) o;
+        BeanA itemBean = (BeanA) o;
         return id == itemBean.id &&
                 viewType == itemBean.viewType &&
                 TextUtils.equals(text, itemBean.text);

@@ -1,0 +1,304 @@
+package com.tencent.lib.multi.core
+
+import android.util.ArrayMap
+import android.util.Log
+import android.view.View
+import android.view.ViewGroup
+import androidx.annotation.CallSuper
+import androidx.annotation.IdRes
+import androidx.recyclerview.widget.RecyclerView
+import com.tencent.lib.multi.core.annotation.OnClickItemView
+import com.tencent.lib.multi.core.listener.OnClickItemViewListener
+import com.tencent.lib.multi.core.listener.OnLongClickItemViewListener
+import java.lang.reflect.Method
+
+/**
+ * Author：岑胜德 on 2021/2/22 16:23
+ *
+ *
+ * 说明：某一种类型 item 的抽象。
+ */
+abstract class ItemType<T, VH : RecyclerView.ViewHolder> {
+
+    private var mMethodCachePool: Map<String, Method>? = null /*缓存反射获取的method对象，减少反射成本*/
+    private var mOnClickItemViewListener: OnClickItemViewListener<T?>? = null
+    private var mOnLongClickItemViewListener: OnLongClickItemViewListener<T?>? = null
+    private var clickEventReceiver /*item view 点击事件的接收者*/: Any? = null
+
+    private var mHelper: MultiHelper? = null
+    private val methodCachePool: Map<String, Method>
+        get() {
+            if (mMethodCachePool == null) {
+                mMethodCachePool = ArrayMap()
+            }
+            return mMethodCachePool!!
+        }
+
+    fun inject(receiver: Any) {
+        this.inject(receiver, null)
+    }
+
+    fun inject(receiver: Any, methodCachePool: Map<String, Method>? = null) {
+        if (checkIsNull(receiver, "inject receiver is null")) {
+            return
+        }
+        clickEventReceiver = receiver
+        mMethodCachePool = methodCachePool
+        if (mMethodCachePool == null) {
+            mMethodCachePool = createMethodCachePool(receiver)
+        }
+    }
+
+    @CallSuper
+    open fun onAttach(helper: MultiHelper) {
+        mHelper = helper
+    }
+
+    val helper: MultiHelper
+        get() {
+            checkNotNull(mHelper) { "MultiItem $this not attached to an MultiHelper." }
+            return mHelper as MultiHelper
+        }
+
+    open fun getItemId(position: Int): Long {
+        return RecyclerView.NO_ID
+    }
+
+    /**
+     * 当前 position 是否与当前 ItemType 匹配。这个方法是实现多样式 item 的关键！
+     * 如若此方法实现错误，那将导致某position上匹配不到ItemType，进而引发程序崩溃！
+     *
+     * @param bean     当前 position 对应的实体对象
+     * @param position 当前 position
+     * @return true 表示匹配；否则不匹配。
+     */
+    open fun isMatchForMe(bean: Any?, position: Int): Boolean {
+        return true
+    }
+
+    /**
+     * 创建 ViewHolder
+     *
+     * @param parent
+     * @return
+     */
+    abstract fun onCreateViewHolder(parent: ViewGroup): VH
+
+    /**
+     * 绑定数据
+     *
+     * @param holder
+     * @param bean
+     * @param position
+     * @param payloads
+     */
+    open fun onBindViewHolder(holder: VH, bean: T, position: Int,
+                              payloads: List<Any>) {
+        onBindViewHolder(holder, bean, position)
+    }
+
+    /**
+     * 绑定数据
+     *
+     * @param holder
+     * @param bean
+     * @param position
+     */
+    abstract fun onBindViewHolder(holder: VH, bean: T, position: Int)
+
+    /**
+     * View 已经回收。
+     *
+     * @param holder
+     */
+    open fun onViewRecycled(holder: VH) {}
+
+    open fun onFailedToRecycleView(holder: VH): Boolean {
+        return false
+    }
+
+    open fun onViewAttachedToWindow(holder: VH) {}
+    open fun onViewDetachedFromWindow(holder: VH) {}
+    open fun onAttachedToRecyclerView(recyclerView: RecyclerView) {}
+    open fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {}
+
+    fun setOnLongClickItemViewListener(listener: OnLongClickItemViewListener<T?>?) {
+        mOnLongClickItemViewListener = listener
+    }
+
+    fun setOnClickItemViewListener(itemListener: OnClickItemViewListener<T?>?) {
+        mOnClickItemViewListener = itemListener
+    }
+
+
+    protected fun registerClickEvent(holder: VH,
+                                     @IdRes vararg viewIds: Int) {
+        registerClickEvent(holder, null, *viewIds)
+    }
+
+    /**
+     * Item view 点击事件注册。（包含item 子view）
+     *
+     * @param holder
+     * @param method  目标方法名
+     * @param viewIds view的id 集合；因为可能存在多个view响应同一套点击逻辑的情况。
+     */
+    protected fun registerClickEvent(holder: VH,
+                                     method: String?,
+                                     @IdRes vararg viewIds: Int) {
+        /*如果不传viewId，则默认是注册item根布局的点击事件监听*/
+        if (viewIds.isEmpty()) {
+            registerClickEvent(holder, holder.itemView, method)
+            return
+        }
+        for (id in viewIds) {
+            val view = holder.itemView.findViewById<View>(id)
+            registerClickEvent(holder, view, method)
+        }
+    }
+
+    protected fun registerClickEvent(holder: VH, view: View, method: String?) {
+        view.isClickable = true
+        view.setOnClickListener { v: View ->
+            val position = holder.adapterPosition
+            if (position == RecyclerView.NO_POSITION) {
+                Log.e(TAG, "item 点击异常: position=$position")
+                return@setOnClickListener
+            }
+            val data = helper.getItem(position)
+            if (checkIsNull(data, "item 点击异常:data is null")) {
+                return@setOnClickListener
+            }
+            //优先监听器
+            if (mOnClickItemViewListener != null) {
+                mOnClickItemViewListener!!.onClickItemView(v, this, data as T, position)
+                return@setOnClickListener
+            }
+            callTagMethod(v, method, data, position, "item 点击异常")
+        }
+    }
+
+    /**
+     * Item view 长点击事件注册。（包含item 子view）
+     *
+     * @param holder
+     * @param method  目标方法名
+     * @param viewIds view的id 集合；因为可能存在多个view响应同一套点击逻辑的情况。
+     */
+    protected fun registerLongClickEvent(holder: VH,
+                                         method: String?,
+                                         @IdRes vararg viewIds: Int) {
+        /*如果不传viewId，则默认是注册item根布局的点击事件监听*/
+        if (viewIds.isEmpty()) {
+            registerLongClickEvent(holder, holder.itemView, method)
+            return
+        }
+        for (id in viewIds) {
+            val view = holder.itemView.findViewById<View>(id)
+            registerLongClickEvent(holder, view, method)
+        }
+    }
+
+    protected fun registerLongClickEvent(holder: VH, view: View, method: String?) {
+        view.isLongClickable = true
+        view.setOnLongClickListener { v: View ->
+            var consume = false
+            val position = holder.adapterPosition
+            if (position == RecyclerView.NO_POSITION) {
+                Log.e(TAG, "item 长点击异常: position=$position")
+                return@setOnLongClickListener consume
+            }
+            val data = helper.getItem(position)
+            if (checkIsNull(data, "item 长点击异常:data is null")) {
+                return@setOnLongClickListener consume
+            }
+            //监听器优先
+            if (mOnLongClickItemViewListener != null) {
+                return@setOnLongClickListener mOnLongClickItemViewListener!!.onLongClickItemView(v, this, data as T, position)
+            }
+            consume = callTagLongClickMethod(v, method, data, position, "item 长点击异常")
+            consume
+        }
+    }
+
+    /**
+     * 反射回调点击方法
+     *
+     * @param v
+     * @param data
+     * @param position
+     * @param errMsg
+     */
+    private fun callTagMethod(v: View, methodName: String?, data: Any?, position: Int, errMsg: String) {
+        try {
+            val method = methodCachePool[methodName]
+            if (checkIsNull(method, "callTagMethod method is null")) {
+                return
+            }
+            assert(method != null)
+            if (!method!!.isAccessible) {
+                method.isAccessible = true
+            }
+            method.invoke(clickEventReceiver, v, data, position)
+        } catch (e: Exception) {
+            Log.e(TAG, errMsg + ":" + e.message)
+        }
+    }
+
+    /**
+     * 反射回调长点击方法
+     *
+     * @param v
+     * @param data
+     * @param position
+     * @param errMsg
+     * @return
+     */
+    private fun callTagLongClickMethod(v: View, target: String?, data: Any?, position: Int, errMsg: String): Boolean {
+        var consume = false
+        try {
+            val method = methodCachePool[target]
+            if (checkIsNull(method, "callTagLongClickMethod method is null")) {
+                return consume
+            }
+            assert(method != null)
+            if (!method!!.isAccessible) {
+                method.isAccessible = true
+            }
+            consume = method.invoke(clickEventReceiver, v, data, position) as Boolean
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return consume
+    }
+
+    private fun checkIsNull(o: Any?, msg: String): Boolean {
+        if (o == null) {
+            Log.e(TAG, "===>$msg")
+        }
+        return o == null
+    }
+
+    companion object {
+
+        private const val TAG = "ItemType"
+
+        @JvmStatic
+        fun createMethodCachePool(clickEventReceiver: Any): Map<String, Method> {
+            val pool: MutableMap<String, Method> = ArrayMap()
+            try {
+                val clazz = clickEventReceiver.javaClass
+                val methods = clazz.declaredMethods
+                for (m in methods) {
+                    val annotation = m.getAnnotation(OnClickItemView::class.java)
+                    annotation?.let {
+                        pool[it.value] = m
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            return pool
+        }
+    }
+}
