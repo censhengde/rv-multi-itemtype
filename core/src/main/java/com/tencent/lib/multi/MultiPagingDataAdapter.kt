@@ -35,10 +35,10 @@ open class MultiPagingDataAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return mDelegate.onCreateViewHolder(parent, viewType) as RecyclerView.ViewHolder
+        return mDelegate.onCreateViewHolder(parent, viewType)
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: List<Any?>) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: List<Any>) {
         mDelegate.onBindViewHolder(holder, position, payloads)
     }
 

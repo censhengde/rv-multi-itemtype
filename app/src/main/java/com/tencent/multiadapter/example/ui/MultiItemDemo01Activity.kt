@@ -1,40 +1,40 @@
 package com.tencent.multiadapter.example.ui
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.tencent.lib.multi.MultiItemTypeAdapter
+import com.tencent.lib.multi.MultiAdapter
 import com.tencent.lib.multi.core.annotation.OnClickItemView
 import com.tencent.multiadapter.R
-import com.tencent.multiadapter.example.bean.AItemBean
+import com.tencent.multiadapter.databinding.ActivityMultiItemBinding
+import com.tencent.multiadapter.example.bean.BeanA
 import com.tencent.multiadapter.example.bean.ItemBean
 import com.tencent.multiadapter.example.item.*
-import kotlinx.android.synthetic.main.activity_multi_item.*
 import java.util.*
 
 class MultiItemDemo01Activity : AppCompatActivity() {
 
-    lateinit var adapter: MultiItemTypeAdapter
+    lateinit var adapter: MultiAdapter
+    private val vb by lazy { ActivityMultiItemBinding.inflate(LayoutInflater.from(this)) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_multi_item)
+        setContentView(vb.root)
         //初始化ItemType
         val item00 = ItemType00()
         val item01 = ItemType01()
         val item02 = ItemType02()
         /*初始化Adapter*/
-        adapter = MultiItemTypeAdapter(this)
+        adapter = MultiAdapter(this)
         /*将所有ItemType添加到Adapter中*/
         adapter.addItemType(item00)
                 .addItemType(item01)
                 .addItemType(item02)
         /*设置数据*/
         adapter.dataList=getData()
-        rv_list.adapter = adapter
-
-
+        vb.rvList.adapter = adapter
     }
 
     /* bItemType.bind(this)
@@ -63,8 +63,8 @@ class MultiItemDemo01Activity : AppCompatActivity() {
      */
 
     @OnClickItemView("onLongClickItem")
-    private fun onLongClickItem(view: View, itemBean: AItemBean, position: Int): Boolean {
-        Toast.makeText(this, "AItemBean:${itemBean.text},position:$position", Toast.LENGTH_SHORT).show()
+    private fun onLongClickItem(view: View, beanA: BeanA, position: Int): Boolean {
+        Toast.makeText(this, "AItemBean:${beanA.text},position:$position", Toast.LENGTH_SHORT).show()
         return true
     }
 

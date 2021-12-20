@@ -5,11 +5,11 @@ package com.tencent.multiadapter.example.bean;
  *
  * 说明：
  */
-public class BItemBean {
+public class BeanB {
 
     public String text;
 
-    public BItemBean(String text) {
+    public BeanB(String text) {
         this.text = text;
     }
 }

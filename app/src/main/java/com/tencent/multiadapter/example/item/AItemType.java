@@ -4,18 +4,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import com.tencent.lib.multi.core.SimpleItemType;
 import com.tencent.lib.multi.core.MultiViewHolder;
+import com.tencent.lib.multi.core.SimpleItemType;
 import com.tencent.lib.multi.core.annotation.OnClickItemView;
 import com.tencent.multiadapter.databinding.ItemABinding;
-import com.tencent.multiadapter.example.bean.AItemBean;
-
+import com.tencent.multiadapter.example.bean.BeanA;
 import java.util.List;
-
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -23,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * 说明：
  */
-public class AItemType extends SimpleItemType<AItemBean, ItemABinding> {
+public class AItemType extends SimpleItemType<BeanA, ItemABinding> {
 
     public AItemType() {
         inject(this);
@@ -31,7 +27,7 @@ public class AItemType extends SimpleItemType<AItemBean, ItemABinding> {
 
     @Override
     public boolean isMatchForMe(@Nullable Object bean, int position) {
-        return bean instanceof AItemBean;
+        return bean instanceof BeanA;
     }
 
     /**
@@ -41,36 +37,15 @@ public class AItemType extends SimpleItemType<AItemBean, ItemABinding> {
      * @param holder
      */
     @Override
-    public void onViewHolderCreated(@NonNull MultiViewHolder holder, ItemABinding binding) {
+    public void onViewHolderCreated(@NonNull MultiViewHolder holder, @NotNull ItemABinding binding) {
         /*注册监听器，不传view则默认是给item根布局注册监听*/
         registerClickEvent(holder, "onClickItem");
     }
 
     @Override
-    public void onBindViewHolder(@NonNull @NotNull ItemABinding binding,
-                                 @NonNull @NotNull AItemBean bean,
-                                 int position,
-                                 @NonNull @NotNull List<Object> payloads) {
-        if (payloads.isEmpty()){
-            onBindViewHolder(binding,bean,position);
-            return;
-        }
-        Log.e("===>", " A 类Item 局部刷新：" + position);
-        for (Object payload : payloads) {
-            if (payload instanceof Bundle) {
-                Bundle bundle = (Bundle) payload;
-                binding.tvA.setText(bundle.getString("content"));
-            }
-        }
-
-
-    }
-
-    @Override
     public void onBindViewHolder(@NonNull ItemABinding binding,
-                                 @NotNull AItemBean itemBean,
+                                 @NotNull BeanA itemBean,
                                  int position) {
-        Log.e("===>", " A 类Item 级别刷新：" + position);
         binding.tvA.setText(itemBean.text);
     }
 
@@ -83,7 +58,7 @@ public class AItemType extends SimpleItemType<AItemBean, ItemABinding> {
      * item点击事件
      */
     @OnClickItemView("onClickItem")
-    private void onClickItem(View view, AItemBean bean, int position) {
+    private void onClickItem(View view, BeanA bean, int position) {
         Toast.makeText(view.getContext(), "点击事件："+bean.text, Toast.LENGTH_SHORT).show();
     }
 }

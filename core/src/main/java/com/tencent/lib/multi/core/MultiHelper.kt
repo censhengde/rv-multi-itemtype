@@ -50,7 +50,7 @@ abstract class MultiHelper(val adapter: RecyclerView.Adapter<*>,
 
     fun onBindViewHolder(holder: RecyclerView.ViewHolder,
                          position: Int,
-                         payloads: List<Any?>) {
+                         payloads: List<Any>) {
         if (position == RecyclerView.NO_POSITION) {
             return
         }
