@@ -14,12 +14,12 @@ import java.util.ArrayList
  * 说明：实现Item多样式的公共逻辑封装。本质上是Adapter 生命周期的代理类，
  * 将 Adapter 生命周期分发给了position对应的ItemType。
  */
-abstract class MultiHelper(val adapter: RecyclerView.Adapter<*>,
-                           val activity: FragmentActivity? = null,
-                           val fragment: Fragment? = null,
-                           // 为减少反射成本，也可以由外部传进一个共享的缓存池。
-                           val shareMethodCachePool: Map<String, Method>? = null,
-                           private val initialCapacity: Int = 0) {
+abstract class MultiItemManager(val adapter: RecyclerView.Adapter<*>,
+                                val activity: FragmentActivity? = null,
+                                val fragment: Fragment? = null,
+                                // 为减少反射成本，也可以由外部传进一个共享的缓存池。
+                                val shareMethodCachePool: Map<String, Method>? = null,
+                                 initialCapacity: Int = 0) {
     // ItemType 池.
     private val itemTypePool = ArrayList<ItemType<Any, RecyclerView.ViewHolder>>(initialCapacity)
 
@@ -96,7 +96,7 @@ abstract class MultiHelper(val adapter: RecyclerView.Adapter<*>,
     abstract fun getItem(position: Int): Any?
 
     /**
-     * 添加 MultiItem
+     * 添加 ItemType
      *
      * @param itemType
      */

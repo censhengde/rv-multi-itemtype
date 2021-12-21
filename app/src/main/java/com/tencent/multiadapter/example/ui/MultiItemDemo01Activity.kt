@@ -6,8 +6,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.tencent.lib.multi.MultiAdapter
-import com.tencent.lib.multi.core.annotation.OnClickItemView
-import com.tencent.multiadapter.R
+import com.tencent.lib.multi.core.annotation.BindItemViewClickEvent
 import com.tencent.multiadapter.databinding.ActivityMultiItemBinding
 import com.tencent.multiadapter.example.bean.BeanA
 import com.tencent.multiadapter.example.bean.ItemBean
@@ -62,7 +61,7 @@ class MultiItemDemo01Activity : AppCompatActivity() {
      * Item 长点击事件
      */
 
-    @OnClickItemView("onLongClickItem")
+    @BindItemViewClickEvent("onLongClickItem")
     private fun onLongClickItem(view: View, beanA: BeanA, position: Int): Boolean {
         Toast.makeText(this, "AItemBean:${beanA.text},position:$position", Toast.LENGTH_SHORT).show()
         return true

@@ -4,7 +4,7 @@ import android.view.View
 import android.widget.Toast
 import com.tencent.lib.multi.core.MultiViewHolder
 import com.tencent.lib.multi.core.SimpleItemType
-import com.tencent.lib.multi.core.annotation.OnClickItemView
+import com.tencent.lib.multi.core.annotation.BindItemViewClickEvent
 import com.tencent.multiadapter.databinding.ItemA01Binding
 import com.tencent.multiadapter.example.bean.ItemBean
 
@@ -32,7 +32,7 @@ class ItemType01 : SimpleItemType<ItemBean, ItemA01Binding>() {
         vb.tvA.text = bean.text
     }
 
-    @OnClickItemView("onClickItemChildView")
+    @BindItemViewClickEvent("onClickItemChildView")
     private fun onClickItemChildView(view: View, itemBean: ItemBean, position: Int) {
         Toast.makeText(view.context, "ItemBean:${itemBean.text},position:$position", Toast.LENGTH_SHORT).show()
     }

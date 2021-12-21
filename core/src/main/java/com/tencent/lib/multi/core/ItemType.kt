@@ -5,9 +5,8 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
-import androidx.annotation.IdRes
 import androidx.recyclerview.widget.RecyclerView
-import com.tencent.lib.multi.core.annotation.OnClickItemView
+import com.tencent.lib.multi.core.annotation.BindItemViewClickEvent
 import com.tencent.lib.multi.core.listener.OnClickItemViewListener
 import com.tencent.lib.multi.core.listener.OnLongClickItemViewListener
 import java.lang.reflect.Method
@@ -25,7 +24,7 @@ abstract class ItemType<T, VH : RecyclerView.ViewHolder> {
     private var mOnLongClickItemViewListener: OnLongClickItemViewListener<T?>? = null
     private var clickEventReceiver: Any? = null /*item view 点击事件的接收者*/
 
-    private var mHelper: MultiHelper? = null
+    private var mManager: MultiItemManager? = null
     private val methodCachePool: Map<String, Method>
         get() {
             if (mMethodCachePool == null) {
@@ -49,14 +48,14 @@ abstract class ItemType<T, VH : RecyclerView.ViewHolder> {
     }
 
     @CallSuper
-    open fun onAttach(helper: MultiHelper) {
-        mHelper = helper
+    open fun onAttach(manager: MultiItemManager) {
+        mManager = manager
     }
 
-    val helper: MultiHelper
+    val manager: MultiItemManager
         get() {
-            checkNotNull(mHelper) { "ItemType $this not attached to an MultiHelper." }
-            return mHelper as MultiHelper
+            checkNotNull(mManager) { "ItemType $this not attached to an MultiHelper." }
+            return mManager as MultiItemManager
         }
 
     open fun getItemId(position: Int): Long {
@@ -114,7 +113,7 @@ abstract class ItemType<T, VH : RecyclerView.ViewHolder> {
                 Log.e(TAG, "item 点击异常: position=$position")
                 return@setOnClickListener
             }
-            val data = helper.getItem(position)
+            val data = manager.getItem(position)
             if (checkIsNull(data, "item 点击异常:data is null")) {
                 return@setOnClickListener
             }
@@ -139,7 +138,7 @@ abstract class ItemType<T, VH : RecyclerView.ViewHolder> {
                 Log.e(TAG, "item 长点击异常: position=$position")
                 return@setOnLongClickListener consume
             }
-            val data = helper.getItem(position)
+            val data = manager.getItem(position)
             if (checkIsNull(data, "item 长点击异常:data is null")) {
                 return@setOnLongClickListener consume
             }
@@ -221,7 +220,7 @@ abstract class ItemType<T, VH : RecyclerView.ViewHolder> {
                 val clazz = clickEventReceiver.javaClass
                 val methods = clazz.declaredMethods
                 for (m in methods) {
-                    val annotation = m.getAnnotation(OnClickItemView::class.java)
+                    val annotation = m.getAnnotation(BindItemViewClickEvent::class.java)
                     annotation?.let {
                         pool[it.value] = m
                     }
