@@ -1,7 +1,7 @@
 package com.tencent.multiadapter.example.item
 
 import com.tencent.lib.multi.core.SimpleItemType
-import com.tencent.multiadapter.databinding.ItemA02Binding
+import com.tencent.multiadapter.databinding.Item02Binding
 import com.tencent.multiadapter.example.bean.ItemBean
 
 /**
@@ -11,13 +11,13 @@ import com.tencent.multiadapter.example.bean.ItemBean
  * 说明：
 
  */
-class ItemType02 : SimpleItemType<ItemBean, ItemA02Binding>() {
+class ItemType02 : SimpleItemType<ItemBean, Item02Binding>() {
 
     override fun isMatchForMe(bean: Any?, position: Int): Boolean {
         return bean is ItemBean && bean.viewType == ItemBean.TYPE_02
     }
 
-    override fun onBindViewHolder(vb: ItemA02Binding, bean: ItemBean, position: Int) {
+    override fun onBindViewBinding(vb: Item02Binding, bean: ItemBean, position: Int) {
         vb.tvA.text = bean.text
     }
 }

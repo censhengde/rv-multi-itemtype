@@ -17,7 +17,7 @@ public class ItemBean {
     public static final int TYPE_02 = 2;
 
     public int id;
-    //Item类型标识（很关键！）
+    // Item类型标识（很关键！）
     public int viewType;
 
 
@@ -28,12 +28,6 @@ public class ItemBean {
     public ItemBean(int viewType, String text) {
         this.viewType = viewType;
         this.text = text;
-    }
-
-    public ItemBean(int id, int viewType, String text) {
-        this.viewType = viewType;
-        this.text = text;
-        this.id = id;
     }
 
 }

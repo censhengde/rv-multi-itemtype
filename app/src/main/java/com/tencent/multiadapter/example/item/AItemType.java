@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 public class AItemType extends SimpleItemType<BeanA, ItemABinding> {
 
     public AItemType() {
+        // 注入点击事件接收者
         inject(this);
     }
 
@@ -41,19 +42,15 @@ public class AItemType extends SimpleItemType<BeanA, ItemABinding> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ItemABinding binding,
+    public void onBindViewBinding(@NonNull ItemABinding binding,
                                  @NotNull BeanA itemBean,
                                  int position) {
         binding.tvA.setText(itemBean.text);
     }
 
-    @Override
-    public void onViewRecycled(MultiViewHolder holder) {
-        Log.e("AItemType ", "===> onViewRecycled" + holder.getItemViewType());
-    }
-
     /**
      * item点击事件
+     *  注意 bean 类型，一定要与当前 ItemType 的 bean 类型对应。
      */
     @BindItemViewClickEvent("onClickItem")
     private void onClickItem(View view, BeanA bean, int position) {

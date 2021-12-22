@@ -8,15 +8,9 @@ package com.tencent.multiadapter.example.bean;
  * */
 public class BeanC {
 
-    public static final int VIEW_TYPE_HEADER=1;/*头布局标识位*/
-    public static final int VIEW_TYPE_CHECKABLE = 0;/*可选中的Item标识位*/
-    public static final int VIEW_TYPE_FOOTER=2;/*脚布局标识位*/
-    public int viewType = VIEW_TYPE_CHECKABLE;/*默认是可选中item*/
-
     public String text="";
-    public BeanC(int viewType, String text) {
-        this.viewType = viewType;
+
+    public BeanC( String text) {
         this.text = text;
     }
-
 }

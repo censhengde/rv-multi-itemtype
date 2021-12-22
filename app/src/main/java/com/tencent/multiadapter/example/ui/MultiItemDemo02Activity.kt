@@ -32,8 +32,6 @@ class MultiItemDemo02Activity : AppCompatActivity() {
         val aItemType = AItemType()
         val bItemType = BItemType()
         val cItemType = CItemType()
-        bItemType.inject(this)
-        cItemType.inject(this)
         /*初始化Adapter*/
         adapter = MultiPagingDataAdapter(this, diffCallback = object : DiffUtil.ItemCallback<Any>() {
             override fun areItemsTheSame(oldItem: Any, newItem: Any): Boolean =false
@@ -58,35 +56,11 @@ class MultiItemDemo02Activity : AppCompatActivity() {
     private fun getData(): List<Any> {
         val beans = ArrayList<Any>()
         for (i in 0..5) {
-            beans.add(BeanA(0, "我是A类Item$i"))
+            beans.add(BeanA( "我是A类Item$i"))
             beans.add(BeanB("我是B类Item${i + 1}"))
-            beans.add(BeanC(0, "我是C类Item${i + 2}"))
+            beans.add(BeanC( "我是C类Item${i + 2}"))
         }
         return beans
-    }
-
-
-    /**
-     * item 子View 点击事件
-     */
-    private fun onClickItemChildView(view: View, beanA: BeanA, position: Int) {
-        Toast.makeText(this, "ItemBean:${beanA.text},position:$position", Toast.LENGTH_SHORT).show()
-    }
-
-    /**
-     * item 子View 长点击事件
-     */
-    private fun onLongClickItemChildView(view: View, beanA: BeanA, position: Int): Boolean {
-        Toast.makeText(this, "ItemBean:${beanA.text},position:$position", Toast.LENGTH_SHORT).show()
-        return true
-    }
-
-    /**
-     * Item 长点击事件
-     */
-    private fun onLongClickItem(view: View, beanA: BeanA, position: Int): Boolean {
-        Toast.makeText(this, "ItemBean:${beanA.text},position:$position", Toast.LENGTH_SHORT).show()
-        return true
     }
 
 }

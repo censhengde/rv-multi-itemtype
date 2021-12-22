@@ -62,16 +62,16 @@ abstract class SimpleItemType<T, VB : ViewBinding> : ItemType<T, MultiViewHolder
     final override fun onBindViewHolder(holder: MultiViewHolder, bean: T, position: Int,
                                         payloads: List<Any>) {
         /*这里直接 将ViewHolder 转换成 ViewBinding，让子类获取控件代码更简洁！*/
-        onBindViewHolder(holder.vb as VB, bean, position, payloads)
+        onBindViewBinding(holder.vb as VB, bean, position, payloads)
     }
 
 
     final override fun onBindViewHolder(holder: MultiViewHolder, bean: T, position: Int) {
     }
 
-    protected open fun onBindViewHolder(vb: VB, bean: T, position: Int, payloads: List<Any>) {
-        onBindViewHolder(vb, bean, position)
+    protected open fun onBindViewBinding(vb: VB, bean: T, position: Int, payloads: List<Any>) {
+        onBindViewBinding(vb, bean, position)
     }
 
-    protected abstract fun onBindViewHolder(vb: VB, bean: T, position: Int)
+    protected abstract fun onBindViewBinding(vb: VB, bean: T, position: Int)
 }

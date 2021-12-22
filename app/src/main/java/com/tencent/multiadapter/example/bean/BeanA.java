@@ -10,42 +10,12 @@ import java.util.Objects;
  */
 public class BeanA {
 
-    //所有Item类型都在这里定义
-    public static final int TYPE_A_00 = 0;
-    public static final int TYPE_A_01 = 1;
-    public static final int TYPE_A_02 = 2;
-
-    public int id;
-    //Item类型标识（很关键！）
-    public int viewType;
-
-
     //item具体业务数据字段
+    public int id;
     public String text = "";
 
-
-    public BeanA(int viewType, String text) {
-        this.viewType = viewType;
+    public BeanA( String text) {
         this.text = text;
     }
 
-    public BeanA(int id, int viewType, String text) {
-        this.viewType = viewType;
-        this.text = text;
-        this.id = id;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-
-        BeanA itemBean = (BeanA) o;
-        return id == itemBean.id &&
-                viewType == itemBean.viewType &&
-                TextUtils.equals(text, itemBean.text);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, viewType, text);
-    }
 }

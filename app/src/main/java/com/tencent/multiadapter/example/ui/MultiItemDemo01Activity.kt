@@ -27,13 +27,7 @@ class MultiItemDemo01Activity : AppCompatActivity() {
         val item01 = ItemType01()
         val item02 = ItemType02()
         /*初始化Adapter*/
-        adapter = MultiAdapter(this, diffCallback = object : DiffUtil.ItemCallback<ItemBean>() {
-            override fun areItemsTheSame(oldItem: ItemBean, newItem: ItemBean): Boolean = false
-
-            override fun areContentsTheSame(oldItem: ItemBean, newItem: ItemBean): Boolean {
-                return false
-            }
-        })
+        adapter = MultiAdapter(this)
         /*将所有ItemType添加到Adapter中*/
         adapter.addItemType(item00)
                 .addItemType(item01)
@@ -43,8 +37,6 @@ class MultiItemDemo01Activity : AppCompatActivity() {
         vb.rvList.adapter = adapter
     }
 
-    /* bItemType.bind(this)
-        cItemType.bind(this)*/
     /**
      * 模拟数据
      */
@@ -56,17 +48,6 @@ class MultiItemDemo01Activity : AppCompatActivity() {
             beans.add(ItemBean(ItemBean.TYPE_02, "我是A_02类Item${i + 2}"))
         }
         return beans
-    }
-
-
-    /**
-     * Item 长点击事件
-     */
-
-    @BindItemViewClickEvent("onLongClickItem")
-    private fun onLongClickItem(view: View, beanA: BeanA, position: Int): Boolean {
-        Toast.makeText(this, "AItemBean:${beanA.text},position:$position", Toast.LENGTH_SHORT).show()
-        return true
     }
 
 }

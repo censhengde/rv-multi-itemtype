@@ -23,21 +23,8 @@ public class CItemType extends SimpleItemType<BeanC, ItemCBinding> {
     }
 
     @Override
-    public void onViewHolderCreated(@NonNull MultiViewHolder holder,
-            @NonNull ItemCBinding binding) {
-        registerLongClickEvent(holder, binding.ivC,"onLongClickItemChildView");
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull ItemCBinding binding,
+    public void onBindViewBinding(@NonNull ItemCBinding binding,
                                  @NonNull BeanC bean, int position) {
         binding.tvC.setText(bean.text);
     }
-
-    @SuppressLint("LongLogTag")
-    @Override
-    public void onViewRecycled(MultiViewHolder holder) {
-        Log.e("===> CItemType onViewRecycled",""+holder.getItemViewType());
-    }
-
 }
