@@ -23,43 +23,18 @@ Adapter，达到无缝兼容类似于jetpack Paging2、3系列组件！**
 
 
 # 依赖
- 由于jcenter已跑路，目前项目已迁至JitPack，依赖方式如下：
+(kotlin 重塑版即将上线，敬请关注！） 
 
-1）在工程根目录build.gradle添加：
-```
-allprojects {
-    repositories {  
-    
-    maven { url 'https://jitpack.io' }  
-    
-      }  
-    }
-```
 
-2）在module build.gradle 添加：
-```
-dependencies {
 
-implementation 'com.github.censhengde.MultiAdapter:core:1.1.5'  //核心模块(必选）
-
-//分页模块（可选），提供谷歌paging3 PagingDataAdapter 的改造：MultiPagingDataAdapter
-implementation 'com.github.censhengde.MultiAdapter:paging:1.1.5'
-
-}
-```
 
 # 版本更新说明
-1.1.2版本新增DiffUtil支持。
+2.0.0 kotlin 重塑版：精简工程功能，进一步简化用法，移除不相干功能。
 
-1.1.3版本移除ItemType getViewType方法；ItemType onBindViewHolder方法的 MultiHelper helper参数替换为 T bean。
-
-1.1.4版本新增ViewBinding支持。
-
-1.1.5版本新增不同item 之间 实体类类型隔离。
 
 # 问题反馈
  1 请加群：
 
-![MultiAdapter问题反馈群群聊二维码.png](image/MultiAdapter问题反馈群群聊二维码.png)
+![问题反馈群群聊二维码.png](image/MultiAdapter问题反馈群群聊二维码.png)
 
 [详细文档](https://www.jianshu.com/p/5bc618cb1c1d)
