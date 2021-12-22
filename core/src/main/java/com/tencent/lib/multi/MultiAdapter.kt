@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.tencent.lib.multi.core.MultiHelper
+import com.tencent.lib.multi.core.MultiItemManager
 import com.tencent.lib.multi.core.ItemType
 import java.lang.reflect.Method
 
@@ -27,51 +27,51 @@ open class MultiAdapter(
         get() {
             return AsyncListDiffer(this, diffCallback ?: return null)
         }
-    private val delegate: MultiHelper = object : MultiHelper(this, activity, fragment, shareMethodCachePool) {
+    private val mManager: MultiItemManager = object : MultiItemManager(this, activity, fragment, shareMethodCachePool) {
         override fun getItem(position: Int): Any? {
             return this@MultiAdapter.getItem(position)
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return delegate.onCreateViewHolder(parent, viewType)
+        return mManager.onCreateViewHolder(parent, viewType)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {}
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: List<Any>) {
-        delegate.onBindViewHolder(holder, position, payloads)
+        mManager.onBindViewHolder(holder, position, payloads)
     }
 
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
-        delegate.onViewRecycled(holder)
+        mManager.onViewRecycled(holder)
     }
 
     override fun getItemViewType(position: Int): Int {
-        return delegate.getItemViewType(position)
+        return mManager.getItemViewType(position)
     }
 
     override fun getItemId(position: Int): Long {
-        return delegate.getItemId(position)
+        return mManager.getItemId(position)
     }
 
     override fun onFailedToRecycleView(holder: RecyclerView.ViewHolder): Boolean {
-        return delegate.onFailedToRecycleView(holder)
+        return mManager.onFailedToRecycleView(holder)
     }
 
     override fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
-        delegate.onViewAttachedToWindow(holder)
+        mManager.onViewAttachedToWindow(holder)
     }
 
     override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
-        delegate.onViewAttachedToWindow(holder)
+        mManager.onViewAttachedToWindow(holder)
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-        delegate.onAttachedToRecyclerView(recyclerView)
+        mManager.onAttachedToRecyclerView(recyclerView)
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-        delegate.onDetachedFromRecyclerView(recyclerView)
+        mManager.onDetachedFromRecyclerView(recyclerView)
     }
 
     override fun getItemCount(): Int {
@@ -87,7 +87,7 @@ open class MultiAdapter(
     }
 
     fun addItemType(type: ItemType<*, *>): MultiAdapter {
-        delegate.addItemType(type)
+        mManager.addItemType(type)
         return this
     }
 

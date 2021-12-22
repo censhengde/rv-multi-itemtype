@@ -1,6 +1,5 @@
 package com.tencent.multiadapter.example.item;
 
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -8,10 +7,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.tencent.lib.multi.core.MultiViewHolder;
 import com.tencent.lib.multi.core.SimpleItemType;
-import com.tencent.lib.multi.core.annotation.OnClickItemView;
+import com.tencent.lib.multi.core.annotation.BindItemViewClickEvent;
 import com.tencent.multiadapter.databinding.ItemABinding;
 import com.tencent.multiadapter.example.bean.BeanA;
-import java.util.List;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -39,7 +37,7 @@ public class AItemType extends SimpleItemType<BeanA, ItemABinding> {
     @Override
     public void onViewHolderCreated(@NonNull MultiViewHolder holder, @NotNull ItemABinding binding) {
         /*注册监听器，不传view则默认是给item根布局注册监听*/
-        registerClickEvent(holder, "onClickItem");
+        registerClickEvent(holder, holder.itemView,"onClickItem");
     }
 
     @Override
@@ -57,7 +55,7 @@ public class AItemType extends SimpleItemType<BeanA, ItemABinding> {
     /**
      * item点击事件
      */
-    @OnClickItemView("onClickItem")
+    @BindItemViewClickEvent("onClickItem")
     private void onClickItem(View view, BeanA bean, int position) {
         Toast.makeText(view.getContext(), "点击事件："+bean.text, Toast.LENGTH_SHORT).show();
     }
