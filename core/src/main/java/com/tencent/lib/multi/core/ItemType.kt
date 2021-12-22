@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
+import androidx.annotation.IdRes
 import androidx.recyclerview.widget.RecyclerView
 import com.tencent.lib.multi.core.annotation.BindItemViewClickEvent
 import com.tencent.lib.multi.core.listener.OnClickItemViewListener
@@ -102,10 +103,14 @@ abstract class ItemType<T, VH : RecyclerView.ViewHolder> {
         mOnClickItemViewListener = itemListener
     }
 
+    protected fun registerClickEvent(holder: VH, @IdRes id: Int, event: String) {
+        registerClickEvent(holder, holder.itemView.findViewById(id), event)
+    }
+
     /**
      * 注册 item view 点击事件。
      */
-    protected fun registerClickEvent(holder: VH, view: View, method: String?) {
+    protected fun registerClickEvent(holder: VH, view: View, event: String) {
         view.isClickable = true
         view.setOnClickListener { v: View ->
             val position = holder.adapterPosition
@@ -122,14 +127,42 @@ abstract class ItemType<T, VH : RecyclerView.ViewHolder> {
                 mOnClickItemViewListener!!.onClickItemView(v, this, data as T, position)
                 return@setOnClickListener
             }
-            callTagMethod(v, method, data, position, "item 点击异常")
+            callTagMethod(v, event, data, position, "item 点击异常")
         }
+    }
+
+    /**
+     * 反射回调点击方法
+     *
+     * @param v
+     * @param data
+     * @param position
+     * @param errMsg
+     */
+    private fun callTagMethod(v: View, event: String, data: Any?, position: Int, errMsg: String) {
+        try {
+            val method = methodCachePool[event]
+            if (checkIsNull(method, "callTagMethod method is null")) {
+                return
+            }
+            assert(method != null)
+            if (!method!!.isAccessible) {
+                method.isAccessible = true
+            }
+            method.invoke(clickEventReceiver, v, data, position)
+        } catch (e: Exception) {
+            Log.e(TAG, errMsg + ":" + e.message)
+        }
+    }
+
+    protected fun registerLongClickEvent(holder: VH, @IdRes id: Int, event: String) {
+        registerLongClickEvent(holder, holder.itemView.findViewById(id), event)
     }
 
     /**
      * 注册 item view 长点击事件。
      */
-    protected fun registerLongClickEvent(holder: VH, view: View, method: String?) {
+    protected fun registerLongClickEvent(holder: VH, view: View, event: String) {
         view.isLongClickable = true
         view.setOnLongClickListener { v: View ->
             var consume = false
@@ -146,34 +179,11 @@ abstract class ItemType<T, VH : RecyclerView.ViewHolder> {
             if (mOnLongClickItemViewListener != null) {
                 return@setOnLongClickListener mOnLongClickItemViewListener!!.onLongClickItemView(v, this, data as T, position)
             }
-            consume = callTagLongClickMethod(v, method, data, position, "item 长点击异常")
+            consume = callTagLongClickMethod(v, event, data, position, "item 长点击异常")
             consume
         }
     }
 
-    /**
-     * 反射回调点击方法
-     *
-     * @param v
-     * @param data
-     * @param position
-     * @param errMsg
-     */
-    private fun callTagMethod(v: View, methodName: String?, data: Any?, position: Int, errMsg: String) {
-        try {
-            val method = methodCachePool[methodName]
-            if (checkIsNull(method, "callTagMethod method is null")) {
-                return
-            }
-            assert(method != null)
-            if (!method!!.isAccessible) {
-                method.isAccessible = true
-            }
-            method.invoke(clickEventReceiver, v, data, position)
-        } catch (e: Exception) {
-            Log.e(TAG, errMsg + ":" + e.message)
-        }
-    }
 
     /**
      * 反射回调长点击方法
@@ -184,10 +194,10 @@ abstract class ItemType<T, VH : RecyclerView.ViewHolder> {
      * @param errMsg
      * @return
      */
-    private fun callTagLongClickMethod(v: View, target: String?, data: Any?, position: Int, errMsg: String): Boolean {
+    private fun callTagLongClickMethod(v: View, event: String, data: Any?, position: Int, errMsg: String): Boolean {
         var consume = false
         try {
-            val method = methodCachePool[target]
+            val method = methodCachePool[event]
             if (checkIsNull(method, "callTagLongClickMethod method is null")) {
                 return consume
             }

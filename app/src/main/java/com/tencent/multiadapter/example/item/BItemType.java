@@ -31,7 +31,7 @@ public class BItemType extends SimpleItemType<BeanB, ItemBBinding> {
     @Override
     public void onViewHolderCreated(@NonNull MultiViewHolder holder, @NonNull ItemBBinding binding) {
         /*注册监听器，不传viewId则默认是给item根布局注册监听*/
-        registerLongClickEvent(holder, "onLongClickItem");
+        registerLongClickEvent(holder, binding.getRoot(),"onLongClickItem");
         registerClickEvent(holder, binding.btnB, "onClickItemChildView");
         registerClickEvent(holder, binding.tvB, "onClickItemChildView");
 
