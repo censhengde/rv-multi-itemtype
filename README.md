@@ -1,4 +1,4 @@
-# 最新版本：1.1.5
+
 # 介绍
 
    rv-multi-itemtype
@@ -451,4 +451,4 @@ class MultiItemDemo02Activity : AppCompatActivity() {
 
 ![问题反馈群群聊二维码.png](image/MultiAdapter问题反馈群群聊二维码.png)
 
-[详细文档](https://www.jianshu.com/p/5bc618cb1c1d)
+
