@@ -1,22 +1,14 @@
 package com.tencent.multiadapter.example.item;
 
-import android.annotation.SuppressLint;
-import android.os.Bundle;
 import android.util.Log;
-
 import android.view.View;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
-
-import com.tencent.lib.multi.core.SimpleItemType;
 import com.tencent.lib.multi.core.MultiViewHolder;
+import com.tencent.lib.multi.core.SimpleItemType;
 import com.tencent.lib.multi.core.annotation.BindItemViewClickEvent;
 import com.tencent.multiadapter.databinding.ItemBBinding;
-import com.tencent.multiadapter.example.bean.BeanA;
 import com.tencent.multiadapter.example.bean.BeanB;
-
-import java.util.List;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Author：岑胜德 on 2021/1/6 18:04

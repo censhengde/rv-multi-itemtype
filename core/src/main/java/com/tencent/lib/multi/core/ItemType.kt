@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
+import androidx.annotation.IdRes
 import androidx.recyclerview.widget.RecyclerView
 import com.tencent.lib.multi.core.annotation.BindItemViewClickEvent
 import com.tencent.lib.multi.core.listener.OnClickItemViewListener
