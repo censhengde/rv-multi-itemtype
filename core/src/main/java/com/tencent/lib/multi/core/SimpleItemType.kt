@@ -12,6 +12,7 @@ import java.lang.reflect.ParameterizedType
  *
  * 说明：支持 ViewBinding用法。
  */
+@Suppress("UNCHECKED_CAST")
 abstract class SimpleItemType<T, VB : ViewBinding> : ItemType<T, MultiViewHolder>() {
 
     private var mBindMethod: Method? = null

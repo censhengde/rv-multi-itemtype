@@ -14,10 +14,9 @@ import java.lang.reflect.Method
 
 /**
  * Author：岑胜德 on 2021/2/22 16:23
- *
- *
  * 说明：某一种类型 item 的抽象。
  */
+
 abstract class ItemType<T, VH : RecyclerView.ViewHolder> {
 
     private var mMethodCachePool: Map<String, Method>? = null /*缓存反射获取的method对象，减少反射成本*/

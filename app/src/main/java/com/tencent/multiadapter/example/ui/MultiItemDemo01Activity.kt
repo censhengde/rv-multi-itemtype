@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DiffUtil
 import com.tencent.lib.multi.MultiAdapter
 import com.tencent.lib.multi.core.annotation.BindItemViewClickEvent
 import com.tencent.multiadapter.databinding.ActivityMultiItemBinding
@@ -26,13 +27,19 @@ class MultiItemDemo01Activity : AppCompatActivity() {
         val item01 = ItemType01()
         val item02 = ItemType02()
         /*初始化Adapter*/
-        adapter = MultiAdapter(this)
+        adapter = MultiAdapter(this, diffCallback = object : DiffUtil.ItemCallback<ItemBean>() {
+            override fun areItemsTheSame(oldItem: ItemBean, newItem: ItemBean): Boolean = false
+
+            override fun areContentsTheSame(oldItem: ItemBean, newItem: ItemBean): Boolean {
+                return false
+            }
+        })
         /*将所有ItemType添加到Adapter中*/
         adapter.addItemType(item00)
                 .addItemType(item01)
                 .addItemType(item02)
         /*设置数据*/
-        adapter.dataList=getData()
+        adapter.dataList = getData()
         vb.rvList.adapter = adapter
     }
 
@@ -50,11 +57,6 @@ class MultiItemDemo01Activity : AppCompatActivity() {
         }
         return beans
     }
-
-
-
-
-
 
 
     /**

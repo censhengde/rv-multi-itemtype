@@ -36,9 +36,8 @@ class MultiItemDemo02Activity : AppCompatActivity() {
         cItemType.inject(this)
         /*初始化Adapter*/
         adapter = MultiPagingDataAdapter(this, diffCallback = object : DiffUtil.ItemCallback<Any>() {
-            override fun areItemsTheSame(oldItem: Any, newItem: Any): Boolean = true
-
-            override fun areContentsTheSame(oldItem: Any, newItem: Any): Boolean = true
+            override fun areItemsTheSame(oldItem: Any, newItem: Any): Boolean =false
+            override fun areContentsTheSame(oldItem: Any, newItem: Any): Boolean =false
 
         })
         /*将所有ItemType添加到Adapter中*/

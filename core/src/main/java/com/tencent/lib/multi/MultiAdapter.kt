@@ -16,17 +16,22 @@ import java.lang.reflect.Method
  *
  * 说明：未分页的Adapter
  */
+@Suppress("UNCHECKED_CAST")
 open class MultiAdapter(
         activity: FragmentActivity? = null,
         fragment: Fragment? = null,
         shareMethodCachePool: Map<String, Method>? = null,
-        private val diffCallback: DiffUtil.ItemCallback<Any>? = null)
+        diffCallback: DiffUtil.ItemCallback<*>? = null)
     : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val mAsyncListDiffer: AsyncListDiffer<Any>?
-        get() {
-            return AsyncListDiffer(this, diffCallback ?: return null)
+    private var mAsyncListDiffer: AsyncListDiffer<Any>? = null
+
+    init {
+        diffCallback?.let {
+            mAsyncListDiffer = AsyncListDiffer(this, diffCallback as DiffUtil.ItemCallback<Any>)
         }
+    }
+
     private val mManager: MultiItemManager = object : MultiItemManager(this, activity, fragment, shareMethodCachePool) {
         override fun getItem(position: Int): Any? {
             return this@MultiAdapter.getItem(position)

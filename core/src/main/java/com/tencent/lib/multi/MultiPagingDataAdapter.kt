@@ -17,12 +17,13 @@ import java.lang.reflect.Method
  * 说明：
 
  */
+@Suppress("UNCHECKED_CAST")
 open class MultiPagingDataAdapter(
         activity: FragmentActivity? = null,
         fragment: Fragment? = null,
         shareMethodCachePool: Map<String, Method>? = null,
-        diffCallback: DiffUtil.ItemCallback<Any>)
-    : PagingDataAdapter<Any, RecyclerView.ViewHolder>(diffCallback) {
+        diffCallback: DiffUtil.ItemCallback<*>)
+    : PagingDataAdapter<Any, RecyclerView.ViewHolder>(diffCallback as DiffUtil.ItemCallback<Any>) {
 
     private val mDelegate = object : MultiItemManager(this, activity, fragment, shareMethodCachePool) {
         override fun getItem(position: Int): Any? {

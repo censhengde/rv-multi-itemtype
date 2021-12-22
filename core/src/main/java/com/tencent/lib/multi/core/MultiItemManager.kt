@@ -100,7 +100,7 @@ abstract class MultiItemManager(val adapter: RecyclerView.Adapter<*>,
      *
      * @param itemType
      */
-    @SuppressWarnings("unchecked all")
+    @Suppress("UNCHECKED_CAST")
     fun addItemType(itemType: ItemType<*, *>) {
         // 保证一种 ItemType 只有一个实例。
         if (itemTypePool.contains(itemType)) {
