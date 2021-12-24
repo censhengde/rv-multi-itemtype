@@ -4,8 +4,11 @@ buildscript {
     ext.kotlin_version = '1.4.30-M1'
 
     repositories {
-        google()
+        jcenter()
         mavenCentral()
+        google()
+
+
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.6.3'
