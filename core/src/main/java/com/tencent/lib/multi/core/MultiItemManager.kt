@@ -17,8 +17,6 @@ import java.util.ArrayList
 abstract class MultiItemManager(val adapter: RecyclerView.Adapter<*>,
                                 val activity: FragmentActivity? = null,
                                 val fragment: Fragment? = null,
-                                // 为减少反射成本，也可以由外部传进一个共享的缓存池。
-                                val shareMethodCachePool: Map<String, Method>? = null,
                                  initialCapacity: Int = 0) {
     // ItemType 池.
     private val itemTypePool = ArrayList<ItemType<Any, RecyclerView.ViewHolder>>(initialCapacity)

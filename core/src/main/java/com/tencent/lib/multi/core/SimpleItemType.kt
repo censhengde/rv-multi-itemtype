@@ -18,7 +18,7 @@ abstract class SimpleItemType<T, VB : ViewBinding> : ItemType<T, MultiViewHolder
     private var mBindMethod: Method? = null
 
 
-    override fun onCreateViewHolder(parent: ViewGroup): MultiViewHolder {
+    final override fun onCreateViewHolder(parent: ViewGroup): MultiViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val vb = onCreateViewBinding(parent, inflater)
         val holder = MultiViewHolder(vb)

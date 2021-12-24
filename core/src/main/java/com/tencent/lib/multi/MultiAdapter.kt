@@ -20,7 +20,6 @@ import java.lang.reflect.Method
 open class MultiAdapter(
         activity: FragmentActivity? = null,
         fragment: Fragment? = null,
-        shareMethodCachePool: Map<String, Method>? = null,
         diffCallback: DiffUtil.ItemCallback<*>? = null)
     : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -32,7 +31,7 @@ open class MultiAdapter(
         }
     }
 
-    private val mManager: MultiItemManager = object : MultiItemManager(this, activity, fragment, shareMethodCachePool) {
+    private val mManager: MultiItemManager = object : MultiItemManager(this, activity, fragment) {
         override fun getItem(position: Int): Any? {
             return this@MultiAdapter.getItem(position)
         }
