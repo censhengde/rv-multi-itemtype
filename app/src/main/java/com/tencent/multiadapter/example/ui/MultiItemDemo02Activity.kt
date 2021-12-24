@@ -2,13 +2,10 @@ package com.tencent.multiadapter.example.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.DiffUtil
-import com.tencent.lib.multi.MultiAdapter
 import com.tencent.lib.multi.MultiPagingDataAdapter
 import com.tencent.multiadapter.databinding.ActivityMultiItemBinding
 import com.tencent.multiadapter.example.bean.BeanA
