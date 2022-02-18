@@ -36,7 +36,7 @@ Adapter，达到无缝兼容类似于jetpack Paging2、3系列组件的目的！
 **2.在 app module 的 build.gradle文件添加依赖：**
 ```
    dependencies {
-       implementation 'com.gitee.sdecen:rv-multi-itemtype:2.0.2'
+       implementation 'com.gitee.sdecen:rv-multi-itemtype:2.0.3'
    }
 ```
 
