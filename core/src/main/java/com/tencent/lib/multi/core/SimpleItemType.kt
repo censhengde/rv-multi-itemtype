@@ -26,7 +26,7 @@ abstract class SimpleItemType<T, VB : ViewBinding> : ItemType<T, MultiViewHolder
         return holder
     }
 
-    protected open fun onCreateViewBinding(parent: ViewGroup?, inflater: LayoutInflater): VB {
+    protected open fun onCreateViewBinding(parent: ViewGroup, inflater: LayoutInflater): VB {
         var vb: VB? = null
         try {
             if (mBindMethod == null) {
