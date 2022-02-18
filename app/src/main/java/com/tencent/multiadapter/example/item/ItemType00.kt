@@ -32,7 +32,7 @@ class ItemType00 : SimpleItemType<ItemBean, Item00Binding>() {
         registerLongClickEvent(holder,vb.tvA,"onLongClickItemChildView")
     }
 
-    override fun onBindViewBinding(vb: Item00Binding, bean: ItemBean, position: Int) {
+    override fun onBindView(vb: Item00Binding, bean: ItemBean, position: Int) {
         vb.tvA.text = bean.text
     }
 

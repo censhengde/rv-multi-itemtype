@@ -42,9 +42,9 @@ public class AItemType extends SimpleItemType<BeanA, ItemABinding> {
     }
 
     @Override
-    public void onBindViewBinding(@NonNull ItemABinding binding,
-                                 @NotNull BeanA itemBean,
-                                 int position) {
+    public void onBindView(@NonNull ItemABinding binding,
+                           @NotNull BeanA itemBean,
+                           int position) {
         binding.tvA.setText(itemBean.text);
     }
 

@@ -34,7 +34,7 @@ public class BItemType extends SimpleItemType<BeanB, ItemBBinding> {
     }
 
     @Override
-    public void onBindViewBinding(@NonNull ItemBBinding binding, @NonNull BeanB data, int position) {
+    public void onBindView(@NonNull ItemBBinding binding, @NonNull BeanB data, int position) {
         Log.e("===>", " B类 Item 级别刷新：" + position);
         binding.tvB.setText(data.text);
 

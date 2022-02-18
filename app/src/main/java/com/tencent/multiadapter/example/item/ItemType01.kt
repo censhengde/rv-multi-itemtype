@@ -17,7 +17,7 @@ class ItemType01 : SimpleItemType<ItemBean, Item01Binding>() {
         return bean is ItemBean && bean.viewType == ItemBean.TYPE_01
     }
 
-    override fun onBindViewBinding(vb: Item01Binding, bean: ItemBean, position: Int) {
+    override fun onBindView(vb: Item01Binding, bean: ItemBean, position: Int) {
         vb.tvA.text = bean.text
     }
 

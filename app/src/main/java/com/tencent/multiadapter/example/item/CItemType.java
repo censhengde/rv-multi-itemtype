@@ -23,8 +23,8 @@ public class CItemType extends SimpleItemType<BeanC, ItemCBinding> {
     }
 
     @Override
-    public void onBindViewBinding(@NonNull ItemCBinding binding,
-                                 @NonNull BeanC bean, int position) {
+    public void onBindView(@NonNull ItemCBinding binding,
+                           @NonNull BeanC bean, int position) {
         binding.tvC.setText(bean.text);
     }
 }

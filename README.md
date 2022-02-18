@@ -143,7 +143,7 @@ class ItemType00 : SimpleItemType<ItemBean, Item00Binding>() {
     // 这里其实就是 onBindViewHolder 方法的变种，只是把ViewHolder 参数
     // 转变成了 ViewBinding 对象，这样使用起来就特别简单了！去除一切 自定义
     // ViewHolder及 findViewById 工作！
-    override fun onBindViewBinding(vb: Item00Binding, bean: ItemBean, position: Int) {
+    override fun onBindView(vb: Item00Binding, bean: ItemBean, position: Int) {
         vb.tvA.text = bean.text
     }
 
@@ -186,7 +186,7 @@ class ItemType01 : SimpleItemType<ItemBean, Item01Binding>() {
         return bean is ItemBean && bean.viewType == ItemBean.TYPE_01
     }
     
-    override fun onBindViewBinding(vb: Item01Binding, bean: ItemBean, position: Int) {
+    override fun onBindView(vb: Item01Binding, bean: ItemBean, position: Int) {
         vb.tvA.text = bean.text
     }
     
@@ -205,7 +205,7 @@ class ItemType02 : SimpleItemType<ItemBean, Item02Binding>() {
         return bean is ItemBean && bean.viewType == ItemBean.TYPE_02
     }
 
-    override fun onBindViewBinding(vb: Item02Binding, bean: ItemBean, position: Int) {
+    override fun onBindView(vb: Item02Binding, bean: ItemBean, position: Int) {
         vb.tvA.text = bean.text
     }
 }
@@ -337,7 +337,7 @@ public class AItemType extends SimpleItemType<BeanA, ItemABinding> {
     }
 
     @Override
-    public void onBindViewBinding(@NonNull ItemABinding binding,
+    public void onBindView(@NonNull ItemABinding binding,
                                  @NotNull BeanA itemBean,
                                  int position) {
         binding.tvA.setText(itemBean.text);
@@ -373,7 +373,7 @@ public class BItemType extends SimpleItemType<BeanB, ItemBBinding> {
     }
 
     @Override
-    public void onBindViewBinding(@NonNull ItemBBinding binding, @NonNull BeanB data, int position) {
+    public void onBindView(@NonNull ItemBBinding binding, @NonNull BeanB data, int position) {
       
         binding.tvB.setText(data.text);
 
@@ -399,7 +399,7 @@ public class CItemType extends SimpleItemType<BeanC, ItemCBinding> {
     }
 
     @Override
-    public void onBindViewBinding(@NonNull ItemCBinding binding,
+    public void onBindView(@NonNull ItemCBinding binding,
                                  @NonNull BeanC bean, int position) {
         binding.tvC.setText(bean.text);
     }
