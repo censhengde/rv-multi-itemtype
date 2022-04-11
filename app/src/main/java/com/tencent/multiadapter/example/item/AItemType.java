@@ -1,13 +1,13 @@
 package com.tencent.multiadapter.example.item;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.tencent.lib.multi.core.MultiViewHolder;
 import com.tencent.lib.multi.core.SimpleItemType;
-import com.tencent.lib.multi.core.annotation.BindItemViewClickEvent;
 import com.tencent.multiadapter.databinding.ItemABinding;
 import com.tencent.multiadapter.example.bean.BeanA;
 import org.jetbrains.annotations.NotNull;
@@ -19,13 +19,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public class AItemType extends SimpleItemType<BeanA, ItemABinding> {
 
-    public AItemType() {
-        // 注入点击事件接收者
-        inject(this);
-    }
-
     @Override
-    public boolean isMatchForMe(@Nullable Object bean, int position) {
+    public boolean isMatched(@Nullable Object bean, int position) {
         return bean instanceof BeanA;
     }
 
@@ -37,8 +32,7 @@ public class AItemType extends SimpleItemType<BeanA, ItemABinding> {
      */
     @Override
     public void onViewHolderCreated(@NonNull MultiViewHolder holder, @NotNull ItemABinding binding) {
-        /*注册监听器，不传view则默认是给item根布局注册监听*/
-        registerClickEvent(holder, holder.itemView,"onClickItem");
+        registerClickEvent(this,holder, holder.itemView,"onClickItem");
     }
 
     @Override
@@ -52,7 +46,7 @@ public class AItemType extends SimpleItemType<BeanA, ItemABinding> {
      * item点击事件
      *  注意 bean 类型，一定要与当前 ItemType 的 bean 类型对应。
      */
-    @BindItemViewClickEvent("onClickItem")
+    @Keep
     private void onClickItem(View view, BeanA bean, int position) {
         Toast.makeText(view.getContext(), "点击事件："+bean.text, Toast.LENGTH_SHORT).show();
     }

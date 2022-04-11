@@ -7,8 +7,7 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.tencent.lib.multi.core.ItemType
-import com.tencent.lib.multi.core.MultiItemManager
-import java.lang.reflect.Method
+import com.tencent.lib.multi.core.ItemTypeManager
 
 /**
 
@@ -19,12 +18,11 @@ import java.lang.reflect.Method
  */
 @Suppress("UNCHECKED_CAST")
 open class MultiPagingDataAdapter(
-        activity: FragmentActivity? = null,
-        fragment: Fragment? = null,
-        diffCallback: DiffUtil.ItemCallback<*>)
-    : PagingDataAdapter<Any, RecyclerView.ViewHolder>(diffCallback as DiffUtil.ItemCallback<Any>) {
+    diffCallback: DiffUtil.ItemCallback<*>,
+    initialCapacity: Int = 0
+) : PagingDataAdapter<Any, RecyclerView.ViewHolder>(diffCallback as DiffUtil.ItemCallback<Any>) {
 
-    private val mDelegate = object : MultiItemManager(this, activity, fragment) {
+    private val mDelegate = object : ItemTypeManager(this, initialCapacity) {
         override fun getItem(position: Int): Any? {
             return this@MultiPagingDataAdapter.getItem(position)
         }
@@ -38,11 +36,15 @@ open class MultiPagingDataAdapter(
         return mDelegate.onCreateViewHolder(parent, viewType)
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: List<Any>) {
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+        payloads: List<Any>
+    ) {
         mDelegate.onBindViewHolder(holder, position, payloads)
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    final override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
     }
 

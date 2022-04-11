@@ -30,11 +30,11 @@ class MultiItemDemo02Activity : AppCompatActivity() {
         val bItemType = BItemType()
         val cItemType = CItemType()
         /*初始化Adapter*/
-        adapter = MultiPagingDataAdapter(this, diffCallback = object : DiffUtil.ItemCallback<Any>() {
+        adapter = MultiPagingDataAdapter( diffCallback = object : DiffUtil.ItemCallback<Any>() {
             override fun areItemsTheSame(oldItem: Any, newItem: Any): Boolean =false
             override fun areContentsTheSame(oldItem: Any, newItem: Any): Boolean =false
 
-        })
+        },3)
         /*将所有ItemType添加到Adapter中*/
         adapter.addItemType(aItemType)
                 .addItemType(bItemType)

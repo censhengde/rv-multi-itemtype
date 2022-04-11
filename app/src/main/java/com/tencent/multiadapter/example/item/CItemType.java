@@ -18,7 +18,7 @@ import com.tencent.multiadapter.example.bean.BeanC;
 public class CItemType extends SimpleItemType<BeanC, ItemCBinding> {
 
     @Override
-    public boolean isMatchForMe(Object bean, int position) {
+    public boolean isMatched(Object bean, int position) {
         return  bean instanceof BeanC;
     }
 

@@ -13,7 +13,7 @@ import com.tencent.multiadapter.example.bean.ItemBean
  */
 class ItemType01 : SimpleItemType<ItemBean, Item01Binding>() {
 
-    override fun isMatchForMe(bean: Any?, position: Int): Boolean {
+    override fun isMatched(bean: Any?, position: Int): Boolean {
         return bean is ItemBean && bean.viewType == ItemBean.TYPE_01
     }
 

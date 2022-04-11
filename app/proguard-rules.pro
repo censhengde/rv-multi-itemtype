@@ -25,3 +25,6 @@
  -keep class * implements androidx.viewbinding.ViewBinding {
  *;
  }
+ -keepclassmembers class * {
+     @com.tencent.lib.multi.core.annotation.OnClickItemView <methods>;
+ }

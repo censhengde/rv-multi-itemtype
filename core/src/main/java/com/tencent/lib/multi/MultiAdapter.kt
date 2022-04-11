@@ -6,9 +6,8 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.tencent.lib.multi.core.MultiItemManager
+import com.tencent.lib.multi.core.ItemTypeManager
 import com.tencent.lib.multi.core.ItemType
-import java.lang.reflect.Method
 
 /**
  * Author：岑胜德 on 2021/1/6 14:57
@@ -18,10 +17,9 @@ import java.lang.reflect.Method
  */
 @Suppress("UNCHECKED_CAST")
 open class MultiAdapter(
-        activity: FragmentActivity? = null,
-        fragment: Fragment? = null,
-        diffCallback: DiffUtil.ItemCallback<*>? = null)
-    : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    diffCallback: DiffUtil.ItemCallback<*>? = null,
+    initialCapacity: Int = 0
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var mAsyncListDiffer: AsyncListDiffer<Any>? = null
 
@@ -31,7 +29,7 @@ open class MultiAdapter(
         }
     }
 
-    private val mManager: MultiItemManager = object : MultiItemManager(this, activity, fragment) {
+    private val mManager: ItemTypeManager = object : ItemTypeManager(this, initialCapacity) {
         override fun getItem(position: Int): Any? {
             return this@MultiAdapter.getItem(position)
         }
@@ -42,7 +40,11 @@ open class MultiAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {}
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: List<Any>) {
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+        payloads: List<Any>
+    ) {
         mManager.onBindViewHolder(holder, position, payloads)
     }
 

@@ -1,13 +1,10 @@
 package com.tencent.lib.multi.core
 
-import android.util.ArrayMap
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.CallSuper
-import androidx.annotation.IdRes
 import androidx.recyclerview.widget.RecyclerView
-import com.tencent.lib.multi.core.annotation.BindItemViewClickEvent
+import androidx.recyclerview.widget.RecyclerView.NO_ID
 import java.lang.reflect.Method
 
 /**
@@ -17,33 +14,22 @@ import java.lang.reflect.Method
 
 abstract class ItemType<T, VH : RecyclerView.ViewHolder> {
 
-    private var mMethodCachePool: Map<String, Method>? = null /*缓存反射获取的method对象，减少反射成本*/
-    private var clickEventReceiver: Any? = null /*item view 点击事件的接收者*/
-    private var mManager: MultiItemManager? = null
-
-    fun inject(receiver: Any) = this.inject(receiver, null)
-
-
-    fun inject(receiver: Any, methodCachePool: Map<String, Method>? = null) {
-        if (checkIsNull(receiver, "inject receiver is null")) {
-            return
-        }
-        clickEventReceiver = receiver
-        mMethodCachePool = methodCachePool
-        if (mMethodCachePool == null) {
-            mMethodCachePool = createMethodCachePool(receiver)
-        }
+    companion object {
+        private const val TAG = "ItemType"
     }
 
-    @CallSuper
-    open fun onAttach(manager: MultiItemManager) {
+    /*缓存反射获取的method对象，减少反射成本*/
+    private var clickEventReceiver: Any? = null /*item view 点击事件的接收者*/
+    private var mManager: ItemTypeManager? = null
+
+    internal fun onAttach(manager: ItemTypeManager) {
         mManager = manager
     }
 
-    protected val manager: MultiItemManager
+    protected val manager: ItemTypeManager
         get() {
             checkNotNull(mManager) { "ItemType $this not attached to an MultiItemManager." }
-            return mManager as MultiItemManager
+            return mManager as ItemTypeManager
         }
 
 
@@ -55,16 +41,18 @@ abstract class ItemType<T, VH : RecyclerView.ViewHolder> {
      * @param position 当前 position
      * @return true 表示匹配；否则不匹配。
      */
-    open fun isMatchForMe(bean: Any?, position: Int): Boolean = true
+    open fun isMatched(bean: Any?, position: Int): Boolean = true
 
     /*=========以下是代理 RecyclerView.Adapter 中的方法============================*/
 
-    open fun getItemId(position: Int): Long = RecyclerView.NO_ID
+    open fun getItemId(bean: T, position: Int) = NO_ID
 
     abstract fun onCreateViewHolder(parent: ViewGroup): VH
 
-    open fun onBindViewHolder(holder: VH, bean: T, position: Int,
-                              payloads: List<Any>) {
+    open fun onBindViewHolder(
+        holder: VH, bean: T, position: Int,
+        payloads: List<Any>
+    ) {
         onBindViewHolder(holder, bean, position)
     }
 
@@ -87,49 +75,41 @@ abstract class ItemType<T, VH : RecyclerView.ViewHolder> {
     /**
      * 注册 item view 点击事件。
      */
-    protected fun registerClickEvent(holder: VH, @IdRes id: Int, event: String) {
-        registerClickEvent(holder, holder.itemView.findViewById(id), event)
-    }
-
-    protected fun registerClickEvent(holder: VH, view: View, event: String) {
-        view.isClickable = true
+    protected fun registerClickEvent(receiver: Any, holder: VH, view: View, method: String) {
         view.setOnClickListener { v: View ->
             val position = holder.adapterPosition
-            if (position !in 0 until manager.adapter.itemCount) {
-                Log.e(TAG, "item 点击异常: position=$position")
-                return@setOnClickListener
-            }
-            val data = manager.getItem(position)
-            if (checkIsNull(data, "item 点击异常:data is null")) {
-                return@setOnClickListener
-            }
-            callTargetMethod(v, event, data!!, position, false)
+            callTargetMethod(receiver, v, method, position, false)
+        }
+    }
+
+    protected fun registerClickEvent(receiver: Any, position: Int, view: View, method: String) {
+        view.setOnClickListener { v: View ->
+            callTargetMethod(receiver, v, method, position, false)
         }
     }
 
     /**
      * 注册 item view 长点击事件。
      */
-    protected fun registerLongClickEvent(holder: VH, @IdRes id: Int, event: String) {
-        registerLongClickEvent(holder, holder.itemView.findViewById(id), event)
+    protected fun registerLongClickEvent(receiver: Any, holder: VH, view: View, method: String) {
+        view.setOnLongClickListener { v: View ->
+            return@setOnLongClickListener callTargetMethod(
+                receiver,
+                v,
+                method,
+                holder.adapterPosition,
+                true
+            )
+                ?: false
+        }
     }
 
-    protected fun registerLongClickEvent(holder: VH, view: View, event: String) {
-        view.isLongClickable = true
+    protected fun registerLongClickEvent(receiver: Any, position: Int, view: View, method: String) {
         view.setOnLongClickListener { v: View ->
-            var consume = false
-            val position = holder.adapterPosition
-            if (position !in 0 until manager.adapter.itemCount) {
-                Log.e(TAG, "item 长点击异常: position=$position")
-                return@setOnLongClickListener consume
-            }
-            val data = manager.getItem(position)
-            checkIsNull(data, "item 长点击异常:data is null")
-            data?.let {
-                consume = callTargetMethod(v, event, it, position, true)
-                        ?: false
-            }
-            return@setOnLongClickListener consume
+            return@setOnLongClickListener callTargetMethod(
+                receiver,
+                v, method, position, true
+            ) ?: false
         }
     }
 
@@ -141,58 +121,60 @@ abstract class ItemType<T, VH : RecyclerView.ViewHolder> {
      * @param position
      * @param errMsg
      */
-    private fun callTargetMethod(v: View, event: String, data: Any, position: Int, long: Boolean): Boolean? {
+    private fun callTargetMethod(
+        receiver: Any,
+        v: View,
+        methodName: String,
+        position: Int,
+        long: Boolean
+    ): Boolean? = try {
         var result: Boolean? = null
-        try {
-            checkIsNull(mMethodCachePool, "callTagMethod mMethodCachePool is null")
-            mMethodCachePool?.let { pool ->
-                val method = pool[event]
-                checkIsNull(method, "callTagMethod method is null")
-                method?.let { m ->
-                    if (!m.isAccessible) {
-                        method.isAccessible = true
-                    }
-                    result = if (long) {
-                        m.invoke(clickEventReceiver, v, data, position) as Boolean
-                    } else {
-                        m.invoke(clickEventReceiver, v, data, position)
-                        null
-                    }
+        val data = manager.getItem(position)
+        findWrapper(receiver).also {
+            Log.i(TAG, "===> receiver:$receiver ReceiverWrapper:$it")
+            findTargetMethod(it, methodName)?.run {
+                if (!this.isAccessible) {
+                    this.isAccessible = true
+                }
+                if (long) {
+                    result = this.invoke(receiver, v, data, position) as Boolean
+                } else {
+                    this.invoke(receiver, v, data, position)
                 }
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "callTargetMethod: ${e.message}")
         }
-        return result
+        result
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
     }
 
-    private fun checkIsNull(o: Any?, msg: String): Boolean {
-        if (o == null) {
-            Log.e(TAG, "===>$msg")
-        }
-        return o == null
-    }
 
-    companion object {
-
-        private const val TAG = "ItemType"
-
-        @JvmStatic
-        fun createMethodCachePool(clickEventReceiver: Any): Map<String, Method> {
-            val pool: MutableMap<String, Method> = ArrayMap()
-            try {
-                val clazz = clickEventReceiver.javaClass
-                val methods = clazz.declaredMethods
-                for (m in methods) {
-                    val annotation = m.getAnnotation(BindItemViewClickEvent::class.java)
-                    annotation?.let {
-                        pool[it.value] = m
-                    }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
+    private fun findWrapper(receiver: Any): ReceiverWrapper {
+        var wrapper: ReceiverWrapper?
+        receiver.javaClass.also {
+            wrapper = manager.cachePool[it]
+            if (wrapper == null) {
+                wrapper = ReceiverWrapper(receiver)
+                manager.cachePool[it] = wrapper
             }
-            return pool
         }
+        return wrapper!!
     }
+
+    private fun findTargetMethod(wrapper: ReceiverWrapper, methodName: String): Method? {
+        var method = wrapper.methods[methodName]
+        if (method == null) {
+            wrapper.receiver.javaClass.declaredMethods.forEach {
+                // 需要用户确保目标方法不能被混淆。
+                if (it.name == methodName) {
+                    method = it
+                    wrapper.methods[methodName] = method
+                    return method
+                }
+            }
+        }
+        return method
+    }
+
 }

@@ -6,7 +6,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import com.tencent.lib.multi.core.MultiViewHolder;
 import com.tencent.lib.multi.core.SimpleItemType;
-import com.tencent.lib.multi.core.annotation.BindItemViewClickEvent;
 import com.tencent.multiadapter.databinding.ItemBBinding;
 import com.tencent.multiadapter.example.bean.BeanB;
 
@@ -17,19 +16,16 @@ import com.tencent.multiadapter.example.bean.BeanB;
  */
 public class BItemType extends SimpleItemType<BeanB, ItemBBinding> {
 
-    public BItemType() {
-        // 注入点击事件接收者
-        inject(this);
-    }
+
     @Override
-    public boolean isMatchForMe(Object bean, int position) {
+    public boolean isMatched(Object bean, int position) {
         return bean instanceof BeanB;
     }
 
     @Override
     public void onViewHolderCreated(@NonNull MultiViewHolder holder, @NonNull ItemBBinding binding) {
         /*注册 item 点击事件*/
-        registerClickEvent(holder, binding.getRoot(),"onClickItem");
+        registerClickEvent(this,holder, binding.getRoot(),"onClickItem");
 
     }
 
@@ -44,7 +40,6 @@ public class BItemType extends SimpleItemType<BeanB, ItemBBinding> {
      * item点击事件
      * 注意 bean 类型，一定要与当前 ItemType 的 bean 类型对应。
      */
-    @BindItemViewClickEvent("onClickItem")
     private void onClickItem(View view, BeanB bean, int position) {
         Toast.makeText(view.getContext(), "点击事件："+bean.text, Toast.LENGTH_SHORT).show();
     }

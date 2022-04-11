@@ -2,16 +2,13 @@ package com.tencent.multiadapter.example.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.DiffUtil
 import com.tencent.lib.multi.MultiAdapter
-import com.tencent.lib.multi.core.annotation.BindItemViewClickEvent
 import com.tencent.multiadapter.databinding.ActivityMultiItemBinding
-import com.tencent.multiadapter.example.bean.BeanA
 import com.tencent.multiadapter.example.bean.ItemBean
-import com.tencent.multiadapter.example.item.*
+import com.tencent.multiadapter.example.item.ItemType00
+import com.tencent.multiadapter.example.item.ItemType01
+import com.tencent.multiadapter.example.item.ItemType02
 import java.util.*
 
 class MultiItemDemo01Activity : AppCompatActivity() {
@@ -27,7 +24,7 @@ class MultiItemDemo01Activity : AppCompatActivity() {
         val item01 = ItemType01()
         val item02 = ItemType02()
         /*初始化Adapter*/
-        adapter = MultiAdapter(this)
+        adapter = MultiAdapter(initialCapacity = 3)
         /*将所有ItemType添加到Adapter中*/
         adapter.addItemType(item00)
                 .addItemType(item01)
