@@ -1,8 +1,14 @@
 package com.tencent.lib.multi.core
 
+import android.R
+import android.annotation.SuppressLint
+import android.content.Context
+import android.util.AttributeSet
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.collection.SimpleArrayMap
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.NO_ID
 import java.lang.reflect.Method
@@ -12,15 +18,16 @@ import java.lang.reflect.Method
  * 说明：某一种类型 item 的抽象。
  */
 
-abstract class ItemType<T, VH : RecyclerView.ViewHolder> {
+abstract class ItemType<T, VH : RecyclerView.ViewHolder> (){
 
     companion object {
         private const val TAG = "ItemType"
     }
 
     /*缓存反射获取的method对象，减少反射成本*/
-    private var clickEventReceiver: Any? = null /*item view 点击事件的接收者*/
     private var mManager: ItemTypeManager? = null
+
+
 
     internal fun onAttach(manager: ItemTypeManager) {
         mManager = manager

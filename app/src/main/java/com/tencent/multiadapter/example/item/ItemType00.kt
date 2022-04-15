@@ -23,12 +23,7 @@ class ItemType00 : SimpleItemType<ItemBean, Item00Binding>() {
         return bean is ItemBean && bean.viewType == ItemBean.TYPE_00
     }
 
-    override fun onViewHolderCreated(holder: MultiViewHolder, vb: Item00Binding) {
-        // 注册 item view 点击事件
-        registerClickEvent(this,holder, vb.root, "onClickItem")
-        // 注册 item view 长点击事件
-        registerLongClickEvent(this,holder,vb.tvA,"onLongClickItemChildView")
-    }
+
 
     override fun onBindView(vb: Item00Binding, bean: ItemBean, position: Int) {
         vb.tvA.text = bean.text
