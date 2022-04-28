@@ -1,14 +1,8 @@
 package com.tencent.lib.multi.core
 
-import android.R
-import android.annotation.SuppressLint
-import android.content.Context
-import android.util.AttributeSet
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.collection.SimpleArrayMap
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.NO_ID
 import java.lang.reflect.Method
@@ -25,18 +19,18 @@ abstract class ItemType<T, VH : RecyclerView.ViewHolder> (){
     }
 
     /*缓存反射获取的method对象，减少反射成本*/
-    private var mManager: ItemTypeManager? = null
+    private var mManager: ItemManager? = null
 
 
 
-    internal fun onAttach(manager: ItemTypeManager) {
+    internal fun onAttach(manager: ItemManager) {
         mManager = manager
     }
 
-    protected val manager: ItemTypeManager
+    protected val manager: ItemManager
         get() {
             checkNotNull(mManager) { "ItemType $this not attached to an MultiItemManager." }
-            return mManager as ItemTypeManager
+            return mManager as ItemManager
         }
 
 

@@ -1,12 +1,10 @@
 package com.tencent.lib.multi
 
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.tencent.lib.multi.core.ItemTypeManager
+import com.tencent.lib.multi.core.ItemManager
 import com.tencent.lib.multi.core.ItemType
 
 /**
@@ -29,7 +27,7 @@ open class MultiAdapter(
         }
     }
 
-    private val mManager: ItemTypeManager = object : ItemTypeManager(this, initialCapacity) {
+    private val mManager: ItemManager = object : ItemManager(this, initialCapacity) {
         override fun getItem(position: Int): Any? {
             return this@MultiAdapter.getItem(position)
         }

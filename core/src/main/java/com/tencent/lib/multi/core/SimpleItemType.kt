@@ -20,29 +20,33 @@ import java.lang.reflect.ParameterizedType
  * 说明：支持 ViewBinding用法。
  */
 @Suppress("UNCHECKED_CAST")
-abstract class SimpleItemType<T, VB : ViewBinding>(private val clickEventReceiver: Any? = null) :
-    ItemType<T, MultiViewHolder>(), LayoutInflater.Factory2 {
+abstract class SimpleItemType<T, VB : ViewBinding>(private var clickEventReceiver: Any? = null) :
+    ItemType<T, MultiViewHolder>() {
     companion object {
         private const val TAG = "SimpleItemType"
-        private val sAttrs = intArrayOf(R.attr.onClick, R.attr.id)
     }
 
     private var mBindMethod: Method? = null
     private val targetViewIds by lazy {
         SimpleArrayMap<Int, String>()
     }
-    private var layoutInflater: LayoutInflater? = null
+    private var layoutInflater: ItemLayoutInflater? = null
 
+    fun bind(clickEventReceiver: Any) {
+        this.clickEventReceiver = clickEventReceiver
+    }
 
     final override fun onCreateViewHolder(parent: ViewGroup): MultiViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
         if (layoutInflater == null) {
-            layoutInflater = inflater.cloneInContext(parent.context)
-            layoutInflater?.factory2 = this
+            val original = LayoutInflater.from(parent.context)
+            ItemLayoutInflater(original = original, parent.context).also {
+                layoutInflater = it
+            }
         }
         val vb = onCreateViewBinding(parent, layoutInflater!!)
         val holder = MultiViewHolder(vb)
         onViewHolderCreated(holder, vb)
+        layoutInflater?.clearAllNeedRegisterViews()
         return holder
     }
 
@@ -67,6 +71,7 @@ abstract class SimpleItemType<T, VB : ViewBinding>(private val clickEventReceive
             }
             vb = mBindMethod!!.invoke(null, inflater, parent, false) as VB
         } catch (e: Exception) {
+            e.printStackTrace()
             throw IllegalStateException("反射创建 ViewBinding 失败:" + e.message)
         }
         return vb
@@ -76,17 +81,26 @@ abstract class SimpleItemType<T, VB : ViewBinding>(private val clickEventReceive
         holder: MultiViewHolder,
         vb: VB
     ) {
-        for (i in 0 until targetViewIds.size()) {
-            val id = targetViewIds.keyAt(i)
-            vb.root.findViewById<View>(id)?.apply {
-                registerClickEvent(
-                    clickEventReceiver ?: return,
-                    holder,
-                    this,
-                    targetViewIds.valueAt(i)
-                )
+        layoutInflater ?: return
+        clickEventReceiver ?: return
+        // 注册点击事件
+        repeat(layoutInflater!!.needRegisterClickEventViews?.size() ?: 0) {
+            layoutInflater!!.needRegisterClickEventViews?.keyAt(it)?.apply {
+                layoutInflater!!.needRegisterClickEventViews?.valueAt(it)?.let { name ->
+                    registerClickEvent(clickEventReceiver!!, holder, this, name)
+                }
+            }
+
+        }
+        // 注册长点击事件
+        repeat(layoutInflater!!.needRegisterLongClickEventViews?.size() ?: 0) {
+            layoutInflater!!.needRegisterLongClickEventViews?.keyAt(it)?.apply {
+                layoutInflater!!.needRegisterLongClickEventViews?.valueAt(it)?.let { name ->
+                    registerLongClickEvent(clickEventReceiver!!, holder, this, name)
+                }
             }
         }
+
 
     }
 
@@ -116,31 +130,4 @@ abstract class SimpleItemType<T, VB : ViewBinding>(private val clickEventReceive
 
     protected abstract fun onBindView(vb: VB, bean: T, position: Int)
 
-
-    /**
-     * 监听 xml 视图创建。
-     */
-    @SuppressLint("Recycle")
-    final override fun onCreateView(
-        parent: View?,
-        name: String,
-        context: Context,
-        attrs: AttributeSet
-    ): View? {
-        val a = context.obtainStyledAttributes(attrs, sAttrs)
-        // 获得android:onClick ="xxx" 属性值。
-        a.getString(0)?.apply {
-            val id = a.getInt(1, View.NO_ID)
-
-            Log.i(TAG, "===> onCreateView name:$name id:$id android:onClick=$this")
-            targetViewIds.put(id, this)
-        }
-        a.recycle()
-        return onCreateView(name, context, attrs)
-    }
-
-    final override fun onCreateView(name: String, context: Context, attrs: AttributeSet): View? {
-        Log.i(TAG, "===> onCreateView name:$name")
-        return null
-    }
 }

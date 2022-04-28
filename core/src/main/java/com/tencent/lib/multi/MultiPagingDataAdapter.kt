@@ -1,13 +1,11 @@
 package com.tencent.lib.multi
 
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.tencent.lib.multi.core.ItemType
-import com.tencent.lib.multi.core.ItemTypeManager
+import com.tencent.lib.multi.core.ItemManager
 
 /**
 
@@ -22,7 +20,7 @@ open class MultiPagingDataAdapter(
     initialCapacity: Int = 0
 ) : PagingDataAdapter<Any, RecyclerView.ViewHolder>(diffCallback as DiffUtil.ItemCallback<Any>) {
 
-    private val mDelegate = object : ItemTypeManager(this, initialCapacity) {
+    private val mDelegate = object : ItemManager(this, initialCapacity) {
         override fun getItem(position: Int): Any? {
             return this@MultiPagingDataAdapter.getItem(position)
         }
