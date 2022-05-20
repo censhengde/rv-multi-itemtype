@@ -17,12 +17,13 @@ import com.tencent.multiadapter.example.bean.ItemBean
  */
 class ItemType00 : SimpleItemType<ItemBean, Item00Binding>() {
 
-
+    init {
+        bind(this)
+    }
 
     override fun isMatched(bean: Any?, position: Int): Boolean {
         return bean is ItemBean && bean.viewType == ItemBean.TYPE_00
     }
-
 
 
     override fun onBindView(vb: Item00Binding, bean: ItemBean, position: Int) {
@@ -34,15 +35,23 @@ class ItemType00 : SimpleItemType<ItemBean, Item00Binding>() {
      */
     @Keep
     private fun onClickItem(view: View, itemBean: ItemBean, position: Int) {
-        Toast.makeText(view.context, "点击事件：ItemBean:${itemBean.text},position:$position", Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            view.context,
+            "点击事件：ItemBean:${itemBean.text},position:$position",
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     /**
-     * item 子View 长点击事件
+     * item 长点击事件
      */
     @Keep
-    private fun onLongClickItemChildView(view: View, itemBean: ItemBean, position: Int): Boolean {
-        Toast.makeText(view.context, "长点击事件：ItemBean:${itemBean.text},position:$position", Toast.LENGTH_SHORT).show()
+    private fun onLongClick(view: View, itemBean: ItemBean, position: Int): Boolean {
+        Toast.makeText(
+            view.context,
+            "长点击事件：ItemBean:${itemBean.text},position:$position",
+            Toast.LENGTH_SHORT
+        ).show()
         return true
     }
 

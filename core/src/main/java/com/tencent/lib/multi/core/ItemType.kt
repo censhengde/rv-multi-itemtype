@@ -5,6 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.NO_ID
+import java.lang.IllegalArgumentException
+import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 
 /**
@@ -12,7 +14,7 @@ import java.lang.reflect.Method
  * 说明：某一种类型 item 的抽象。
  */
 
-abstract class ItemType<T, VH : RecyclerView.ViewHolder> (){
+abstract class ItemType<T, VH : RecyclerView.ViewHolder>() {
 
     companion object {
         private const val TAG = "ItemType"
@@ -20,7 +22,6 @@ abstract class ItemType<T, VH : RecyclerView.ViewHolder> (){
 
     /*缓存反射获取的method对象，减少反射成本*/
     private var mManager: ItemManager? = null
-
 
 
     internal fun onAttach(manager: ItemManager) {
@@ -76,14 +77,14 @@ abstract class ItemType<T, VH : RecyclerView.ViewHolder> (){
     /**
      * 注册 item view 点击事件。
      */
-    protected fun registerClickEvent(receiver: Any, holder: VH, view: View, method: String) {
+    fun registerClickEvent(receiver: Any, holder: VH, view: View, method: String) {
         view.setOnClickListener { v: View ->
             val position = holder.adapterPosition
             callTargetMethod(receiver, v, method, position, false)
         }
     }
 
-    protected fun registerClickEvent(receiver: Any, position: Int, view: View, method: String) {
+    fun registerClickEvent(receiver: Any, position: Int, view: View, method: String) {
         view.setOnClickListener { v: View ->
             callTargetMethod(receiver, v, method, position, false)
         }
@@ -92,7 +93,7 @@ abstract class ItemType<T, VH : RecyclerView.ViewHolder> (){
     /**
      * 注册 item view 长点击事件。
      */
-    protected fun registerLongClickEvent(receiver: Any, holder: VH, view: View, method: String) {
+    fun registerLongClickEvent(receiver: Any, holder: VH, view: View, method: String) {
         view.setOnLongClickListener { v: View ->
             return@setOnLongClickListener callTargetMethod(
                 receiver,
@@ -105,7 +106,7 @@ abstract class ItemType<T, VH : RecyclerView.ViewHolder> (){
         }
     }
 
-    protected fun registerLongClickEvent(receiver: Any, position: Int, view: View, method: String) {
+    fun registerLongClickEvent(receiver: Any, position: Int, view: View, method: String) {
         view.setOnLongClickListener { v: View ->
             return@setOnLongClickListener callTargetMethod(
                 receiver,
@@ -145,7 +146,13 @@ abstract class ItemType<T, VH : RecyclerView.ViewHolder> (){
             }
         }
         result
-    } catch (e: Exception) {
+    } catch (e: InvocationTargetException) {
+        e.printStackTrace()
+        null
+    } catch (e: IllegalAccessException) {
+        e.printStackTrace()
+        null
+    } catch (e: IllegalAccessException) {
         e.printStackTrace()
         null
     }

@@ -6,9 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="140dp"
     android:background="#4CAF50"
-    android:onClick="onClickItem"
     android:orientation="vertical"
-    app:onLongClick="onLongClick">
+    app:linkClick="onClickItem"
+    app:linkLongClick="onLongClick">
 
     <TextView
         android:id="@+id/tv_a"

@@ -9,7 +9,11 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Project/rv-multi-itemtype/app/src/main/res/layout/item_00.xml" value="0.23697916666666666" />
+        <entry key="..\:/Project/rv-multi-itemtype/app/src/main/res/layout/item_01.xml" value="0.24114583333333334" />
+        <entry key="..\:/Project/rv-multi-itemtype/app/src/main/res/layout/item_02.xml" value="0.24114583333333334" />
         <entry key="..\:/Project/rv-multi-itemtype/app/src/main/res/layout/item_a.xml" value="0.23697916666666666" />
+        <entry key="..\:/Project/rv-multi-itemtype/app/src/main/res/layout/item_b.xml" value="0.24114583333333334" />
+        <entry key="..\:/Project/rv-multi-itemtype/app/src/main/res/layout/item_c.xml" value="0.24114583333333334" />
       </map>
     </option>
   </component>

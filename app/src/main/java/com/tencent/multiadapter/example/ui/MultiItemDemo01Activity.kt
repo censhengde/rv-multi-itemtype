@@ -11,6 +11,9 @@ import com.tencent.multiadapter.example.item.ItemType01
 import com.tencent.multiadapter.example.item.ItemType02
 import java.util.*
 
+/**
+ * 单 bean 类型对应多样 item。
+ */
 class MultiItemDemo01Activity : AppCompatActivity() {
 
     lateinit var adapter: MultiAdapter

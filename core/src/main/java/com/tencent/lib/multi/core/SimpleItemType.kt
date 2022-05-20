@@ -1,15 +1,16 @@
 package com.tencent.lib.multi.core
 
-import android.R
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.collection.SimpleArrayMap
+import androidx.core.view.LayoutInflaterCompat
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
+import com.tencent.lib.itemType.R
 import java.lang.reflect.Method
 import java.lang.reflect.ParameterizedType
 
@@ -27,28 +28,39 @@ abstract class SimpleItemType<T, VB : ViewBinding>(private var clickEventReceive
     }
 
     private var mBindMethod: Method? = null
-    private val targetViewIds by lazy {
-        SimpleArrayMap<Int, String>()
-    }
-    private var layoutInflater: ItemLayoutInflater? = null
+    protected var viewClickRegistry: ViewClickRegistry? = null
+    private var factory: ItemViewInflaterFactory? = null
 
     fun bind(clickEventReceiver: Any) {
         this.clickEventReceiver = clickEventReceiver
     }
 
     final override fun onCreateViewHolder(parent: ViewGroup): MultiViewHolder {
-        if (layoutInflater == null) {
-            val original = LayoutInflater.from(parent.context)
-            ItemLayoutInflater(original = original, parent.context).also {
-                layoutInflater = it
-            }
-        }
-        val vb = onCreateViewBinding(parent, layoutInflater!!)
+        val vb = onCreateViewBinding(parent, getLayoutInflater(parent))
         val holder = MultiViewHolder(vb)
         onViewHolderCreated(holder, vb)
-        layoutInflater?.clearAllNeedRegisterViews()
         return holder
     }
+
+    /**
+     * 将来有可能需要配合动态换肤框架使用，届时有可能需要重写此方法。
+     */
+    protected open fun getLayoutInflater(parent: ViewGroup): LayoutInflater =
+        LayoutInflater.from(parent.context).also {
+            if (viewClickRegistry == null) {
+                viewClickRegistry =
+                    ViewClickRegistry(this as ItemType<Any, RecyclerView.ViewHolder>)
+            }
+            // 如果已经设置了 ItemViewInflaterFactory，则更新 ViewClickRegistry
+            if (it.factory2 is ItemViewInflaterFactory) {
+                (it.factory2 as ItemViewInflaterFactory).setViewClickRegistry(viewClickRegistry!!)
+            } else {
+                forceSetFactory2(it, ItemViewInflaterFactory().also {
+                    it.setViewClickRegistry(viewClickRegistry!!)
+                })
+            }
+        }
+
 
     protected open fun onCreateViewBinding(parent: ViewGroup, inflater: LayoutInflater): VB {
         var vb: VB? = null
@@ -81,27 +93,9 @@ abstract class SimpleItemType<T, VB : ViewBinding>(private var clickEventReceive
         holder: MultiViewHolder,
         vb: VB
     ) {
-        layoutInflater ?: return
         clickEventReceiver ?: return
-        // 注册点击事件
-        repeat(layoutInflater!!.needRegisterClickEventViews?.size() ?: 0) {
-            layoutInflater!!.needRegisterClickEventViews?.keyAt(it)?.apply {
-                layoutInflater!!.needRegisterClickEventViews?.valueAt(it)?.let { name ->
-                    registerClickEvent(clickEventReceiver!!, holder, this, name)
-                }
-            }
-
-        }
-        // 注册长点击事件
-        repeat(layoutInflater!!.needRegisterLongClickEventViews?.size() ?: 0) {
-            layoutInflater!!.needRegisterLongClickEventViews?.keyAt(it)?.apply {
-                layoutInflater!!.needRegisterLongClickEventViews?.valueAt(it)?.let { name ->
-                    registerLongClickEvent(clickEventReceiver!!, holder, this, name)
-                }
-            }
-        }
-
-
+        viewClickRegistry?.register(clickEventReceiver!!, holder)
+        viewClickRegistry?.clearAllNeedRegisterViews()
     }
 
     /**
@@ -129,5 +123,20 @@ abstract class SimpleItemType<T, VB : ViewBinding>(private var clickEventReceive
     }
 
     protected abstract fun onBindView(vb: VB, bean: T, position: Int)
+
+
+    @SuppressLint("DiscouragedPrivateApi")
+    protected fun forceSetFactory2(inflater: LayoutInflater, factory2: LayoutInflater.Factory2) {
+        val inflaterClass = LayoutInflater::class.java
+        try {
+            val mFactory2 = inflaterClass.getDeclaredField("mFactory2")
+            mFactory2.isAccessible = true
+            mFactory2.set(inflater, factory2)
+        } catch (e: IllegalAccessException) {
+            e.printStackTrace()
+        } catch (e: NoSuchFieldException) {
+            e.printStackTrace()
+        }
+    }
 
 }

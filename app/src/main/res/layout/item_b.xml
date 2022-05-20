@@ -1,26 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:layout_height="120dp"
     android:background="@color/colorAccent"
-    android:layout_height="120dp">
+    android:orientation="horizontal">
 
     <Button
-            android:id="@+id/btn_b"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:background="@android:color/transparent"
-            android:gravity="center"
-            android:text="Button"
-            android:textAllCaps="false"
-            android:textSize="18sp" />
-    <TextView
-            android:id="@+id/tv_b"
+        android:id="@+id/btn_b"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
+        android:layout_gravity="center_vertical"
+        android:background="@android:color/transparent"
         android:gravity="center"
-        android:text="B 类 Item"/>
+        android:text="长按点击"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        app:linkLongClick="onLongClick" />
+
+    <TextView
+        android:id="@+id/tv_b"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="B 类 Item"
+        android:textSize="18sp" />
 
 </LinearLayout>

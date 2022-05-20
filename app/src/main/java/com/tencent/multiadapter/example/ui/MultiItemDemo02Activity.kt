@@ -16,7 +16,9 @@ import com.tencent.multiadapter.example.item.BItemType
 import com.tencent.multiadapter.example.item.CItemType
 import kotlinx.coroutines.launch
 import java.util.*
-
+/**
+ * 多 bean 类型对应多样 item。
+ */
 class MultiItemDemo02Activity : AppCompatActivity() {
 
     private lateinit var adapter: MultiPagingDataAdapter

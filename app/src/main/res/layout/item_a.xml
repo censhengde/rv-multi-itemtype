@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="#FF5722"
-        android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#FF5722"
+    android:orientation="vertical">
 
     <TextView
-            android:id="@+id/tv_a"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textSize="18sp"
-            tools:text="A 类 Item" />
+        android:id="@+id/tv_a"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        app:linkClick="onClickItem"
+        android:textSize="18sp"
+        tools:text="A 类 Item" />
 
 </LinearLayout>

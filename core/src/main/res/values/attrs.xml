@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="ItemView">
-        <attr name="onLongClick" format="string" />
+        <attr name="linkLongClick" format="string" />
+        <attr name="linkClick" format="string" />
     </declare-styleable>
 </resources>
