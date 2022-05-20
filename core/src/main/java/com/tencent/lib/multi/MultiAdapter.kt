@@ -20,6 +20,14 @@ open class MultiAdapter(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var mAsyncListDiffer: AsyncListDiffer<Any>? = null
+    private var _dataList: List<Any>? = null
+    private val dataList: List<Any>
+        get() {
+            mAsyncListDiffer?.let {
+                return it.currentList
+            }
+            return _dataList ?: emptyList()
+        }
 
     init {
         diffCallback?.let {
@@ -95,19 +103,20 @@ open class MultiAdapter(
         return this
     }
 
-    open var dataList: List<Any> = emptyList()
-        set(value) {
-            field = value
-            mAsyncListDiffer?.let {
-                it.submitList(field)
-                return
-            }
-            notifyDataSetChanged()
-        }
-        get() {
-            mAsyncListDiffer?.let {
-                return it.currentList
-            }
-            return field
-        }
+    fun clearAllItemTypes() {
+        mManager.clearAllItemTypes()
+    }
+
+    fun setDataList(list: List<Any>) {
+        _dataList = list
+    }
+
+    fun submitList(list: List<Any>) {
+        mAsyncListDiffer?.submitList(list)
+    }
+
+    fun submitList(list: List<Any>, runnable: Runnable) {
+        mAsyncListDiffer?.submitList(list, runnable)
+    }
+
 }

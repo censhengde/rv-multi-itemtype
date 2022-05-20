@@ -75,4 +75,8 @@ open class MultiPagingDataAdapter(
         return this
     }
 
+    fun clearAllItemTypes() {
+        mDelegate.clearAllItemTypes()
+    }
+
 }

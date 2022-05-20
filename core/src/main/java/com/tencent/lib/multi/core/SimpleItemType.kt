@@ -29,8 +29,10 @@ abstract class SimpleItemType<T, VB : ViewBinding>(private var clickEventReceive
 
     private var mBindMethod: Method? = null
     protected var viewClickRegistry: ViewClickRegistry? = null
-    private var factory: ItemViewInflaterFactory? = null
 
+    /**
+     * 绑定点击事件接收对象。
+     */
     fun bind(clickEventReceiver: Any) {
         this.clickEventReceiver = clickEventReceiver
     }

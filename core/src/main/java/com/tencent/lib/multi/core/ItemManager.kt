@@ -113,4 +113,8 @@ abstract class ItemManager(
         itemType.onAttach(this)
         itemTypePool.add(itemType as ItemType<Any, RecyclerView.ViewHolder>)
     }
+
+    fun clearAllItemTypes() {
+        itemTypePool.clear()
+    }
 }
