@@ -20,7 +20,6 @@ abstract class ItemType<T, VH : RecyclerView.ViewHolder>() {
         private const val TAG = "ItemType"
     }
 
-    /*缓存反射获取的method对象，减少反射成本*/
     private var mManager: ItemManager? = null
 
 
@@ -30,7 +29,7 @@ abstract class ItemType<T, VH : RecyclerView.ViewHolder>() {
 
     protected val manager: ItemManager
         get() {
-            checkNotNull(mManager) { "ItemType $this not attached to an MultiItemManager." }
+            checkNotNull(mManager) { "ItemType $this not attached to an ItemManager." }
             return mManager as ItemManager
         }
 

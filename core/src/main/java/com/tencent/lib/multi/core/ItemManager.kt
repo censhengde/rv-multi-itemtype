@@ -40,8 +40,7 @@ abstract class ItemManager(
                 return index // index 直接作为 itemViewType 返回。
             }
         }
-        // 如果在当前 position 未匹配到对应的 ItemType，则抛异常，此时用户首先应当检查 ItemType 的
-        // isMatchForMe(...) 方法是否正确实现。
+        // 未匹配到对应的 ItemType 则抛异常。
         throw java.lang.RuntimeException("ItemType is not found in position:$position")
     }
 

@@ -127,6 +127,11 @@ abstract class SimpleItemType<T, VB : ViewBinding>(private var clickEventReceive
     protected abstract fun onBindView(vb: VB, bean: T, position: Int)
 
 
+    /**
+     * 强行设置 Factory2。
+     * 由于在 AppCompatActivity 中 LayoutInflater 已经被系统设置过了 Factory2，
+     * 这里再次通过 LayoutInflater.setFactory2(...)方法设置Factory2会抛异常，故只能反射强行设置。
+     */
     @SuppressLint("DiscouragedPrivateApi")
     protected fun forceSetFactory2(inflater: LayoutInflater, factory2: LayoutInflater.Factory2) {
         val inflaterClass = LayoutInflater::class.java
