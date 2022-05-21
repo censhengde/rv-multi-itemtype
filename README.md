@@ -140,8 +140,7 @@ public class ItemBean {
 ```
 class ItemType00 : SimpleItemType<ItemBean, Item00Binding>() {
 
-    
-
+ 
     override fun isMatched(bean: Any?, position: Int): Boolean {
         // 如果当前 position 的bean 对象是 ItemBean 类型且 bean.viewType == ItemBean.TYPE_00
         // 则表明当前 position 是与“我”相匹配的，即当前 position 是 00号类型的item样式。
@@ -155,28 +154,7 @@ class ItemType00 : SimpleItemType<ItemBean, Item00Binding>() {
         vb.tvA.text = bean.text
     }
 
-    /**
-     *绑定item点击事件
-     *
-     *（注意：1.这里传入注解的值要与 onViewHolderCreated 方法处
-     *     registerClickEvent(...) 方法最后一个参数的值要对应！否则反射不到这个方法。
-     *     2. 注意方法形参书写的顺序：View、Bean、position ，写错会导致反射异常！）
-     * 
-     */
-    @BindItemViewClickEvent("onClickItem")
-    private fun onClickItem(view: View, itemBean: ItemBean, position: Int) {
-        Toast.makeText(view.context, "点击事件：ItemBean:${itemBean.text},position:$position", Toast.LENGTH_SHORT).show()
-    }
-
-    /**
-     * 绑定item 子View 长点击事件（同理）
-     */
-    @BindItemViewClickEvent("onLongClickItemChildView")
-    private fun onLongClickItemChildView(view: View, itemBean: ItemBean, position: Int): Boolean {
-        Toast.makeText(view.context, "长点击事件：ItemBean:${itemBean.text},position:$position", Toast.LENGTH_SHORT).show()
-        return true
-    }
-
+    
 }
 ```
 
