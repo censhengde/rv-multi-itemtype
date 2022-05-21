@@ -105,15 +105,16 @@ abstract class ItemManager(
      */
     @Suppress("UNCHECKED_CAST")
     fun addItemType(itemType: ItemType<*, *>) {
-        // 保证一种 ItemType 只有一个实例。
-        if (itemTypePool.contains(itemType)) {
-            return
-        }
         // 关联
         itemType.onAttach(this)
         itemTypePool.add(itemType as ItemType<Any, RecyclerView.ViewHolder>)
     }
 
+    /**
+     * 在 addItemType 方法之前最好清空一遍 itemTypePool，确保 itemTypePool
+     * 里一种item类型仅有一个ItemType实例。否则当Activity/Fragment重走创建视图生命周期
+     * 会导致 ItemType 实例重复添加。
+     */
     fun clearAllItemTypes() {
         itemTypePool.clear()
     }

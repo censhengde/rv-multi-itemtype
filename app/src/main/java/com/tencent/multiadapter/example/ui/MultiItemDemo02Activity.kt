@@ -37,6 +37,7 @@ class MultiItemDemo02Activity : AppCompatActivity() {
             override fun areContentsTheSame(oldItem: Any, newItem: Any): Boolean =false
 
         },3)
+        adapter.clearAllItemTypes()
         /*将所有ItemType添加到Adapter中*/
         adapter.addItemType(aItemType)
                 .addItemType(bItemType)

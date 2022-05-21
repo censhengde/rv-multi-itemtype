@@ -1,5 +1,6 @@
 package com.tencent.lib.multi
 
+import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -107,8 +108,12 @@ open class MultiAdapter(
         mManager.clearAllItemTypes()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setDataList(list: List<Any>) {
-        _dataList = list
+        if (_dataList != list) {
+            _dataList = list
+        }
+        notifyDataSetChanged()
     }
 
     fun submitList(list: List<Any>) {

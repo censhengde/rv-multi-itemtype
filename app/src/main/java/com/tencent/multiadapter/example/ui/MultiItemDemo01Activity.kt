@@ -28,12 +28,13 @@ class MultiItemDemo01Activity : AppCompatActivity() {
         val item02 = ItemType02()
         /*初始化Adapter*/
         adapter = MultiAdapter(initialCapacity = 3)
+        adapter.clearAllItemTypes()
         /*将所有ItemType添加到Adapter中*/
         adapter.addItemType(item00)
                 .addItemType(item01)
                 .addItemType(item02)
         /*设置数据*/
-        adapter.dataList = getData()
+        adapter.setDataList(getData())
         vb.rvList.adapter = adapter
     }
 
