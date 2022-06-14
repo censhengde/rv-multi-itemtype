@@ -16,7 +16,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:gravity="center"
-        android:textColor="@android:color/white"
+        android:textColor="@color/cardview_dark_background"
         android:textSize="24sp"
         tools:text="A 类 Item" />
 

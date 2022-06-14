@@ -36,13 +36,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
-
-    api ('androidx.paging:paging-runtime:3.0.1'){
-        exclude group: "org.jetbrains.kotlinx"
-    }
-    //kotlin 协程
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2"
+    compileOnly 'androidx.recyclerview:recyclerview:1.2.1'
 
 
 }

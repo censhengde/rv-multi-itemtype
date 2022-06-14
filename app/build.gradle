@@ -55,6 +55,14 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     implementation project(path: ':core')
     implementation 'com.drakeet.multitype:multitype:4.3.0'
+    api ('androidx.paging:paging-runtime:3.0.1'){
+        exclude group: "org.jetbrains.kotlinx"
+    }
+    //kotlin 协程
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2"
+    implementation project(path: ':paging')
+   implementation 'androidx.recyclerview:recyclerview:1.2.1'
 
 
 }

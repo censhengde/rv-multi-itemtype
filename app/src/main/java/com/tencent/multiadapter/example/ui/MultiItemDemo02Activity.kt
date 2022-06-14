@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.DiffUtil
-import com.tencent.lib.multi.MultiPagingDataAdapter
+import com.csd.multi.paging.MultiPagingDataAdapter
 import com.tencent.multiadapter.databinding.ActivityMultiItemBinding
 import com.tencent.multiadapter.example.bean.BeanA
 import com.tencent.multiadapter.example.bean.BeanB
@@ -32,11 +32,12 @@ class MultiItemDemo02Activity : AppCompatActivity() {
         val bItemType = BItemType()
         val cItemType = CItemType()
         /*初始化Adapter*/
-        adapter = MultiPagingDataAdapter( diffCallback = object : DiffUtil.ItemCallback<Any>() {
-            override fun areItemsTheSame(oldItem: Any, newItem: Any): Boolean =false
-            override fun areContentsTheSame(oldItem: Any, newItem: Any): Boolean =false
+        adapter = MultiPagingDataAdapter(diffCallback = object :
+            DiffUtil.ItemCallback<Any>() {
+            override fun areItemsTheSame(oldItem: Any, newItem: Any): Boolean = false
+            override fun areContentsTheSame(oldItem: Any, newItem: Any): Boolean = false
 
-        },3)
+        }, 3)
         adapter.clearAllItemTypes()
         /*将所有ItemType添加到Adapter中*/
         adapter.addItemType(aItemType)

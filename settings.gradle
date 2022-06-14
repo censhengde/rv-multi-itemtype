@@ -1,3 +1,4 @@
 rootProject.name='rv-multi-itemtype'
 include ':app'
 include ':core'
+include ':paging'

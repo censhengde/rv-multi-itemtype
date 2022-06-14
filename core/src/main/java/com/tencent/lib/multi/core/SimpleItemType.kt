@@ -13,6 +13,8 @@ import androidx.viewbinding.ViewBinding
 import com.tencent.lib.itemType.R
 import java.lang.reflect.Method
 import java.lang.reflect.ParameterizedType
+import java.lang.reflect.Type
+import java.util.*
 
 /**
  * Author：岑胜德 on 2021/8/30 10:58
@@ -68,7 +70,16 @@ abstract class SimpleItemType<T, VB : ViewBinding>(private var clickEventReceive
         var vb: VB? = null
         try {
             if (mBindMethod == null) {
-                val type = this.javaClass.genericSuperclass
+                var clazz: Class<*>? = this.javaClass
+                var type: Type? = clazz?.genericSuperclass
+                while (type !is ParameterizedType) {
+                    if (clazz == Objects::class.java) {
+                        break
+                    }
+                    clazz = clazz?.superclass
+                    type = clazz?.genericSuperclass
+                }
+
                 val p = type as ParameterizedType
                 // 孙类以下如果不透传 VB 泛型参数到其父类就会获取Class对象失败,
                 // 此时解决方案就是全盘重写 onCreateViewBinding(ViewGroup parent) 方法，手动创建
