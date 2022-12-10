@@ -79,4 +79,7 @@ open class MultiPagingDataAdapter(
         mDelegate.clearAllItemTypes()
     }
 
+    fun <T> updateItem(position: Int, block: (bean: T) -> Any?) {
+        mDelegate.updateItem(position, block)
+    }
 }

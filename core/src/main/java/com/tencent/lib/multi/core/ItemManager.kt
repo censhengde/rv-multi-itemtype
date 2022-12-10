@@ -12,6 +12,7 @@ import java.util.ArrayList
  * 说明：实现Item多样式的公共逻辑封装。本质上是Adapter 生命周期的代理类，
  * 将 Adapter 生命周期分发给了position对应的ItemType。
  */
+@Suppress("UNCHECKED_CAST")
 abstract class ItemManager(
     val adapter: RecyclerView.Adapter<*>,
     initialCapacity: Int = 0
@@ -116,5 +117,11 @@ abstract class ItemManager(
      */
     fun clearAllItemTypes() {
         itemTypePool.clear()
+    }
+
+    fun <T> updateItem(position: Int, block: (bean: T) -> Any?) {
+        getItem(position)?.run {
+            adapter.notifyItemChanged(position, block(this as T))
+        }
     }
 }

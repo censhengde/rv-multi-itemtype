@@ -184,4 +184,7 @@ abstract class ItemType<T, VH : RecyclerView.ViewHolder>() {
         return method
     }
 
+    fun <T> updateItem(position: Int, block: (bean: T) -> Any?) {
+        manager.updateItem(position, block)
+    }
 }

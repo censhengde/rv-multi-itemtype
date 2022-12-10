@@ -134,11 +134,7 @@ open class MultiAdapter(
     }
 
     fun <T> updateItem(position: Int, block: (bean: T) -> Any?) {
-        getItem(position)?.run {
-            (this as T).run {
-                notifyItemChanged(position, block(this))
-            }
-        }
+        mManager.updateItem(position, block)
     }
 
 }
