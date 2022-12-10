@@ -51,4 +51,9 @@ class MultiItemDemo01Activity : AppCompatActivity() {
         return beans
     }
 
+    override fun onDestroy() {
+        adapter.clearDataList()
+        super.onDestroy()
+    }
+
 }

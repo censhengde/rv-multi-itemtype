@@ -124,4 +124,21 @@ open class MultiAdapter(
         mAsyncListDiffer?.submitList(list, runnable)
     }
 
+
+    fun clearDataList() {
+        if (_dataList is MutableList<Any>) {
+            (_dataList as MutableList<Any>).clear()
+        }
+        _dataList = null
+        mAsyncListDiffer?.currentList?.clear()
+    }
+
+    fun <T> updateItem(position: Int, block: (bean: T) -> Any?) {
+        getItem(position)?.run {
+            (this as T).run {
+                notifyItemChanged(position, block(this))
+            }
+        }
+    }
+
 }
