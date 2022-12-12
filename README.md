@@ -47,7 +47,7 @@ item的样式抽象为一个ItemType，每一种ItemType都自己独立的点击
 
 ```
    dependencies {
-       implementation 'com.gitee.sdecen:rv-multi-itemtype:2.0.3'
+       implementation 'com.github.censhengde.rv-multi-itemtype:core:lastVersion'
    }
 ```
 
