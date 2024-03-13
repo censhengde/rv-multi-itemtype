@@ -25,9 +25,6 @@ import java.util.*
 @Suppress("UNCHECKED_CAST")
 abstract class SimpleItemType<T, VB : ViewBinding>(private var clickEventReceiver: Any? = null) :
     ItemType<T, MultiViewHolder>() {
-    companion object {
-        private const val TAG = "SimpleItemType"
-    }
 
     private var mBindMethod: Method? = null
     protected var viewClickRegistry: ViewClickRegistry? = null

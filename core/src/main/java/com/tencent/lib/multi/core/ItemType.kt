@@ -1,11 +1,9 @@
 package com.tencent.lib.multi.core
 
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.NO_ID
-import java.lang.IllegalArgumentException
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 
@@ -132,7 +130,6 @@ abstract class ItemType<T, VH : RecyclerView.ViewHolder>() {
         var result: Boolean? = null
         val data = manager.getItem(position)
         findWrapper(receiver).also {
-            Log.i(TAG, "===> receiver:$receiver ReceiverWrapper:$it")
             findTargetMethod(it, methodName)?.run {
                 if (!this.isAccessible) {
                     this.isAccessible = true

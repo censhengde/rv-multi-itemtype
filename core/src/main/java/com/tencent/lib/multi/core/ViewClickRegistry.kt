@@ -47,7 +47,6 @@ class ViewClickRegistry(private val itemType: ItemType<Any, RecyclerView.ViewHol
      fun collectView(view: View, name: String, attrs: AttributeSet) {
         val a = view.context.obtainStyledAttributes(attrs, R.styleable.ItemView)
         a.getString(R.styleable.ItemView_linkClick)?.apply {
-            "===>$name android:linkClick=$this".logI(TAG)
             if (needRegisterClickEventViews == null) {
                 needRegisterClickEventViews = SimpleArrayMap()
             }
@@ -55,7 +54,6 @@ class ViewClickRegistry(private val itemType: ItemType<Any, RecyclerView.ViewHol
 
         }
         a.getString(R.styleable.ItemView_linkLongClick)?.apply {
-            "===> $name app:linkLongClick=$this".logI(TAG)
             if (needRegisterLongClickEventViews == null) {
                 needRegisterLongClickEventViews = SimpleArrayMap()
             }
