@@ -1,3 +1,4 @@
+# 最新版本：2.1.2
 # 介绍
 
 rv-multi-itemtype 是一个轻松优雅实现RecyclerView item
@@ -47,7 +48,10 @@ item的样式抽象为一个ItemType，每一种ItemType都自己独立的点击
 
 ```
    dependencies {
+       // 必须项
        implementation 'com.github.censhengde.rv-multi-itemtype:core:lastVersion'
+       // 可选项。 当有分页需求并且引用jetpack paging3 组件时依赖。
+       implementation 'com.github.censhengde.rv-multi-itemtype:paging:lastVersion'
    }
 ```
 
